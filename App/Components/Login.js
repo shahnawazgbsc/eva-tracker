@@ -15,7 +15,7 @@ export default class Login extends Component {
                 <View style={styles.mainstyle}>
                     <Form>
 
-                        <Item rounded style={{ border: 0.15,backgroundColor:'#c0b46a', borderColor:'gray', }}>
+                        <Item rounded style={{border: 0.15,backgroundColor:'#c0b46a', borderColor:'gray', height : 40}}>
 
                             <Image
                                 source={require("../Images/email.png")}
@@ -23,7 +23,7 @@ export default class Login extends Component {
                             />
                             <Input placeholder="Email Address" />
                         </Item>
-                        <Item rounded style={{ marginTop: 10 ,border: 0.15,justifyContent:'center',borderColor:'gray', backgroundColor:'#c0b46a'}}>
+                        <Item rounded style={{ marginTop: 10 ,border: 0.15,justifyContent:'center',borderColor:'gray', backgroundColor:'#c0b46a', height : 40}}>
                             <Image
                                 source={require("../Images/ic_password.png")}
                                 style={styles.email}
