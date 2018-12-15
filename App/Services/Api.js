@@ -1,20 +1,23 @@
 // a library to wrap and simplify api calls
 import apisauce from 'apisauce'
+import { from } from 'rxjs'
 
+let api
 // our "constructor"
-const create = (baseURL = 'https://api.github.com/') => {
+const create = (baseURL = 'http://demo-gbsc.azurewebsites.net/etrackerservice/') => {
   // ------
   // STEP 1
   // ------
   //
   // Create and configure an apisauce-based api object.
   //
-  const api = apisauce.create({
+  api = apisauce.create({
     // base URL is read from the "constructor"
     baseURL,
     // here are some default headers
     headers: {
-      'Cache-Control': 'no-cache'
+      'Cache-Control': 'no-cache',
+      'Content-Type': 'application/json'
     },
     // 10 second timeout...
     timeout: 10000
@@ -34,9 +37,9 @@ const create = (baseURL = 'https://api.github.com/') => {
   // Since we can't hide from that, we embrace it by getting out of the
   // way at this level.
   //
-  const getRoot = () => api.get('')
-  const getRate = () => api.get('rate_limit')
-  const getUser = (username) => api.get('search/users', {q: username})
+  const login = (params) => from(api.post('api/auth/login', params))
+  const storesByUserId = (id) => from(api.get(`api/store/getalluserstores/${id}`))
+  const getUser = (username) => api.get('search/users', { q: username })
 
   // ------
   // STEP 3
@@ -52,13 +55,14 @@ const create = (baseURL = 'https://api.github.com/') => {
   //
   return {
     // a list of the API functions from step 2
-    getRoot,
-    getRate,
+    login,
+    storesByUserId,
     getUser
   }
 }
 
 // let's return back our create method as the default.
 export default {
-  create
+  create,
+  api: () => api
 }

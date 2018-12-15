@@ -12,11 +12,17 @@ class RootContainer extends Component {
     this.props.startup()
   }
 
+  componentWillReceiveProps (nextProps, nextContext): void {
+    if (nextProps.headers) { this.props.api.setHeader('Api_key', nextProps.headers) }
+  }
+
   render () {
     return (
       <View style={styles.applicationView}>
-        <StatusBar barStyle='light-content' />
-        <ReduxNavigation />
+        <StatusBar barStyle='light-content'
+        />
+        <ReduxNavigation
+        />
       </View>
     )
   }
@@ -27,4 +33,8 @@ const mapDispatchToProps = (dispatch) => ({
   startup: () => dispatch(StartupActions.startup())
 })
 
-export default connect(null, mapDispatchToProps)(RootContainer)
+const mapStateToProps = (state) => ({
+  headers: state.login && state.login.response && state.login.response.auth_token
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(RootContainer)

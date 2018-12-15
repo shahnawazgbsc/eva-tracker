@@ -1,0 +1,59 @@
+import {Reducer} from "redux";
+import * as SI from "seamless-immutable";
+import {createAction, createStandardAction, getType} from "typesafe-actions";
+import {createReducer} from "reduxsauce";
+
+
+/* ------------- Types and Action Creators ------------- */
+export interface <%= pascalCase(props.name) %>RequestParams {
+  data: string;
+}
+
+
+export interface <%= pascalCase(props.name) %>Response {
+  data: string;
+}
+
+const actionCreators = {
+  success: createStandardAction("<%= snakeCase(props.name).toUpperCase() %>_SUCCESS")<<%= pascalCase(props.name) %>Response>(),
+  request: createStandardAction("snakeCase(props.name).toUpperCase()_REQUEST")<<%= pascalCase(props.name) %>RequestParams>(),
+  failure: createAction("<%= snakeCase(props.name).toUpperCase() %>_FAILURE"),
+};
+
+export const <%= pascalCase(props.name) %>Actions = actionCreators;
+
+export interface <%= pascalCase(props.name) %>State {
+  fetching: boolean;
+  data?: <%= pascalCase(props.name) %>Response | undefined;
+  request?: <%= pascalCase(props.name) %>RequestParams;
+}
+
+export type Immutable<%= pascalCase(props.name) %>State = SI.Immutable<<%= pascalCase(props.name) %>State>;
+
+/* ------------- Initial State ------------- */
+
+export const INITIAL_STATE: Immutable<%= pascalCase(props.name) %>State = SI.from({
+  fetching: false,
+  data: undefined,
+  request: undefined,
+});
+
+/* ------------- Reducers ------------- */
+
+export const request: Reducer<Immutable<%= pascalCase(props.name) %>State> = (state, action) => state.merge({fetching: true, request: action.payload});
+
+export const success: Reducer<Immutable<%= pascalCase(props.name) %>State> = (state, action) => state.merge({fetching: false, data: action.payload});
+
+export const failure: Reducer<Immutable<%= pascalCase(props.name) %>State> = (state) => state.merge({fetching: false});
+
+/* ------------- Hookup Reducers To Types ------------- */
+
+const reducerMap = {
+  [getType(actionCreators.request)]: request,
+  [getType(actionCreators.failure)]: failure,
+  [getType(actionCreators.success)]: success,
+};
+
+export const <%= pascalCase(props.name) %>Reducer = createReducer(INITIAL_STATE, reducerMap);
+
+export default <%= pascalCase(props.name) %>Reducer;

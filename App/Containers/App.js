@@ -2,11 +2,13 @@ import '../Config'
 import DebugConfig from '../Config/DebugConfig'
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
+import { Root } from 'native-base'
 import RootContainer from './RootContainer'
 import createStore from '../Redux'
+import LoaderScreen from './LoaderScreen'
 
 // create our store
-const store = createStore()
+const { store, api, persistor } = createStore()
 
 /**
  * Provides an entry point into our application.  Both index.ios.js and index.android.js
@@ -18,10 +20,21 @@ const store = createStore()
  * We separate like this to play nice with React Native's hot reloading.
  */
 class App extends Component {
+  componentDidMount (): void {
+    persistor.purge()
+  }
+
+  componentWillUnmount (): void {
+    persistor.flush()
+  }
+
   render () {
     return (
       <Provider store={store}>
-        <RootContainer />
+        <Root>
+          <RootContainer api={api} />
+          <LoaderScreen />
+        </Root>
       </Provider>
     )
   }
