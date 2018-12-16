@@ -2,7 +2,6 @@ import * as React from "react";
 import styles from "./HeaderStyle";
 import {Body, Button, Header as NBHeader, Icon, Left, Right, Text} from "native-base";
 import {Actions} from "react-native-router-flux";
-import { settings } from "cluster";
 
 const back = () => {
   Actions.pop();
@@ -34,7 +33,7 @@ export default class Header extends React.Component {
   }
   render(){
     return(
-      <NBHeader style={[styles.menu, style]}>
+      <NBHeader style={[styles.menu]}>
     <Left>
       {
         <Button transparent onPress={menu}>
@@ -61,7 +60,7 @@ export default class Header extends React.Component {
       case 'market survey':
         return(
           <Icon style={styles.icon} name='menu'/>)
-      case 'market survey':
+      case 'market':
         return(
           <Icon style={styles.icon} name='menu'/>)
     }
@@ -92,7 +91,7 @@ export default class Header extends React.Component {
   onPressHandlers() {
     switch(this.state.screen) {
       case 'main screen':
-        return settings
+        return setting
       case 'market survey':
         return add
       case 'market':
