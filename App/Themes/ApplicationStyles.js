@@ -7,6 +7,9 @@ import Colors from './Colors'
 
 const ApplicationStyles = {
   screen: {
+    header: {
+      backgroundColor: 'transparent'
+    },
     mainContainer: {
       flex: 1,
       backgroundColor: Colors.transparent
@@ -43,7 +46,8 @@ const ApplicationStyles = {
     titleText: {
       ...Fonts.style.h2,
       fontSize: 14,
-      color: Colors.text
+      textAlign: 'center',
+      color: Colors.white
     }
   },
   darkLabelContainer: {

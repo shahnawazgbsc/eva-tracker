@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
 import { View, StatusBar } from 'react-native'
+import { Root, StyleProvider } from 'native-base'
 import ReduxNavigation from '../Navigation/ReduxNavigation'
 import { connect } from 'react-redux'
 import StartupActions from '../Redux/StartupRedux'
+import getTheme from '../../native-base-theme/components'
+import platform from '../../native-base-theme/variables/platform'
 
 // Styles
 import styles from './Styles/RootContainerStyles'
@@ -13,7 +16,7 @@ class RootContainer extends Component {
   }
 
   componentWillReceiveProps (nextProps, nextContext): void {
-    if (nextProps.headers) { this.props.api.setHeader('Api_key', nextProps.headers) }
+    if (nextProps.headers) { this.props.api.setHeader('api_key', nextProps.headers) }
   }
 
   render () {
@@ -21,8 +24,13 @@ class RootContainer extends Component {
       <View style={styles.applicationView}>
         <StatusBar barStyle='light-content'
         />
-        <ReduxNavigation
-        />
+        <StyleProvider style={getTheme(platform)}>
+          <Root>
+            <ReduxNavigation
+            />
+          </Root>
+        </StyleProvider>
+
       </View>
     )
   }

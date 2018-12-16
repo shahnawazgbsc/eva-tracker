@@ -56,10 +56,6 @@
     "typesafe-actions": "^2.0.4"
   },
   "devDependencies": {
-    "@storybook/addon-storyshots": "^3.4.0",
-    "@storybook/addons": "^3.4.0",
-    "@storybook/channels": "^3.4.0",
-    "@storybook/react-native": "^3.4.0",
     "babel-core": "6.26.0",
     "babel-eslint": "7.1.1",
     "babel-jest": "23.6.0",

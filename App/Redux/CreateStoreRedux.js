@@ -4,19 +4,23 @@ import Immutable from 'seamless-immutable'
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
-  loginRequest: ['data'],
-  loginSuccess: ['payload'],
-  loginFailure: ['error']
+  createStoreRequest: ['data'],
+  createStoreSuccess: ['payload'],
+  subSectionSuccess: ['payload'],
+  selectDays: ['payload'],
+  resetDays: null,
+  createStoreFailure: null
 })
 
-export const LoginTypes = Types
-
+export const CreateStoreTypes = Types
 export default Creators
 
 /* ------------- Initial State ------------- */
 
 export const INITIAL_STATE = Immutable({
   data: null,
+  subSection: null,
+  days: null,
   fetching: null,
   payload: null,
   error: null
@@ -34,14 +38,22 @@ export const success = (state, action) => {
   return state.merge({ fetching: false, error: null, payload })
 }
 
+export const subSectionSuccess = (state, { payload }) => state.merge({ subSection: payload })
+
+export const selectDays = (state, { payload }) => state.merge({ days: payload })
+
+export const resetDays = (state) => state.merge({ days: null })
+
 // Something went wrong somewhere.
-export const failure = (state, action) =>
-  state.merge({ fetching: false, error: action.error, payload: null })
+export const failure = state => state.merge({ fetching: false, error: true, payload: null })
 
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
-  [Types.LOGIN_REQUEST]: request,
-  [Types.LOGIN_SUCCESS]: success,
-  [Types.LOGIN_FAILURE]: failure
+  [Types.CREATE_STORE_REQUEST]: request,
+  [Types.CREATE_STORE_SUCCESS]: success,
+  [Types.CREATE_STORE_FAILURE]: failure,
+  [Types.SUB_SECTION_SUCCESS]: subSectionSuccess,
+  [Types.RESET_DAYS]: resetDays,
+  [Types.SELECT_DAYS]: selectDays
 })

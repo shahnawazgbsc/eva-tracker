@@ -39,7 +39,12 @@ const create = (baseURL = 'http://demo-gbsc.azurewebsites.net/etrackerservice/')
   //
   const login = (params) => from(api.post('api/auth/login', params))
   const storesByUserId = (id) => from(api.get(`api/store/getalluserstores/${id}`))
-  const getUser = (username) => api.get('search/users', { q: username })
+  const subsectionsByUser = (id) => from(api.get(`api/territory/GetSubsectionsByUser/${id}`))
+  const setHeaders = (token) => api.setHeaders([{
+    'Cache-Control': 'no-cache',
+    'Content-Type': 'application/json',
+    'api_key': token
+  }])
 
   // ------
   // STEP 3
@@ -57,7 +62,8 @@ const create = (baseURL = 'http://demo-gbsc.azurewebsites.net/etrackerservice/')
     // a list of the API functions from step 2
     login,
     storesByUserId,
-    getUser
+    subsectionsByUser,
+    setHeaders
   }
 }
 

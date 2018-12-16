@@ -1,0 +1,44 @@
+[
+  {
+    "subsectionId": 7,
+    "companyId": 8,
+    "name": "Subsection3",
+    "sectionId": 4,
+    "section": null,
+    "userId": 8,
+    "user": null,
+    "stores": [],
+    "createdAt": null,
+    "deleted": false,
+    "editedAt": "2018-08-08T09:21:28.4997383",
+    "editedBy": null
+  },
+  {
+    "subsectionId": 6,
+    "companyId": 8,
+    "name": "Subsection2",
+    "sectionId": 4,
+    "section": null,
+    "userId": 8,
+    "user": null,
+    "stores": [],
+    "createdAt": null,
+    "deleted": false,
+    "editedAt": "2018-08-08T09:21:13.9092764",
+    "editedBy": null
+  },
+  {
+    "subsectionId": 5,
+    "companyId": 8,
+    "name": "Subsection",
+    "sectionId": 4,
+    "section": null,
+    "userId": 8,
+    "user": null,
+    "stores": [],
+    "createdAt": null,
+    "deleted": false,
+    "editedAt": "2018-08-08T09:20:55.5411612",
+    "editedBy": null
+  }
+]
