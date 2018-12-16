@@ -3,7 +3,7 @@ import { View, ListView, Text } from 'react-native'
 import { connect } from 'react-redux'
 
 // Styles
-import styles from './Styles/SectionExampleStyle'
+import styles from './SectionExampleStyle'
 
 class ListviewSectionsExample extends Component {
   constructor (props) {
