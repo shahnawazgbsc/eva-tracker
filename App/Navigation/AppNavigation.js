@@ -1,4 +1,4 @@
-import MainScreen from '../Containers/LaunchScreen'
+import MainScreen from '../Containers/MainScreen/MainScreen'
 import { createAppContainer, createDrawerNavigator, createStackNavigator } from 'react-navigation'
 import DaySelection from '../Containers/DaySelection'
 import StoreRegistrationScreen from '../Containers/StoreRegistrationScreen'
@@ -24,7 +24,7 @@ const storeRegistration = createStackNavigator({
 // Manifest of possible screens
 const PrimaryNav = createDrawerNavigator({
   Home: { screen: MainScreen },
-  StoreRegistrationScreen: { screen: storeRegistration }
+  StoreRegistration: { screen: storeRegistration }
 }, {
   // Default config for all screens
   headerMode: 'none',
