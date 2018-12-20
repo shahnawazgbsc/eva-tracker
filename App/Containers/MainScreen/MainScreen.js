@@ -15,6 +15,8 @@ export default class MainScreen extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            daystart: false,
+            endday: true,
             latitude: null,
             longitude: null,
             error: null,
@@ -22,15 +24,13 @@ export default class MainScreen extends React.Component {
             direction: false,
             waypoint: null,
             markerRegion: [
-                { longitude: 67.0645, latitude: 24.9273 },
-                { longitude: 67.0814, latitude: 24.896 },
-                { longitude: 67.2162, latitude: 24.8937 }
+                { longitude: 67.0645, latitude: 24.9273, name: 'Tabba Heart' },
+                { longitude: 67.0814, latitude: 24.896, name: 'National Studium' },
+                { longitude: 67.2162, latitude: 24.8937, name: 'Bolan' }
             ],
         };
-
-
-
     }
+
     componentDidMount() {
         navigator.geolocation.getCurrentPosition((position) => {
             let region = {
@@ -49,7 +49,7 @@ export default class MainScreen extends React.Component {
         var current = this.state.mapRegion.latitude + "," + this.state.mapRegion.longitude;
         var destination = place.latitude + "," + place.longitude;
         try {
-            let resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${current}&destination=${destination}&key=AIzaSyA5HRoSv2R6PCT0bN1ZRoRvOmkxtinRYdk`)
+            let resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${current}&destination=${destination}&key=AIzaSyBrb2XMt6F8A37iCwSDUbsTj3P1GNYJmD4`)
             let respcheck = await resp.json();
             let way = Polyline.decode(respcheck.routes[0].overview_polyline.points);
             let waypoint = way.map((val, index) => {
@@ -122,23 +122,27 @@ export default class MainScreen extends React.Component {
                                     <MapView.Callout onPress={() => { this.Direction(val) }}>
                                         <View>
                                             <Text style={{ fontSize: 18 }}>{val.name}</Text>
-                                            <Text style={{ fontSize: 12, color: 'blue' }}>Click For Direction....</Text>
                                         </View>
                                     </MapView.Callout>
                                 </MapView.Marker>
                             )
                         }) : null}
                     </MapView>
-                    <View style={styles.buttonContainer}>
-                        <Button rounded success>
-                            <Text>Day Start</Text>
-                        </Button>
-                        <Button rounded success>
-                            <Text>Market</Text>
-                        </Button>
-                        <Button rounded success>
-                            <Text>End Day</Text>
-                        </Button>
+
+                    <View style={{ height: 70, backgroundColor: 'white' }}>
+                        <View style={{ height: 12, backgroundColor: 'rgb(0, 164, 81)' }}></View>
+
+                        <View style={{ height: 90, backgroundColor: 'white', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', marginTop: 7 }}>
+                            <Button style={styles.ButtonStyle} disabled={this.state.startday} onPress={() => {
+                                this.setState({ startday: true }, () => { this.setState({ endday: false }) })
+                            }}><Text style={styles.ButtonTextStyle}  >Day Start</Text></Button>
+                            <Button style={styles.ButtonStyle} disabled={this.state.endday}><Text style={styles.ButtonTextStyle} >Market</Text></Button>
+                            <Button style={styles.ButtonStyle} disabled={this.state.endday} onPress={() => {
+                                this.setState({ endday: true }, () => { this.setState({ startday: false }) })
+                            }} ><Text style={styles.ButtonTextStyle}   >End Day</Text></Button>
+                        </View>
+                        <View style={{ height: 8, backgroundColor: 'green' }}></View>
+
                     </View>
                 </View>
             </View>
