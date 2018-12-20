@@ -7,10 +7,15 @@ export default StyleSheet.create({
     buttonContainer:{
         flexDirection:'row',
         justifyContent:'space-between',
-        height:'25%'
+        height:'10%',
+        alignItems: 'center', 
+        justifyContent: 'space-around',
+     marginTop: 7 
     },
     body:{
-        flexDirection:'column'
+        flex:5,
+        flexDirection:'column',
+        
     },
     header:{
         height: 22,
