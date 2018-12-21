@@ -11,8 +11,8 @@ export default (action$, state$, { api }) => action$.pipe(
     return api.login(action.data).pipe(
       mergeMap(response => {
         if (response.ok) {
-          login = response.data
-          api.setHeaders('Api_key', login.response.auth_token)
+          login = JSON.parse(response.data)
+          api.setHeaders(login.response.auth_token)
           return api.subsectionsByUser(login.user.userid)
         } else {
           return of(response)
@@ -20,7 +20,7 @@ export default (action$, state$, { api }) => action$.pipe(
       }),
       mergeMap(response => {
         if (response.ok) {
-          return of(LoginActions.loginSuccess(login), CreateStoreActions.createStoreSuccess(response.data))
+          return of(LoginActions.loginSuccess(login), CreateStoreActions.subSectionSuccess(response.data))
         } else {
           return of(LoginActions.loginFailure(response))
         }

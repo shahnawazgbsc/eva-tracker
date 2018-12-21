@@ -1,10 +1,11 @@
 // a library to wrap and simplify api calls
 import apisauce from 'apisauce'
 import { from } from 'rxjs'
+import AppConfig from '../Config/AppConfig'
 
 let api
 // our "constructor"
-const create = (baseURL = 'http://demo-gbsc.azurewebsites.net/etrackerservice/') => {
+const create = (baseURL = AppConfig.baseUrl) => {
   // ------
   // STEP 1
   // ------
@@ -40,11 +41,21 @@ const create = (baseURL = 'http://demo-gbsc.azurewebsites.net/etrackerservice/')
   const login = (params) => from(api.post('api/auth/login', params))
   const storesByUserId = (id) => from(api.get(`api/store/getalluserstores/${id}`))
   const subsectionsByUser = (id) => from(api.get(`api/territory/GetSubsectionsByUser/${id}`))
-  const setHeaders = (token) => api.setHeaders([{
-    'Cache-Control': 'no-cache',
-    'Content-Type': 'application/json',
-    'api_key': token
-  }])
+  const uploadImage = (path, id) => {
+    const form = new FormData()
+    form.append('file', {
+      name: 'uploadImage',
+      uri: path,
+      type: 'image/jpeg'
+    })
+    const headers = {
+      ...api.headers,
+      'Content-Type': 'multipart/form-data'
+    }
+    return from(api.post(`api/store/uploadfiles/${id}`, form, { headers }))
+  }
+  const createStore = (data) => from(api.post('api/store/createstore', data))
+  const setHeaders = (token) => api.setHeader('api_key', token)
 
   // ------
   // STEP 3
@@ -63,6 +74,8 @@ const create = (baseURL = 'http://demo-gbsc.azurewebsites.net/etrackerservice/')
     login,
     storesByUserId,
     subsectionsByUser,
+    uploadImage,
+    createStore,
     setHeaders
   }
 }

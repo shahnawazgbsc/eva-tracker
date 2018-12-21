@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View } from 'react-native'
+import { View, Alert } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
 import { connect } from 'react-redux'
 import { Body, Button, Container, Form, Header, Icon, Input, Item, Label, Left, Picker, Right, Text } from 'native-base'
@@ -9,6 +9,7 @@ import CreateStoreActions from '../Redux/CreateStoreRedux'
 // Styles
 import styles from './Styles/StoreRegistrationScreenStyle'
 import GradientWrapper from '../Components/GradientWrapper'
+import { Days } from './DaySelection'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 
@@ -22,9 +23,9 @@ class StoreRegistrationScreen extends Component {
     this.state = {
       image: undefined,
       shopName: '',
-      shopkeeperName: '',
-      contact: '',
-      landLine: '',
+      shopKeeper: '',
+      contactNo: '',
+      landline: '',
       address: '',
       street: '',
       city: '',
@@ -32,9 +33,55 @@ class StoreRegistrationScreen extends Component {
       cnic: '',
       status: true,
       category: undefined,
-      subSection: undefined,
-      classification: undefined,
-      days: undefined
+      subsectionId: undefined,
+      classification: undefined
+    }
+  }
+
+  createStore = () => {
+    const msg = this.validateFields()
+    if (msg === undefined) {
+      this.props.createStore({
+        ...this.state,
+        subsectionId: this.props.subSection[this.state.subsectionId].subsectionId,
+        category: this.Categories[this.state.category],
+        classification: this.Classification[this.state.classification],
+        VisitDays: this.props.days.map(value => ({ day: value }))
+      })
+    } else {
+      Alert.alert('Info', msg)
+    }
+  }
+
+  validateFields () {
+    if (this.state.shopName.length === 0) {
+      return 'Shop name is required'
+    } else if (this.state.shopKeeper.length === 0) {
+      return 'Shopkeeper name is required'
+    } else if (this.state.contactNo.length === 0) {
+      return 'Contact number is required'
+    } else if (this.state.subsectionId === undefined) {
+      return 'Subsection is required'
+    } else if (this.state.address.length === 0) {
+      return 'Address is required'
+    } else if (this.state.street.length === 0) {
+      return 'Street name is required'
+    } else if (this.state.city.length === 0) {
+      return 'City is required'
+    } else if (this.state.landMark.length === 0) {
+      return 'Landmark is required'
+    } else if (this.state.cnic.length !== 13) {
+      return 'CNIC is required'
+    } else if (!this.props.days || this.props.days.length === 0) {
+      return 'Select visit days'
+    } else if (this.state.category === undefined) {
+      return 'Select category'
+    } else if (this.state.classification === undefined) {
+      return 'Select classification'
+    } else if (this.state.image === undefined) {
+      return 'Select image'
+    } else {
+      return undefined
     }
   }
 
@@ -47,7 +94,7 @@ class StoreRegistrationScreen extends Component {
   }
 
   onShopKeeperName = (txt) => {
-    this.setState({ shopKeeperName: txt })
+    this.setState({ shopKeeper: txt })
   }
 
   onLandLine = (txt) => {
@@ -55,7 +102,7 @@ class StoreRegistrationScreen extends Component {
   }
 
   onContact = (txt) => {
-    this.setState({ contact: txt })
+    this.setState({ contactNo: txt })
   }
 
   onAddress = (txt) => {
@@ -71,7 +118,7 @@ class StoreRegistrationScreen extends Component {
   }
 
   onLandmark = (txt) => {
-    this.setState({ landmark: txt })
+    this.setState({ landMark: txt })
   }
 
   onCNIC = (txt) => {
@@ -83,7 +130,7 @@ class StoreRegistrationScreen extends Component {
   }
 
   onSubSectionSelected = (value) => {
-    this.setState({ subSection: value })
+    this.setState({ subsectionId: value })
   }
 
   onClassificationSelected = (value) => {
@@ -116,7 +163,7 @@ class StoreRegistrationScreen extends Component {
       } else {
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-
+        console.log(response)
         this.setState({
           image: response
         })
@@ -164,7 +211,7 @@ class StoreRegistrationScreen extends Component {
                 <Input
                   keyboardType={'phone-pad'}
                   onChangeText={this.onContact}
-                  value={this.state.contact}
+                  value={this.state.contactNo}
                 />
               </Item>
 
@@ -185,7 +232,7 @@ class StoreRegistrationScreen extends Component {
                   iosIcon={<Icon name='ios-arrow-down-outline'
                   />}
                   itemTextStyle={{ color: '#788ad2', fontSize: 12 }}
-                  selectedValue={this.state.subSection}
+                  selectedValue={this.state.subsectionId}
                   onValueChange={this.onSubSectionSelected}
                 >
                   {
@@ -230,6 +277,7 @@ class StoreRegistrationScreen extends Component {
                 <Label>CNIC</Label>
                 <Input
                   keyboardType={'numeric'}
+                  maxLength={13}
                   onChangeText={this.onCNIC}
                   value={this.state.cnic}
                 />
@@ -237,7 +285,7 @@ class StoreRegistrationScreen extends Component {
               <Item fixedLabel onPress={() => this.props.navigation.navigate('DaySelection')}>
                 <Label>Days</Label>
                 <Label style={{ textAlign: 'right', marginRight: 15, marginVertical: 15 }}>
-                  {this.props.days ? this.props.days.map(value => value.substring(0, 3)).join(', ') : 'Select Days'}</Label>
+                  {this.props.days ? this.props.days.map(value => Days.find(value1 => value1.key === value).title.substring(0, 3)).join(', ') : 'Select Days'}</Label>
               </Item>
               <Item fixedLabel>
                 <Label>Category</Label>
@@ -305,7 +353,7 @@ class StoreRegistrationScreen extends Component {
                   margin: 15,
                   borderRadius: 8
                 }}
-                onPress={() => this.props.navigation.navigate('DaySelection')}
+                onPress={this.createStore}
               >
                 <Text style={{ color: 'white' }}>Add Store</Text>
               </Button>
@@ -326,7 +374,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    resetDays: () => dispatch(CreateStoreActions.resetDays())
+    resetDays: () => dispatch(CreateStoreActions.resetDays()),
+    createStore: (data) => dispatch(CreateStoreActions.createStoreRequest(data))
   }
 }
 

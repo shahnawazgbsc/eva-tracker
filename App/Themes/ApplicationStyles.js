@@ -7,6 +7,7 @@ import Colors from './Colors'
 
 const ApplicationStyles = {
   screen: {
+
     header: {
       backgroundColor: 'transparent'
     },

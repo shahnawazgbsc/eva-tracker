@@ -9,7 +9,7 @@ const { Types, Creators } = createActions({
   subSectionSuccess: ['payload'],
   selectDays: ['payload'],
   resetDays: null,
-  createStoreFailure: null
+  createStoreFailure: ['error']
 })
 
 export const CreateStoreTypes = Types
@@ -40,12 +40,12 @@ export const success = (state, action) => {
 
 export const subSectionSuccess = (state, { payload }) => state.merge({ subSection: payload })
 
-export const selectDays = (state, { payload }) => state.merge({ days: payload })
+export const selectDays = (state, { payload }) => state.merge({ days: payload.sort() })
 
 export const resetDays = (state) => state.merge({ days: null })
 
 // Something went wrong somewhere.
-export const failure = state => state.merge({ fetching: false, error: true, payload: null })
+export const failure = (state, { error }) => state.merge({ fetching: false, error, payload: null })
 
 /* ------------- Hookup Reducers To Types ------------- */
 

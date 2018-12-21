@@ -15,10 +15,6 @@ class RootContainer extends Component {
     this.props.startup()
   }
 
-  componentWillReceiveProps (nextProps, nextContext): void {
-    if (nextProps.headers) { this.props.api.setHeader('api_key', nextProps.headers) }
-  }
-
   render () {
     return (
       <View style={styles.applicationView}>

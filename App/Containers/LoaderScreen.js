@@ -27,7 +27,7 @@ class LoaderScreen extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    isLoading: state.login.fetching
+    isLoading: state.login.fetching || state.createStore.fetching
   }
 }
 

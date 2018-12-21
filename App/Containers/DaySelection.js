@@ -9,6 +9,16 @@ import GradientWrapper from '../Components/GradientWrapper'
 
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
 
+export const Days = [
+  { title: 'Monday', key: 1 },
+  { title: 'Tuesday', key: 2 },
+  { title: 'Wednesday', key: 3 },
+  { title: 'Thursday', key: 4 },
+  { title: 'Friday', key: 5 },
+  { title: 'Saturday', key: 6 },
+  { title: 'Sunday', key: 7 }
+]
+
 class DaySelection extends React.PureComponent {
   /* ***********************************************************
   * STEP 1
@@ -28,13 +38,15 @@ class DaySelection extends React.PureComponent {
     return (
       <ListItem noIndent button onPress={() => {
         const selected = new Map(this.state.selected)
-        selected.set(item.title, !selected.get(item.title))
+        selected.set(item.key, !selected.get(item.key))
         this.setState({
           selected: selected
         })
       }}>
         <Text style={{ flex: 1 }}>{item.title}</Text>
-        <CheckBox checked={!!this.state.selected.get(item.title)}/>
+        <CheckBox
+          checked={!!this.state.selected.get(item.key)}
+        />
       </ListItem>
     )
   }
@@ -95,15 +107,7 @@ class DaySelection extends React.PureComponent {
     }
 
     this.state = {
-      dataObjects: [
-        { title: 'Monday', key: 1 },
-        { title: 'Tuesday', key: 2 },
-        { title: 'Wednesday', key: 3 },
-        { title: 'Thursday', key: 4 },
-        { title: 'Friday', key: 5 },
-        { title: 'Saturday', key: 6 },
-        { title: 'Sunday', key: 7 }
-      ],
+      dataObjects: Days,
       selected: map
     }
     this.setState(this.state)
@@ -126,7 +130,7 @@ class DaySelection extends React.PureComponent {
               </Button>
             </Left>
             <Body>
-            <Title>Select Days</Title>
+            <Text style={styles.titleText}>Select Days</Text>
             </Body>
             <Right>
               <Button transparent onPress={this.save} light>
