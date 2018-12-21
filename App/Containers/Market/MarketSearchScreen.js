@@ -13,14 +13,10 @@ export default class MarketSearchScreen extends React.Component {
     render() {
         return (
           <Container style={styles.container}>
-            <View onLayout={event => this.setState({headerHeight: event.nativeEvent.layout.height})}>
-              <Header screen = 'market'/>
-            </View>
-    
             <View style={styles.searchContainer}>
-              <SearchBar style={styles.searchBar}/>
+              <SearchBar keywordFetch="test" style={styles.searchBar}/>
             </View>
-            <KeywordAutoSuggestBox extraMargin={83}/>
+            <KeywordAutoSuggestBox data="test" extraMargin={83}/>
             
           </Container>
         );
