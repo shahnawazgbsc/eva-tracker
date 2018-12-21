@@ -72,5 +72,7 @@ export default StyleSheet.create({
         borderRadius: 3,
         borderColor: Colors.border,
         borderWidth: 10
-    }
+    },
+    ButtonStyle:{ width: 100, justifyContent: 'center', height: 40, backgroundColor: 'rgb(3, 143, 73)' },
+    ButtonTextStyle:{ color: 'white', fontWeight: 'bold',fontSize:12 }
 })
