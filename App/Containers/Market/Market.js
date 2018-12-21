@@ -1,5 +1,5 @@
 import React from 'react'
-import {View} from 'react-native'
+import { View } from 'react-native'
 import Header from '../../Components/Header/Header'
 import {Colors} from '../../Themes'
 import {Scene,Tabs} from 'react-native-router-flux'

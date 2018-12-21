@@ -1,18 +1,37 @@
-import { StackNavigator } from 'react-navigation'
-import LaunchScreen from '../Containers/LaunchScreen'
+import MainScreen from '../Containers/MainScreen/MainScreen'
+import { createAppContainer, createDrawerNavigator, createStackNavigator } from 'react-navigation'
+import DaySelection from '../Containers/DaySelection'
+import StoreRegistrationScreen from '../Containers/StoreRegistrationScreen'
 
 import styles from './Styles/NavigationStyles'
 
+const daySelection = createStackNavigator({
+  Root: { screen: DaySelection }
+}, {
+  mode: 'modal',
+  initialRouteName: 'Root',
+  headerMode: 'none'
+})
+
+const storeRegistration = createStackNavigator({
+  StoreMain: { screen: StoreRegistrationScreen },
+  DaySelection: { screen: daySelection }
+}, {
+  initialRouteName: 'StoreMain',
+  headerMode: 'none'
+})
+
 // Manifest of possible screens
-const PrimaryNav = StackNavigator({
-  LaunchScreen: { screen: LaunchScreen }
+const PrimaryNav = createDrawerNavigator({
+  Home: { screen: MainScreen },
+  StoreRegistration: { screen: storeRegistration }
 }, {
   // Default config for all screens
   headerMode: 'none',
-  initialRouteName: 'LaunchScreen',
+  initialRouteName: 'Home',
   navigationOptions: {
     headerStyle: styles.header
   }
 })
 
-export default PrimaryNav
+export default createAppContainer(PrimaryNav)

@@ -12,4 +12,4 @@ export default class MarketListScreen extends React.Component {
             <MarketListView/>
         )
     }
-}
+ }

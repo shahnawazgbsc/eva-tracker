@@ -4,6 +4,7 @@ import { addNavigationHelpers } from 'react-navigation'
 import { createReduxBoundAddListener } from 'react-navigation-redux-helpers'
 import { connect } from 'react-redux'
 import AppNavigation from './AppNavigation'
+import LoginNavigation from './LoginNavigation'
 
 class ReduxNavigation extends React.Component {
   componentWillMount () {
@@ -11,7 +12,7 @@ class ReduxNavigation extends React.Component {
     BackHandler.addEventListener('hardwareBackPress', () => {
       const { dispatch, nav } = this.props
       // change to whatever is your first screen, otherwise unpredictable results may occur
-      if (nav.routes.length === 1 && (nav.routes[0].routeName === 'LaunchScreen')) {
+      if (nav.routes.length === 1 && (nav.routes[0].routeName === 'LoginScreen')) {
         return false
       }
       // if (shouldCloseApp(nav)) return false
@@ -26,9 +27,13 @@ class ReduxNavigation extends React.Component {
   }
 
   render () {
-    return <AppNavigation navigation={addNavigationHelpers({ dispatch: this.props.dispatch, state: this.props.nav, addListener: createReduxBoundAddListener('root') })} />
+    if (this.props.login && this.props.login.payload) {
+      return <AppNavigation />
+    } else {
+      return <LoginNavigation />
+    }
   }
 }
 
-const mapStateToProps = state => ({ nav: state.nav })
+const mapStateToProps = state => ({ nav: state.nav, login: state.login })
 export default connect(mapStateToProps)(ReduxNavigation)

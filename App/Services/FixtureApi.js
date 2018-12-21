@@ -1,24 +1,18 @@
+import { from } from 'rxjs'
+
 export default {
   // Functions return fixtures
-  getRoot: () => {
-    return {
-      ok: true,
-      data: require('../Fixtures/root.json')
-    }
-  },
-  getRate: () => {
-    return {
-      ok: true,
-      data: require('../Fixtures/rateLimit.json')
-    }
-  },
-  getUser: (username) => {
-    // This fixture only supports gantman or else returns skellock
-    const gantmanData = require('../Fixtures/gantman.json')
-    const skellockData = require('../Fixtures/skellock.json')
-    return {
-      ok: true,
-      data: username.toLowerCase() === 'gantman' ? gantmanData : skellockData
-    }
-  }
+  setHeaders: (token) => {},
+  login: (params) => from(Promise.resolve({
+    ok: true,
+    data: require('../Fixtures/login.json')
+  })),
+  storesByUserId: (id) => from(Promise.resolve({
+    ok: true,
+    data: require('../Fixtures/store.json')
+  })),
+  subsectionsByUser: (id) => from(Promise.resolve({
+    ok: true,
+    data: require('../Fixtures/subscription.json')
+  }))
 }
