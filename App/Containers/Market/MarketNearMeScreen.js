@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import {Colors} from '../../Themes'
-import SectionExample from '../../../ignite/Examples/Containers/ignite-ir-boilerplate-andross/SectionExample'
+import MarketListView from './MarketListView'
 
 export default class MarketNearMeScreen extends React.Component {
     constructor(props) {
@@ -9,7 +9,7 @@ export default class MarketNearMeScreen extends React.Component {
     }
     render() {
         return (
-            <SectionExample/>
+            <MarketListView/>
         )
     }
 }

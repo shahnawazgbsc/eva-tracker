@@ -8,7 +8,7 @@ export default class SearchBar extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-        keywordFetch:keyword
+        keywordFetch:props.keyword
     }
   }
 
@@ -27,7 +27,7 @@ export default class SearchBar extends React.Component {
           <Text>Find :</Text>
           <TextInput
             style={styles.input}
-            placeholder={"Doctor, Procedure, Specialty"}
+            placeholder={"Shop,Market"}
             underlineColorAndroid={Colors.transparent}
             onChangeText={this.onSearchInput}
             autoCorrect={false}
@@ -45,12 +45,10 @@ export default class SearchBar extends React.Component {
   }
 
 onSearchInput = (text) => {
-    this.props.cancelRequest();
     console.log(text);
   };
 
 blurKeywords = () => {
-    this.props.cancelRequest();
   };
 
 }

@@ -1,11 +1,15 @@
 import React from 'react'
-import SectionExample from '../../../ignite/Examples/Containers/ignite-ir-boilerplate-andross/SectionExample'
+import {View} from 'react-native'
+import {Colors} from '../../Themes'
+import MarketListView from './MarketListView'
 
 export default class MarketListScreen extends React.Component {
-
-  render () {
-    return (
-      <SectionExample/>
-    )
-  }
-}
+    constructor(props) {
+        super(props)
+    }
+    render() {
+        return (
+            <MarketListView/>
+        )
+    }
+ }

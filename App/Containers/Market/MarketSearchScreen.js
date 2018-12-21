@@ -7,20 +7,18 @@ import KeywordAutoSuggestBox from '../../Components/KeywordAutoSuggestBox/Keywor
 import { Container } from 'native-base'
 
 export default class MarketSearchScreen extends React.Component {
-
-  render () {
-    return (
-      <Container style={styles.container}>
-        <View onLayout={event => this.setState({ headerHeight: event.nativeEvent.layout.height })}>
-          <Header screen='market'/>
-        </View>
-
-        <View style={styles.searchContainer}>
-          <SearchBar style={styles.searchBar}/>
-        </View>
-        <KeywordAutoSuggestBox extraMargin={83}/>
-
-      </Container>
-    )
-  }
-}
+    constructor(props) {
+        super(props)
+       }
+    render() {
+        return (
+          <Container style={styles.container}>
+            <View style={styles.searchContainer}>
+              <SearchBar keywordFetch="test" style={styles.searchBar}/>
+            </View>
+            <KeywordAutoSuggestBox data="test" extraMargin={83}/>
+            
+          </Container>
+        );
+      }
+    }

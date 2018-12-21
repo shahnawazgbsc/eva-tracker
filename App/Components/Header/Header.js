@@ -25,7 +25,8 @@ export default class Header extends React.Component {
     this.state = {
       style:{},
       hideBack:false,
-      screen:props.screenName
+      screen:props.screenName,
+      headerText:props.header
     }
   }
   componentWillMount(){
@@ -43,11 +44,11 @@ export default class Header extends React.Component {
 
     </Left>
     <Body>
-    <Text>{this.renderHeaderText()}</Text>
+    <Text>{this.state.headerText}</Text>
     </Body>
     <Right>
       <Button transparent onPress={this.onPressHandlers()}>
-      {this.renderRightIcon}
+      {this.renderRightIcon()}
       </Button>
     </Right>
   </NBHeader>
@@ -68,25 +69,14 @@ export default class Header extends React.Component {
   renderRightIcon() {
     switch(this.state.screen) {
       case 'main screen':
-        return (<Icon style={styles.icon} name='setting'/>)
+        return (<Icon style={styles.icon} name='settings'/>)
       case 'market':
         return(
-          <Icon style={styles.icon} name='tune'/>)
+          <Icon style={styles.icon} name='tune' type="MaterialIcons"/>)
       case 'market survey':
         return(
           <Icon style={styles.icon} name='add'/>)
     }
-  }
-  renderHeaderText() {
-    switch(this.state.screen) {
-      case 'main screen':
-        return "Main Screen"
-      case 'market survey':
-        return "Market Survey"
-      case 'market':
-        return "Market"
-    }
-
   }
   onPressHandlers() {
     switch(this.state.screen) {
