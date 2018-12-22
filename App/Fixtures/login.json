@@ -1,0 +1,18 @@
+{
+  "status": true,
+  "message": "Login Success",
+  "companyid": 13,
+  "response": {
+    "id": "239f296f-fbe3-4a94-abe9-db436d56b95c",
+    "auth_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhemVlbSIsImp0aSI6ImFkODQ1Y2I0LTAzNDYtNDg0MC1iYmU5LTJlMDg3MjJiODg5MCIsImlhdCI6MTU0NDYxNTI0MCwicm9sIjoiYXBpX2FjY2VzcyIsImlkIjoiMjM5ZjI5NmYtZmJlMy00YTk0LWFiZTktZGI0MzZkNTZiOTVjIiwibmJmIjoxNTQ0NjE1MjM5LCJleHAiOjE1NDQ2MjI0MzksImlzcyI6IkdCU0MiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjQ0Mzg1LyJ9.f3EXqqYVFnFI7Z_flfCK_ADqd6gvB4z1wkmtPU0_fc8",
+    "expires_in": 7200
+  },
+  "user": {
+    "userid": 21,
+    "territoryid": 11,
+    "firstname": "azeem",
+    "lastname": "lahre",
+    "email": null,
+    "companyId": 13
+  }
+}

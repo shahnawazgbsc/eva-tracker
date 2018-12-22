@@ -1,43 +1,97 @@
 import React, { Component } from 'react'
-import { Text, View, KeyboardAvoidingView } from 'react-native'
+import { View } from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
 import { connect } from 'react-redux'
-import {
-  Container,
-  Content,
-  Body,
-  Button,
-  Form,
-  Header,
-  Icon,
-  Input,
-  Item,
-  Label,
-  Left,
-  Picker,
-  Right
-} from 'native-base'
+import { Body, Button, Container, Form, Header, Icon, Input, Item, Label, Left, Picker, Right, Text } from 'native-base'
 import CircleCheckBox, { LABEL_POSITION } from 'react-native-circle-checkbox'
 import ImagePicker from 'react-native-image-picker'
-import LinearGradient from 'react-native-linear-gradient'
+import CreateStoreActions from '../Redux/CreateStoreRedux'
 // Styles
 import styles from './Styles/StoreRegistrationScreenStyle'
+import GradientWrapper from '../Components/GradientWrapper'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 
 class StoreRegistrationScreen extends Component {
+  Categories = ['LMT', 'V/S', 'Retail']
+  Classification = ['500 & Above', '250 to 499', '100 to 249', 'Less then 100']
+
   constructor (props) {
     super(props)
 
     this.state = {
-      num: 0,
-      selected: []
+      image: undefined,
+      shopName: '',
+      shopkeeperName: '',
+      contact: '',
+      landLine: '',
+      address: '',
+      street: '',
+      city: '',
+      landMark: '',
+      cnic: '',
+      status: true,
+      category: undefined,
+      subSection: undefined,
+      classification: undefined,
+      days: undefined
     }
   }
 
-  onValueChange (value) {
-    this.setState({
-      selected: value
-    })
+  componentDidMount (): void {
+    this.props.resetDays()
+  }
+
+  onShopName = (txt) => {
+    this.setState({ shopName: txt })
+  }
+
+  onShopKeeperName = (txt) => {
+    this.setState({ shopKeeperName: txt })
+  }
+
+  onLandLine = (txt) => {
+    this.setState({ landline: txt })
+  }
+
+  onContact = (txt) => {
+    this.setState({ contact: txt })
+  }
+
+  onAddress = (txt) => {
+    this.setState({ address: txt })
+  }
+
+  onStreet = (txt) => {
+    this.setState({ street: txt })
+  }
+
+  onCity = (txt) => {
+    this.setState({ city: txt })
+  }
+
+  onLandmark = (txt) => {
+    this.setState({ landmark: txt })
+  }
+
+  onCNIC = (txt) => {
+    this.setState({ cnic: txt })
+  }
+
+  onCategorySelected = (value) => {
+    this.setState({ category: value })
+  }
+
+  onSubSectionSelected = (value) => {
+    this.setState({ subSection: value })
+  }
+
+  onClassificationSelected = (value) => {
+    this.setState({ classification: value })
+  }
+
+  close = () => {
+    this.props.navigation.goBack(null)
   }
 
   selectPhotoTapped () {
@@ -60,13 +114,11 @@ class StoreRegistrationScreen extends Component {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton)
       } else {
-        let source = { uri: response.uri }
-
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
 
         this.setState({
-          ImageSource: source
+          image: response
         })
       }
     })
@@ -74,180 +126,208 @@ class StoreRegistrationScreen extends Component {
 
   render () {
     return (
-      <Container style={styles.container}>
-        <LinearGradient colors={['#077940', '#00A150', '#019C4E']} style={styles.linearGradient}>
-
-          <Header style={{ backgroundColor: ['#077940', '#00A150', '#019C4E'] }}>
+      <Container>
+        <GradientWrapper>
+          <Header style={styles.header}>
             <Left>
-              <Button transparent>
-                <Icon name='arrow-back' />
+              <Button transparent light onPress={this.close}>
+                <Icon name='arrow-back'
+                />
+                <Text>Back</Text>
               </Button>
             </Left>
             <Body>
-              <Text style={styles.TitleText}>Store Registration</Text>
+            <Text style={styles.titleText}>Store Registration</Text>
             </Body>
-            <Right>
-              <Button success style={styles.HedaerButton}>
-                <Text style={styles.HeaderText}>Check In</Text>
-              </Button>
-            </Right>
+            <Right/>
           </Header>
-        </LinearGradient>
-        <Content>
-          <KeyboardAvoidingView
-            enabled
-            keyboardVerticalOffset={100}
-            behavior={'position'}>
-            <Form style={styles.FormCotainer}>
+        </GradientWrapper>
+        <KeyboardAwareScrollView>
+          <Form style={styles.FormContainer}>
+            <Item floatingLabel>
+              <Label>Shop Name</Label>
+              <Input
+                onChangeText={this.onShopName}
+                value={this.state.shopName}
+              />
+            </Item>
+            <View>
               <Item floatingLabel>
-                <Label>Shop Name</Label>
-                <Input />
+                <Label>Shopkeeper Name</Label>
+                <Input
+                  onChangeText={this.onShopKeeperName}
+                  value={this.state.shopKeeperName}
+                />
               </Item>
-              <View>
-                <Item floatingLabel>
-                  <Label>* Shopkeeper Name</Label>
-                  <Input />
-                </Item>
+              <Item floatingLabel>
+                <Label>Contact Number</Label>
+                <Input
+                  keyboardType={'phone-pad'}
+                  onChangeText={this.onContact}
+                  value={this.state.contact}
+                />
+              </Item>
 
-                <Item floatingLabel>
-                  <Label>* Contact Number</Label>
-                  <Input />
-                </Item>
+              <Item floatingLabel>
+                <Label>Land Line</Label>
+                <Input
+                  onChangeText={this.onLandLine}
+                  value={this.state.landline}
+                  keyboardType={'phone-pad'}
+                />
+              </Item>
 
-                <Item floatingLabel>
-                  <Label>Landline</Label>
-                  <Input />
-                </Item>
-                <Item>
-                  <Picker
-                    style={styles.pickerStyle}
-                    mode='dropdown'
-                    placeholder='Select SubSection'
-                    iosIcon={<Icon name='ios-arrow-down-outline' />}
-                    selectedValue={this.state.selected}
-                    onValueChange={this.onValueChange.bind(this)}
-                  >
-                    <Picker.Item label='500 above' value='key1' />
-                    <Picker.Item label='250 to 499' value='key2' />
-                  </Picker>
-                </Item>
+              <Item fixedLabel>
+                <Label>Subsection</Label>
+                <Picker
+                  mode='dropdown'
+                  placeholder='Select SubSection'
+                  iosIcon={<Icon name='ios-arrow-down-outline'
+                  />}
+                  itemTextStyle={{ color: '#788ad2', fontSize: 12 }}
+                  selectedValue={this.state.subSection}
+                  onValueChange={this.onSubSectionSelected}
+                >
+                  {
+                    this.props.subSection &&
+                    this.props.subSection.map((value, index) => (
+                      <Picker.Item label={value.name} value={index} key={index}/>))
+                  }
+                </Picker>
+              </Item>
 
-                <Item floatingLabel>
-                  <Label>Address</Label>
-                  <Input />
-                </Item>
+              <Item floatingLabel>
+                <Label>Address</Label>
+                <Input
+                  onChangeText={this.onAddress}
+                  value={this.state.address}
+                />
+              </Item>
 
-                <Item floatingLabel>
-                  <Label>Street</Label>
-                  <Input />
-                </Item>
-                <Item floatingLabel>
-                  <Label>City</Label>
-                  <Input />
-                </Item>
+              <Item floatingLabel>
+                <Label>Street</Label>
+                <Input
+                  onChangeText={this.onStreet}
+                  value={this.state.street}
+                />
+              </Item>
+              <Item floatingLabel>
+                <Label>City</Label>
+                <Input
+                  onChangeText={this.onCity}
+                  value={this.state.city}
+                />
+              </Item>
 
-                <Item floatingLabel>
-                  <Label>Landmark</Label>
-                  <Input />
-                </Item>
-                <Item floatingLabel>
-                  <Label>CNIC</Label>
-                  <Input />
-                </Item>
-                <Item>
-                  <Picker
-                    mode='dropdown'
-                    style={styles.pickerStyle}
-                    placeholder='*Select Days'
-                    iosIcon={<Icon name='ios-arrow-down-outline' />}
-                    selectedValue={this.state.selected}
-                    onValueChange={this.onValueChange.bind(this)}
-                  >
-                    <Picker.Item label='Monday' value='key1' />
-                    <Picker.Item label='Tuesday' value='key2' />
-                    <Picker.Item label='Wednesday' value='key3' />
-                    <Picker.Item label='Thursday' value='key4' />
-                    <Picker.Item label='Friday' value='key5' />
-                  </Picker>
-                </Item>
-                <Item>
-                  <Picker
-                    style={styles.pickerStyle}
-                    mode='dropdown'
-                    placeholder='*Select Category'
-                    iosIcon={<Icon name='ios-arrow-down-outline' />}
-                    selectedValue={this.state.selected}
-                    onValueChange={this.onValueChange.bind(this)}
-                  >
-                    <Picker.Item label='LMT' value='key1' />
-                    <Picker.Item label='V/S' value='key2' />
-                    <Picker.Item label='Retail' value='key3' />
-                  </Picker>
-                </Item>
-                <Item>
-                  <Picker
-                    style={styles.pickerStyle}
-                    mode='dropdown'
-                    placeholder='Select Classification'
-                    iosIcon={<Icon name='ios-arrow-down-outline' />}
-                    itemTextStyle={{ color: '#788ad2', fontSize: 12 }}
-                    selectedValue={this.state.selected}
-                    onValueChange={this.onValueChange.bind(this)}
-                  >
-                    <Picker.Item label='Select Classification' value='key0' />
-                    <Picker.Item label='500 Above' value='key1' />
-                    <Picker.Item label='250 to 499' value='key2' />
-                    <Picker.Item label='100 to249' value='key3' />
-                    <Picker.Item label='Less then 100' value='key4' />
-                  </Picker>
-                </Item>
-                <Label style={{ fontSize: 15, fontWeight: 'bold', marginBottom: 7, marginTop: 10 }}>Status</Label>
+              <Item floatingLabel>
+                <Label>Landmark</Label>
+                <Input
+                  onChangeText={this.onLandmark}
+                  value={this.state.landMark}
+                />
+              </Item>
+              <Item floatingLabel>
+                <Label>CNIC</Label>
+                <Input
+                  keyboardType={'numeric'}
+                  onChangeText={this.onCNIC}
+                  value={this.state.cnic}
+                />
+              </Item>
+              <Item fixedLabel onPress={() => this.props.navigation.navigate('DaySelection')}>
+                <Label>Days</Label>
+                <Label style={{ textAlign: 'right', marginRight: 15, marginVertical: 15 }}>
+                  {this.props.days ? this.props.days.map(value => value.substring(0, 3)).join(', ') : 'Select Days'}</Label>
+              </Item>
+              <Item fixedLabel>
+                <Label>Category</Label>
+                <Picker
+                  mode='dropdown'
+                  placeholder='Select Category'
+                  iosIcon={<Icon name='ios-arrow-down-outline'
+                  />}
+                  itemTextStyle={{ color: '#788ad2', fontSize: 12 }}
+                  selectedValue={this.state.category}
+                  onValueChange={this.onCategorySelected}
+                >
+                  {
+                    this.Categories.map((value, index) => (<Picker.Item label={value} value={index} key={index}/>))
+                  }
+                </Picker>
+              </Item>
+              <Item fixedLabel>
+                <Label>Classification</Label>
+                <Picker
+                  mode='dropdown'
+                  placeholder='Select Classification'
+                  iosIcon={<Icon name='ios-arrow-down-outline'
+                  />}
+                  itemTextStyle={{ color: '#788ad2', fontSize: 12 }}
+                  selectedValue={this.state.classification}
+                  onValueChange={this.onClassificationSelected}
+                >
+                  {
+                    this.Classification.map((value, index) => <Picker.Item label={value} value={index} key={index}/>)
+                  }
+                </Picker>
+              </Item>
+              <Item fixedLabel>
+                <Label style={{ marginVertical: 15 }}>Status</Label>
                 <CircleCheckBox
-                  checked
-                  onToggle={(checked) => console.log('My state is: ', checked)}
+                  checked={this.state.status}
+                  onToggle={(checked) => this.setState({ status: true })}
                   labelPosition={LABEL_POSITION.RIGHT}
                   outerColor='rgb(35, 92, 114)'
                   label='Active'
                   style={{ marginBottom: 7, width: 10, height: 10 }}
                 />
                 <CircleCheckBox
-                  checked={false}
-                  onToggle={(checked) => console.log('My state is: ', checked)}
+                  checked={!this.state.status}
+                  onToggle={(checked) => this.setState({ status: false })}
                   labelPosition={LABEL_POSITION.RIGHT}
                   label='Inactive'
                   outerColor='rgb(35, 92, 114)'
                 />
-                <Item style={{ marginTop: 12 }}>
-                  <Button iconLeft style={{ backgroundColor: 'rgb(216,216,216)', paddingRight: 12 }}
-                    onPress={this.selectPhotoTapped.bind(this)}>
-                    <Icon name='md-attach' style={{ rotation: 230, backgroundColor: 'rgb(216,216,216)' }} />
-                  </Button>
-                  <Label style={{ color: 'rgb(242, 242, 242)', fontSize: 12 }}>*Add Photo</Label>
-                </Item>
-
-                <Button full success style={{
-                  backgroundColor: 'rgb(52, 191, 162)',
-                  marginTop: 8,
-                  marginBottom: 8,
-                  borderRadius: 8
-                }}>
-                  <Text style={{ color: 'white' }}>Add Store</Text>
+              </Item>
+              <Item>
+                <Button
+                  style={{ backgroundColor: 'rgb(216,216,216)', margin: 12, borderRadius: 8 }}
+                  onPress={this.selectPhotoTapped.bind(this)}>
+                  <Icon name='md-attach'
+                  />
                 </Button>
-              </View>
-            </Form>
-          </KeyboardAvoidingView>
-        </Content>
+                <Label>{this.state.image ? this.state.image.fileName : 'Add Photo'}</Label>
+              </Item>
+              <Button
+                full
+                success
+                style={{
+                  margin: 15,
+                  borderRadius: 8
+                }}
+                onPress={() => this.props.navigation.navigate('DaySelection')}
+              >
+                <Text style={{ color: 'white' }}>Add Store</Text>
+              </Button>
+            </View>
+          </Form>
+        </KeyboardAwareScrollView>
       </Container>
     )
   }
 }
 
 const mapStateToProps = (state) => {
-  return {}
+  return {
+    subSection: state.createStore && state.createStore.subSection,
+    days: state.createStore && state.createStore.days
+  }
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return {}
+  return {
+    resetDays: () => dispatch(CreateStoreActions.resetDays())
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(StoreRegistrationScreen)

@@ -10,7 +10,8 @@ export default StyleSheet.create({
     alignSelf: 'flex-end'
   },
   pickerStyle: {
+    flex: 1,
     alignSelf: 'stretch'
   },
-  FormCotainer: { flex: 1, padding: 20, backgroundColor: 'white' }
+  FormContainer: { flex: 1, backgroundColor: 'white' }
 })
