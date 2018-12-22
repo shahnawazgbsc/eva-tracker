@@ -9,6 +9,10 @@ const { Types, Creators } = createActions({
   subSectionSuccess: ['payload'],
   selectDays: ['payload'],
   selectItems: ['payload'],
+  selectProductsList: ['payload'],
+  selectShopName: null,
+  selectShopAddress: null,
+  selectShopNumber: null,
   resetDays: null,
   createStoreFailure: null
 })
@@ -25,7 +29,11 @@ export const INITIAL_STATE = Immutable({
   fetching: null,
   payload: null,
   error: null,
-  items:null
+  items:null,
+  productsList:null,
+  shopName:null,
+  shopAddress:null,
+  shopNumber:null
 })
 
 /* ------------- Reducers ------------- */
@@ -48,6 +56,14 @@ export const resetDays = (state) => state.merge({ days: null })
 
 export const selectItems = (state, { payload }) => state.merge({ items: payload })
 
+export const selectProductsList = (state, { payload }) => state.merge({ productsList: payload })
+
+export const selectShopAddress = (state, { payload }) => state.merge({ shopAddress: payload })
+
+export const selectShopName = (state, { payload }) => state.merge({ shopName: payload })
+
+export const selectShopNumber = (state, { payload }) => state.merge({ shopNumber: payload })
+
 // Something went wrong somewhere.
 export const failure = state => state.merge({ fetching: false, error: true, payload: null })
 
@@ -60,5 +76,9 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.SUB_SECTION_SUCCESS]: subSectionSuccess,
   [Types.RESET_DAYS]: resetDays,
   [Types.SELECT_DAYS]: selectDays,
-  [Types.SELECT_ITEMS]: selectItems
+  [Types.SELECT_ITEMS]: selectItems,
+  [Types.SELECT_PRODUCTS_LIST]: selectProductsList,
+  [Types.SELECT_SHOP_ADDRESS]: selectShopAddress,
+  [Types.SELECT_SHOP_NAME]: selectShopName,
+  [Types.SELECT_SHOP_NUMBER]: selectShopNumber
 })
