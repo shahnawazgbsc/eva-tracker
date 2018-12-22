@@ -25,8 +25,7 @@ export default class Header extends React.Component {
     this.state = {
       style:{},
       hideBack:false,
-      screen:props.screenName,
-      headerText:props.header
+      screen:props.screenName
     }
   }
   componentWillMount(){
@@ -44,11 +43,11 @@ export default class Header extends React.Component {
 
     </Left>
     <Body>
-    <Text>{this.state.headerText}</Text>
+    <Text>{this.renderHeaderText()}</Text>
     </Body>
     <Right>
-      <Button transparent onPress={this.onPressHandlers()}>
-      {this.renderRightIcon()}
+      <Button transparent onPress={this.props.pressHandler}>
+      {this.renderRightIcon}
       </Button>
     </Right>
   </NBHeader>
@@ -72,11 +71,29 @@ export default class Header extends React.Component {
         return (<Icon style={styles.icon} name='settings'/>)
       case 'market':
         return(
-          <Icon style={styles.icon} name='tune' type="MaterialIcons"/>)
-      case 'market survey':
+          <Icon style={styles.icon} name='tune' type='MaterialIcons'/>)
+      case 'add order':
+        return(
+          <Icon style={styles.icon} name='tune' type='MaterialIcons'/>)
+      case 'booking order':
         return(
           <Icon style={styles.icon} name='add'/>)
     }
+  }
+  renderHeaderText() {
+    switch(this.state.screen) {
+      case 'main screen':
+        return "Main Screen"
+      case 'market survey':
+        return "Market Survey"
+      case 'market':
+        return "Market"
+      case 'add order':
+          return 'Add To Cart'
+      case 'booking order':
+          return 'Booking / Sales Order'
+    }
+
   }
   onPressHandlers() {
     switch(this.state.screen) {
