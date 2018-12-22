@@ -12,6 +12,7 @@ export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
     console.log(state$)
     const userId = state$.value.login.payload.user.userid
     const companyId = state$.value.login.payload.user.companyId
+    const location = state$.value.gps.data
 
     return api.uploadImage(action.data.image.uri, userId)
       .pipe(
@@ -19,6 +20,8 @@ export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
           if (response.ok) {
             action.data = {
               ...action.data,
+              latitude: location.latitude,
+              longitude: location.longitude,
               image: null,
               userId,
               companyId,
@@ -33,12 +36,12 @@ export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
   }),
   mergeMap(action => (action.data.imageURL ? api.createStore(action.data) : of(action))
     .pipe(
-      map(response => {
+      mergeMap(response => {
         if (response.ok) {
           Alert.alert('Success', 'Store created successfully')
-          return CreateStoreActions.createStoreSuccess(response.data)
+          return of(CreateStoreActions.createStoreSuccess(response.data), StoresRedux.storesRequest())
         } else {
-          return CreateStoreActions.createStoreFailure(response)
+          return of(CreateStoreActions.createStoreFailure(response))
         }
       })
     ))
@@ -46,13 +49,16 @@ export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
 
 export const storeById = (action$, state$, { api }) => action$.pipe(
   ofType(StoresTypes.STORES_REQUEST),
-  mergeMap(action => api.storesByUserId(action.data).pipe(
-    map(response => {
-      if (response.ok) {
-        return StoresRedux.success(response.data)
-      } else {
-        return StoresRedux.failure(response)
-      }
-    })
-  ))
+  mergeMap(action => {
+    const userId = state$.value.login.payload.user.userid
+    return api.storesByUserId(userId).pipe(
+      map(response => {
+        if (response.ok) {
+          return StoresRedux.storesSuccess(response.data)
+        } else {
+          return StoresRedux.storesFailure(response)
+        }
+      })
+    )
+  })
 )

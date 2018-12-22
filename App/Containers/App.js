@@ -8,7 +8,7 @@ import createStore from '../Redux'
 import LoaderScreen from './LoaderScreen'
 
 // create our store
-const { store, api, persistor } = createStore()
+const { store, api } = createStore()
 
 /**
  * Provides an entry point into our application.  Both index.ios.js and index.android.js
@@ -21,11 +21,11 @@ const { store, api, persistor } = createStore()
  */
 class App extends Component {
   componentDidMount (): void {
-    persistor.purge()
+    // persistor.purge()
   }
 
   componentWillUnmount (): void {
-    persistor.flush()
+    // persistor.flush()
   }
 
   render () {

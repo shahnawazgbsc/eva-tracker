@@ -42,12 +42,12 @@ export default (rootReducer, api) => {
     ),
     compose(...enhancers)
   )
-  const persistor = persistStore(store)
+  // const persistor = persistStore(store)
 
   // kick off root saga
   epicMiddleware.run(rootEpics)
 
   return {
-    store, persistor
+    store
   }
 }

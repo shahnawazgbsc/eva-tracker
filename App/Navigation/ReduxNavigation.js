@@ -1,7 +1,5 @@
 import React from 'react'
 import { BackHandler, Platform } from 'react-native'
-import { addNavigationHelpers } from 'react-navigation'
-import { createReduxBoundAddListener } from 'react-navigation-redux-helpers'
 import { connect } from 'react-redux'
 import AppNavigation from './AppNavigation'
 import LoginNavigation from './LoginNavigation'

@@ -12,6 +12,17 @@ const create = (baseURL = AppConfig.baseUrl) => {
   //
   // Create and configure an apisauce-based api object.
   //
+
+  const googleApi = apisauce.create({
+    baseURL: 'https://maps.googleapis.com/maps/api/directions/',
+    headers: {
+      'Cache-Control': 'no-cache',
+      'Content-Type': 'application/json'
+    },
+    // 20 second timeout...
+    timeout: 20000
+  })
+
   api = apisauce.create({
     // base URL is read from the "constructor"
     baseURL,
@@ -20,8 +31,8 @@ const create = (baseURL = AppConfig.baseUrl) => {
       'Cache-Control': 'no-cache',
       'Content-Type': 'application/json'
     },
-    // 10 second timeout...
-    timeout: 10000
+    // 20 second timeout...
+    timeout: 20000
   })
 
   // ------
@@ -54,6 +65,14 @@ const create = (baseURL = AppConfig.baseUrl) => {
     }
     return from(api.post(`api/store/uploadfiles/${id}`, form, { headers }))
   }
+
+  const direction = (current, location) => from(googleApi.get(`json?origin=${current.latitude},${current.longitude}&destination=${location.latitude},${location.longitude}&key=${AppConfig.GOOGLE_API}`))
+
+  const getBrands = (id) => from(api.get(`api/setup/GetBrandsWithInventoryItems/${id}`))
+  const addItems = (data) => from(api.post('api/storevisit/addmultipleorders', data))
+  const addInventories = (data) => from(api.post('api/storevisit/addmultipleinventorytakings', data))
+  const checkIn = (data) => from(api.post('api/storevisit/addstorevisit', data))
+  const checkOut = (data) => from(api.post('api/storevisit/updatestorevisit', data))
   const createStore = (data) => from(api.post('api/store/createstore', data))
   const setHeaders = (token) => api.setHeader('api_key', token)
 
@@ -72,6 +91,12 @@ const create = (baseURL = AppConfig.baseUrl) => {
   return {
     // a list of the API functions from step 2
     login,
+    direction,
+    checkIn,
+    checkOut,
+    getBrands,
+    addItems,
+    addInventories,
     storesByUserId,
     subsectionsByUser,
     uploadImage,

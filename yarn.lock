@@ -1004,6 +1004,10 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
+"@mapbox/polyline@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@mapbox/polyline/-/polyline-1.0.0.tgz#b6f1c3cf61f8dddcf9ac6dce0b2e50e5f4e965bc"
+
 "@react-navigation/core@3.0.2":
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.0.2.tgz#8631801533a27d034a3b8421dfd0510a9f27dcf3"
@@ -3639,10 +3643,6 @@ husky@^0.14.3:
     normalize-path "^1.0.0"
     strip-indent "^2.0.0"
 
-i18n-js@3.0.11:
-  version "3.0.11"
-  resolved "https://registry.yarnpkg.com/i18n-js/-/i18n-js-3.0.11.tgz#f9e96bdb641c5b9d6be12759d7c422089987ef02"
-
 iconv-lite@0.4.24, iconv-lite@^0.4.17, iconv-lite@^0.4.4, iconv-lite@~0.4.13:
   version "0.4.24"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.24.tgz#2022b4b25fbddc21d2f524974a474aafe733908b"
@@ -5870,10 +5870,6 @@ react-native-circle-checkbox@^0.1.6:
   dependencies:
     prop-types latest
 
-react-native-config@^0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/react-native-config/-/react-native-config-0.10.0.tgz#7ecabfcdc5f8fe34ba42b56b043626eb72d232fe"
-
 react-native-dismiss-keyboard@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-native-dismiss-keyboard/-/react-native-dismiss-keyboard-1.0.0.tgz#32886242b3f2317e121f3aeb9b0a585e2b879b49"
@@ -5910,12 +5906,6 @@ react-native-gesture-handler@^1.0.0, react-native-gesture-handler@^1.0.12:
     hoist-non-react-statics "^2.3.1"
     invariant "^2.2.2"
     prop-types "^15.5.10"
-
-react-native-i18n@^2.0.15:
-  version "2.0.15"
-  resolved "https://registry.yarnpkg.com/react-native-i18n/-/react-native-i18n-2.0.15.tgz#09b5a9836116fa7dbd0054c46e2d1014c1ef3c65"
-  dependencies:
-    i18n-js "3.0.11"
 
 react-native-image-picker@^0.27.2:
   version "0.27.2"

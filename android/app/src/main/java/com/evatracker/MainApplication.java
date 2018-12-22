@@ -3,14 +3,11 @@ package com.evatracker;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.oblador.vectoricons.VectorIconsPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.imagepicker.ImagePickerPackage;
-import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
-import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -31,14 +28,11 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new VectorIconsPackage(),
             new MapsPackage(),
             new LinearGradientPackage(),
             new ImagePickerPackage(),
-            new RNI18nPackage(),
-            new ReactNativeConfigPackage(),
-            new RNGestureHandlerPackage(),
-            new ReactNativeConfigPackage(),
-            new VectorIconsPackage()
+            new RNGestureHandlerPackage()
       );
     }
 
