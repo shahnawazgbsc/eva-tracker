@@ -1,87 +1,112 @@
-import * as React from 'react'
-import styles from './HeaderStyle'
-import { Body, Button, Header as NBHeader, Icon, Left, Right, Text } from 'native-base'
-import GradientWrapper from '../GradientWrapper'
+import * as React from "react";
+import styles from "./HeaderStyle";
+import {Body, Button, Header as NBHeader, Icon, Left, Right, Text} from "native-base";
+import {Actions} from "react-native-router-flux";
+
+const back = () => {
+  Actions.pop();
+};
+const setting = () => {
+
+};
+const filters = () => {
+
+}
+const add = () => {
+
+}
+const menu = () => {
+  Actions.drawerOpen();
+};
 
 export default class Header extends React.Component {
-  constructor (props) {
-    super(props)
+  constructor(props) {
+    super(props);
     this.state = {
-      hideBack: false,
-      screen: props.screenName,
-      headerText: props.header
+      style:{},
+      hideBack:false,
+      screen:props.screenName,
+      pressHandler:props.pressHandler
     }
   }
-
-  setting = () => {
-
-  }
-  filters = () => {
+  componentWillMount(){
 
   }
-  add = () => {
+  render(){
+    return(
+      <NBHeader style={[styles.menu]}>
+    <Left>
+      {
+        <Button transparent onPress={menu}>
+          {this.renderLeftIcon()}
+        </Button>
+      }
 
+    </Left>
+    <Body>
+    <Text>{this.renderHeaderText()}</Text>
+    </Body>
+    <Right>
+      <Button transparent onPress={this.state.pressHandler}>
+      {this.renderRightIcon}
+      </Button>
+    </Right>
+  </NBHeader>
+    );
   }
-
-  render () {
-    return (
-      <GradientWrapper>
-        <NBHeader style={styles.header}>
-          <Left>
-            {
-              <Button transparent light onPress={this.props.back}>
-                {this.renderLeftIcon()}
-              </Button>
-            }
-
-          </Left>
-          <Body>
-          <Text style={styles.titleText}>{this.state.headerText}</Text>
-          </Body>
-          <Right>
-            <Button transparent light onPress={this.onPressHandlers()}>
-              {this.renderRightIcon()}
-            </Button>
-          </Right>
-        </NBHeader>
-      </GradientWrapper>
-    )
-  }
-
-  renderLeftIcon () {
-    switch (this.state.screen) {
+  renderLeftIcon(){
+    switch(this.state.screen) {
       case 'main screen':
         return (<Icon style={styles.icon} name='menu'/>)
       case 'market survey':
-        return (
+        return(
           <Icon style={styles.icon} name='menu'/>)
       case 'market':
-        return (
+        return(
+          <Icon style={styles.icon} name='menu'/>)
+      case 'inventory':
+        return(
+          <Icon style={styles.icon} name='menu'/>)
+      case 'shop profile':
+        return(
           <Icon style={styles.icon} name='menu'/>)
     }
   }
-
-  renderRightIcon () {
-    switch (this.state.screen) {
+  renderRightIcon() {
+    switch(this.state.screen) {
       case 'main screen':
         return (<Icon style={styles.icon} name='settings'/>)
       case 'market':
-        return (
-          <Icon style={styles.icon} name='tune' type="MaterialIcons"/>)
-      case 'market survey':
-        return (
+        return(
+          <Icon style={styles.icon} name='tune' type='MaterialIcons'/>)
+      case 'add order':
+        return(
+          <Icon style={styles.icon} name='tune' type='MaterialIcons'/>)
+      case 'booking order':
+        return(
           <Icon style={styles.icon} name='add'/>)
+      case 'shop profile':
+        return(
+          <Icon style={styles.icon} name='tune' type='MaterialIcons'/>)
     }
   }
-
-  onPressHandlers () {
-    switch (this.state.screen) {
+  renderHeaderText() {
+    switch(this.state.screen) {
       case 'main screen':
-        return this.setting
+        return "Main Screen"
       case 'market survey':
-        return this.add
+        return "Market Survey"
       case 'market':
-        return this.filters
+        return "Market"
+      case 'add order':
+          return 'Add To Cart'
+      case 'booking order':
+          return 'Booking / Sales Order'
+      case 'inventory':
+          return 'Inventory Taking'
+      case 'shop profile':
+          return "Shop Profile"
     }
+
   }
 }
