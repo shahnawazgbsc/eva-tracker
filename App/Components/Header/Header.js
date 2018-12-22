@@ -25,7 +25,8 @@ export default class Header extends React.Component {
     this.state = {
       style:{},
       hideBack:false,
-      screen:props.screenName
+      screen:props.screenName,
+      pressHandler:props.pressHandler
     }
   }
   componentWillMount(){
@@ -46,7 +47,7 @@ export default class Header extends React.Component {
     <Text>{this.renderHeaderText()}</Text>
     </Body>
     <Right>
-      <Button transparent onPress={this.onPressHandlers()}>
+      <Button transparent onPress={this.state.pressHandler}>
       {this.renderRightIcon}
       </Button>
     </Right>
@@ -63,18 +64,30 @@ export default class Header extends React.Component {
       case 'market':
         return(
           <Icon style={styles.icon} name='menu'/>)
+      case 'inventory':
+        return(
+          <Icon style={styles.icon} name='menu'/>)
+      case 'shop profile':
+        return(
+          <Icon style={styles.icon} name='menu'/>)
     }
   }
   renderRightIcon() {
     switch(this.state.screen) {
       case 'main screen':
-        return (<Icon style={styles.icon} name='setting'/>)
+        return (<Icon style={styles.icon} name='settings'/>)
       case 'market':
         return(
-          <Icon style={styles.icon} name='tune'/>)
-      case 'market survey':
+          <Icon style={styles.icon} name='tune' type='MaterialIcons'/>)
+      case 'add order':
+        return(
+          <Icon style={styles.icon} name='tune' type='MaterialIcons'/>)
+      case 'booking order':
         return(
           <Icon style={styles.icon} name='add'/>)
+      case 'shop profile':
+        return(
+          <Icon style={styles.icon} name='tune' type='MaterialIcons'/>)
     }
   }
   renderHeaderText() {
@@ -85,18 +98,15 @@ export default class Header extends React.Component {
         return "Market Survey"
       case 'market':
         return "Market"
+      case 'add order':
+          return 'Add To Cart'
+      case 'booking order':
+          return 'Booking / Sales Order'
+      case 'inventory':
+          return 'Inventory Taking'
+      case 'shop profile':
+          return "Shop Profile"
     }
 
-  }
-  onPressHandlers() {
-    switch(this.state.screen) {
-      case 'main screen':
-        return setting
-      case 'market survey':
-        return add
-      case 'market':
-        return filters
-
-    }
   }
 }
