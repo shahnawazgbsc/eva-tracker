@@ -23,9 +23,9 @@ class OrderScreen extends React.Component {
       <View style={styles.listHeader}>
         <Icon style={[styles.item1, { color: Colors.success }]} name={'arrow-dropdown'}
         />
-        <Text style={[styles.item2, {fontSize: 14, fontWeight: 'bold'}]}>Product</Text>
-        <Text style={[styles.item3, {fontSize: 14, fontWeight: 'bold'}]}>Qty</Text>
-        <Text style={[styles.item4, {fontSize: 14, fontWeight: 'bold'}]}>SKU</Text>
+        <Text style={[styles.item2, { fontSize: 14, fontWeight: 'bold' }]}>Product</Text>
+        <Text style={[styles.item3, { fontSize: 14, fontWeight: 'bold' }]}>Qty</Text>
+        <Text style={[styles.item4, { fontSize: 14, fontWeight: 'bold' }]}>SKU</Text>
         <View style={styles.item5}/>
       </View>
     )
@@ -40,8 +40,8 @@ class OrderScreen extends React.Component {
           resizeMode={'contain'}
         />
         <View style={styles.item2}>
-          <Text style={{fontSize: 10}}>{item.name}</Text>
-          <Text style={{fontSize: 10}}>Product ID: {item.itemCode}</Text>
+          <Text style={{ fontSize: 10 }}>{item.name}</Text>
+          <Text style={{ fontSize: 10 }}>Product ID: {item.itemCode}</Text>
         </View>
         <View style={styles.itemRow}>
           <Row>
@@ -54,11 +54,11 @@ class OrderScreen extends React.Component {
           </Row>
           <Row>
             <Text style={styles.item3}>Trade Price</Text>
-            <Text style={styles.item4}>{item.unit}</Text>
+            <Text style={styles.item4}>{item.tradeOfferAmount}</Text>
           </Row>
           <Row>
             <Text style={styles.item3}>Gross Amount</Text>
-            <Text style={styles.item4}>{item.unit}</Text>
+            <Text style={styles.item4}>{item.retailPrice}</Text>
           </Row>
           <Row>
             <Text style={styles.item3}>TO / Ltr / Kg</Text>
@@ -85,7 +85,7 @@ class OrderScreen extends React.Component {
             <Text style={styles.item4}>{item.unit}</Text>
           </Row>
           <Row>
-            <Text style={styles.item3}>Net Amount</Text>
+            <Text style={[styles.item3, { fontWeight: 'bold' }]}>Net Amount</Text>
             <Text style={styles.item4}>{item.unit}</Text>
           </Row>
         </View>
