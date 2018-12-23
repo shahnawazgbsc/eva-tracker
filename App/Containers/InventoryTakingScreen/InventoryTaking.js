@@ -1,9 +1,26 @@
 import * as React from 'react'
-import {ScrollView,View,Text} from 'react-native'
-import Header from '../../Components/Header/Header'
-import {Button,Item,Picker,Input,Accordion,Card,List,ListItem,Left,Right,Body,CheckBox, Icon} from 'native-base'
+import {ScrollView,View} from 'react-native'
+import {Button,
+    Text,
+    Item,
+    Picker,
+    Input,
+    Accordion,
+    Card,
+    List,
+    ListItem,
+    Left,
+    Right,
+    Body,
+    CheckBox,
+    Icon,
+Container} from 'native-base'
 import {connect} from 'react-redux'
+import {Colors} from '../../Themes'
 import CreateStoreAction from '../../Redux/CreateStoreRedux'
+import GradientWrapper from '../../Components/GradientWrapper'
+import styles from '../../Containers/Styles/InventoryTakingStyle'
+import { Row, Col } from 'react-native-easy-grid';
 var checked = false;
 var selectedReason=""
 class InventoryTaking extends React.Component {
@@ -44,20 +61,41 @@ class InventoryTaking extends React.Component {
           }
     render() {
         return(
-            <View>
-                <Header screenName = "inventory"/>
+            <Container>
+            <GradientWrapper>
+              <View style={[styles.header, styles.headerContainer]}>
+                <Button
+                  style={{ position: 'absolute' }}
+                  transparent
+                  light
+                  onPress={this.menu}
+                >
+                  <Icon
+                    name={'arrow-back'}
+                  />
+                </Button>
+                <View style={{ marginVertical: 10, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                  <Icon
+                    style={styles.headerIcon}
+                    name={'graph-bar'}
+                    type={'Foundation'}
+                  />
+                  <Text style={styles.headerText}>Inventory Taking</Text>
+                </View>
+              </View>
+            </GradientWrapper>
                 <ScrollView  style={{margin:10,
                             marginBottom:"10%"}}>
                     <Card>
-                        <View style={{left:20}}>
+                        <View style={{padding:15}}>
                             <Text style={{marginBottom:5,fontSize:20,fontWeight:"bold"}}>{this.state.shopName}</Text>  
-                        </View>
-                        <View style={{flexDirection:"row"}}>
-                                <Text style={{flex:2,left:20}}>{this.state.shopAddress}</Text>  
-                            <View style={{flex:1,flexDirection:"row",right:20}}>
+                        <View style={{flexDirection:"row",alignContent:'space-between'}}>
+                                <Text>{this.state.shopAddress}</Text>  
+                            <View style={{flexDirection:"row"}}>
                                 <Icon name = 'phone' type="MaterialIcons"/>
                                 <Text>{this.state.shopNumber}</Text>  
                             </View>
+                        </View>
                         </View>
                         <View style={{margin:5}}>
                             <Accordion
@@ -71,20 +109,20 @@ class InventoryTaking extends React.Component {
                             alignItems: 'center',
                             flex:1,
                             right:10}}>
-                            <Button danger> 
+                            <Button rounded danger> 
                                 <Text>Submit</Text>
                             </Button>
                         </View>
                     </Card>
                 </ScrollView>
-            </View>
+                </Container>
         )
     }
     renderForm(content){
         return(
-                <List>
+                <List style={{backgroundColor:Colors.silver}}>
                     <ListItem>
-                        <Left>
+                        <Left style = {{marginLeft:15}}>
                             <Text>Items</Text>
                         </Left>
                         <Body>
@@ -96,31 +134,28 @@ class InventoryTaking extends React.Component {
                     </ListItem>
                     <List dataArray={content.content.productCategory}
                         renderRow={(category) =>
-                        <ListItem>
-                            <Left>
-                                <View style={{flexDirection:"row"}}>
-                                    <CheckBox checked= {checked} 
-                                    onPress={()=>{
-                                        category.checked = category.checked?false:true
-                                    }}/>
-                                    <Text style={{left:20}}>{category.productCategory}</Text>
-                                </View>
-                            </Left>
-                            <Body>
-                                <View style={{width:"50%"}}>
-                                    <Item rounded>
+                        <Col>
+                            <Row>
+                                <CheckBox style={{marginTop:5}} checked= {checked} 
+                                onPress={()=>{
+                                    category.checked = category.checked?false:true
+                                }}/>
+                                <Left style = {{marginTop:5,marginBottom:5,marginLeft:15}}>
+                                    <Text>{category}</Text>
+                                </Left>
+                                <Body style = {{marginTop:5,marginBottom:5,marginLeft:15}}>
+                                    <Item style={{width:50,height:25}} rounded>
                                         <Input/>
                                     </Item>
-                                </View>
-                            </Body>
-                            <Right>
-                                <View style={{width:"100%"}}>
-                                    <Item rounded>
+                                </Body>
+                                <Right style = {{marginRight:15,marginBottom:5,marginLeft:15}}>
+                                    <Item style={{width:45,height:25}} rounded>
                                         <Input/>
                                     </Item>
-                                </View>
-                            </Right>
-                        </ListItem>
+                                </Right>
+                            </Row>            
+                        </Col>
+            
                     }>
                     </List>
                     <ListItem>
@@ -128,38 +163,38 @@ class InventoryTaking extends React.Component {
                             <Text>Reason</Text>
                         </Left>
                         <Body>
-                            <Item picker>
-                                <Picker
-                                    mode="dropdown"
-                                    iosIcon={<Icon name="ios-arrow-down-outline" />}
-                                    style={{ width: undefined }}
-                                    placeholder="Select your SIM"
-                                    placeholderStyle={{ color: "#bfc6ea" }}
-                                    placeholderIconColor="#007aff"
-                                    selectedValue={selectedReason}
-                                    onValueChange={(value)=>{
-                                        selectedReason= value
-                                    }}
-                                >
-                                    <Picker.Item label="Distribution" value="key0" />
-                                    <Picker.Item label="Inventory" value="key1" />
-                                    <Picker.Item label="Closing" value="key2" />
-                                </Picker>
+                            <Card>
+                                <Item picker>
+                                    <Picker
+                                        mode="dropdown"
+                                        iosIcon={<Icon name="ios-arrow-down-outline" />}
+                                        style={{ width: undefined }}
+                                        placeholder="Select your SIM"
+                                        placeholderStyle={{ color: "#bfc6ea" }}
+                                        placeholderIconColor="#007aff"
+                                        selectedValue={selectedReason}
+                                        onValueChange={(value)=>{
+                                            selectedReason= value
+                                        }}
+                                    >
+                                        <Picker.Item label="Distribution" value="key0" />
+                                        <Picker.Item label="Inventory" value="key1" />
+                                        <Picker.Item label="Closing" value="key2" />
+                                    </Picker>
+                                </Item>
+                            </Card>
+                        </Body>
+                    </ListItem>
+                    <ListItem>
+                        <Left>
+                            <Text>Note</Text>
+                        </Left>
+                        <Body>
+                            <Item regular>
+                                <Input placeholder='Quantity'/>
                             </Item>
                         </Body>
                     </ListItem>
-                        <View style={{left:20,right:20}}>
-                            <ListItem>
-                                <Left>
-                                    <Text>Note</Text>
-                                </Left>
-                                <Body>
-                                    <Item regular>
-                                        <Input placeholder='Quantity'/>
-                                    </Item>
-                                </Body>
-                            </ListItem>
-                        </View>
             </List>
         )
     }
