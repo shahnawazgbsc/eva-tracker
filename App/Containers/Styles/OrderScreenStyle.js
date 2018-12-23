@@ -37,19 +37,28 @@ export default StyleSheet.create({
     flexDirection: 'row'
   },
   item1: {
-    flex: 1
+    textAlign: 'center',
+    marginRight: 10,
+    width: 50
   },
   item2: {
-    flex: 2, textAlign: 'left'
+    textAlign: 'left', flexWrap: 'wrap', width: 70
   },
   item3: {
-    flex: 1, textAlign: 'right', marginRight: 5
+    flex: 2, textAlign: 'right', marginRight: 5, flexWrap: 'wrap', fontSize: 10
   },
   item4: {
-    flex: 1, textAlign: 'left'
+    flex: 1, textAlign: 'left', flexWrap: 'wrap', fontSize: 10
   },
   item5: {
-    flex: 1
+    width: 15,
+    paddingLeft: 0,
+    paddingRight: 0,
+    marginLeft: 0,
+    marginRight: 0
+  },
+  itemRow: {
+    flex: 2
   },
   amountText: {
     color: Colors.white,

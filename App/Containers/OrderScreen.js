@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { FlatList, Image, View } from 'react-native'
-import { Button, Card, CardItem, Container, Content, Fab, Footer, Icon, Text } from 'native-base'
+import { Button, Card, Row, CardItem, Container, Content, Fab, Footer, Icon, Text } from 'native-base'
 import { connect } from 'react-redux'
 import GradientWrapper from '../Components/GradientWrapper'
 import styles from './Styles/OrderScreenStyle'
@@ -14,8 +14,8 @@ class OrderScreen extends React.Component {
     this.props.navigation.navigate('AddNewItem')
   }
 
-  menu = () => {
-
+  back = () => {
+    this.props.navigation.goBack(null)
   }
 
   header = () => {
@@ -23,9 +23,9 @@ class OrderScreen extends React.Component {
       <View style={styles.listHeader}>
         <Icon style={[styles.item1, { color: Colors.success }]} name={'arrow-dropdown'}
         />
-        <Text style={styles.item2}>Product</Text>
-        <Text style={styles.item3}>Qty</Text>
-        <Text style={styles.item4}>SKU</Text>
+        <Text style={[styles.item2, {fontSize: 14, fontWeight: 'bold'}]}>Product</Text>
+        <Text style={[styles.item3, {fontSize: 14, fontWeight: 'bold'}]}>Qty</Text>
+        <Text style={[styles.item4, {fontSize: 14, fontWeight: 'bold'}]}>SKU</Text>
         <View style={styles.item5}/>
       </View>
     )
@@ -40,17 +40,57 @@ class OrderScreen extends React.Component {
           resizeMode={'contain'}
         />
         <View style={styles.item2}>
-          <Text>{item.name}</Text>
-          <Text>Product ID: {item.itemCode}</Text>
+          <Text style={{fontSize: 10}}>{item.name}</Text>
+          <Text style={{fontSize: 10}}>Product ID: {item.itemCode}</Text>
         </View>
-        <View style={styles.item3}>
-
-        </View>
-        <View style={styles.item4}>
-
+        <View style={styles.itemRow}>
+          <Row>
+            <Text style={styles.item3}>{item.quantity}</Text>
+            <Text style={styles.item4}>{item.unit}</Text>
+          </Row>
+          <Row>
+            <Text style={styles.item3}>Ltrs / Mes</Text>
+            <Text style={styles.item4}>{item.unit}</Text>
+          </Row>
+          <Row>
+            <Text style={styles.item3}>Trade Price</Text>
+            <Text style={styles.item4}>{item.unit}</Text>
+          </Row>
+          <Row>
+            <Text style={styles.item3}>Gross Amount</Text>
+            <Text style={styles.item4}>{item.unit}</Text>
+          </Row>
+          <Row>
+            <Text style={styles.item3}>TO / Ltr / Kg</Text>
+            <Text style={styles.item4}>{item.unit}</Text>
+          </Row>
+          <Row>
+            <Text style={styles.item3}>Less TO</Text>
+            <Text style={styles.item4}>{item.unit}</Text>
+          </Row>
+          <Row>
+            <Text style={styles.item3}>RD %</Text>
+            <Text style={styles.item4}>{item.unit}</Text>
+          </Row>
+          <Row>
+            <Text style={styles.item3}>Regular Discount</Text>
+            <Text style={styles.item4}>{item.unit}</Text>
+          </Row>
+          <Row>
+            <Text style={styles.item3}>Extra Discount / Ltr / Kg</Text>
+            <Text style={styles.item4}>{item.unit}</Text>
+          </Row>
+          <Row>
+            <Text style={styles.item3}>Less Extra Discount</Text>
+            <Text style={styles.item4}>{item.unit}</Text>
+          </Row>
+          <Row>
+            <Text style={styles.item3}>Net Amount</Text>
+            <Text style={styles.item4}>{item.unit}</Text>
+          </Row>
         </View>
         <Button transparent style={styles.item5}>
-          <Icon name={'trash'} style={{ color: Colors.fire }}
+          <Icon name={'trash'} style={{ color: Colors.fire, marginLeft: 0, marginRight: 0 }}
           />
         </Button>
       </View>
@@ -59,7 +99,7 @@ class OrderScreen extends React.Component {
 
   separator = () => {
     return (
-      <View style={styles.divider}
+      <View style={[styles.divider, { marginVertical: 5 }]}
       />
     )
   }
@@ -73,7 +113,7 @@ class OrderScreen extends React.Component {
               style={{ position: 'absolute' }}
               transparent
               light
-              onPress={this.menu}
+              onPress={this.back}
             >
               <Icon
                 name={'arrow-back'}
