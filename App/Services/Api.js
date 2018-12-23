@@ -49,9 +49,10 @@ const create = (baseURL = AppConfig.baseUrl) => {
   // Since we can't hide from that, we embrace it by getting out of the
   // way at this level.
   //
-  const login = (params) => from(api.post('api/auth/login', params))
-  const storesByUserId = (id) => from(api.get(`api/store/getalluserstores/${id}`))
-  const subsectionsByUser = (id) => from(api.get(`api/territory/GetSubsectionsByUser/${id}`))
+  const login = (params) => from(api.post('etracker/api/auth/login', params))
+  const storesByUserId = (id) => from(api.get(`etracker/api/store/getalluserstores/${id}`))
+  const subsectionsByUser = (id) => from(api.get(`etracker/api/territory/GetSubsectionsByUser/${id}`))
+
   const uploadImage = (path, id) => {
     const form = new FormData()
     form.append('file', {
@@ -63,17 +64,17 @@ const create = (baseURL = AppConfig.baseUrl) => {
       ...api.headers,
       'Content-Type': 'multipart/form-data'
     }
-    return from(api.post(`api/store/uploadfiles/${id}`, form, { headers }))
+    return from(api.post(`etracker/api/store/uploadfiles/${id}`, form, { headers }))
   }
 
   const direction = (current, location) => from(googleApi.get(`json?origin=${current.latitude},${current.longitude}&destination=${location.latitude},${location.longitude}&key=${AppConfig.GOOGLE_API}`))
 
-  const getBrands = (id) => from(api.get(`api/setup/GetBrandsWithInventoryItems/${id}`))
-  const addItems = (data) => from(api.post('api/storevisit/addmultipleorders', data))
-  const addInventories = (data) => from(api.post('api/storevisit/addmultipleinventorytakings', data))
-  const checkIn = (data) => from(api.post('api/storevisit/addstorevisit', data))
-  const checkOut = (data) => from(api.post('api/storevisit/updatestorevisit', data))
-  const createStore = (data) => from(api.post('api/store/createstore', data))
+  const getBrands = (id) => from(api.get(`inventory/api/setup/GetBrandsWithInventoryItems/${id}`))
+  const addItems = (data) => from(api.post('etracker/api/storevisit/addmultipleorders', data))
+  const addInventories = (data) => from(api.post('etracker/api/storevisit/addmultipleinventorytakings', data))
+  const checkIn = (data) => from(api.post('etracker/api/storevisit/addstorevisit', data))
+  const checkOut = (data) => from(api.post('etracker/api/storevisit/updatestorevisit', data))
+  const createStore = (data) => from(api.post('etracker/api/store/createstore', data))
   const setHeaders = (token) => api.setHeader('api_key', token)
 
   // ------

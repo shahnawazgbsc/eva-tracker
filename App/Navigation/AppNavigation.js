@@ -1,13 +1,14 @@
 import MainScreen from '../Containers/MainScreen/MainScreen'
 import { createAppContainer, createDrawerNavigator, createStackNavigator } from 'react-navigation'
-import OrderTaking from '../Containers/OrderTaking'
-import Inventory from '../Containers/Inventory'
-import ShopDetail from '../Containers/ShopDetail'
 import MarketList from '../Containers/MarketList'
 import DaySelection from '../Containers/DaySelection'
 import StoreRegistrationScreen from '../Containers/StoreRegistrationScreen'
 
 import styles from './Styles/NavigationStyles'
+import ShopProfile from '../Containers/Market/ShopProfile'
+import AddNewItem from '../Containers/AddNewItem'
+import OrderScreen from '../Containers/OrderScreen'
+import InventoryTaking from '../Containers/InventoryTakingScreen/InventoryTaking'
 
 const daySelection = createStackNavigator({
   Root: { screen: DaySelection }
@@ -26,7 +27,10 @@ const storeRegistration = createStackNavigator({
 })
 const MarketStack = createStackNavigator({
   'MarketMain': { screen: MarketList },
-  'ShopDetail': { screen: ShopDetail }
+  'ShopDetail': { screen: ShopProfile },
+  'OrderTaking': {screen: OrderScreen},
+  'Inventory': {screen: InventoryTaking},
+  'AddNewItem': { screen: AddNewItem }
 }, {
   headerMode: 'none',
   initialRouteName: 'MarketMain',

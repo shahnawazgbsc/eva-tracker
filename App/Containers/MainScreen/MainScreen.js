@@ -1,12 +1,13 @@
 import React from 'react'
 import { Alert } from 'react-native'
 import { connect } from 'react-redux'
-import { Button, Container, Footer, Text } from 'native-base'
+import { Button, Title, Right, Body, Left, Icon, Container, Footer, Text, Header } from 'native-base'
 import MapView from 'react-native-maps'
-import Header from '../../Components/Header/Header'
 import { Colors, Images } from '../../Themes'
 import StoresRedux from '../../Redux/StoresRedux'
 import GpsLocationRedux from '../../Redux/GpsLocationRedux'
+import GradientWrapper from '../../Components/GradientWrapper'
+import styles from './MainScreenStyle'
 
 class MainScreen extends React.Component {
   constructor (props) {
@@ -18,11 +19,28 @@ class MainScreen extends React.Component {
     this.props.request()
   }
 
+  menu = () => {
+    this.props.navigation.openDrawer()
+  }
+
   render () {
     return (
       <Container>
-        <Header screenName='main screen' back={this.props.navigation.openDrawer.bind(this)}
-        />
+        <GradientWrapper>
+          <Header style={styles.header}>
+            <Left>
+              <Button transparent onPress={this.menu}>
+                <Icon
+                  name={'menu'}
+                />
+              </Button>
+            </Left>
+            <Body>
+            <Title style={styles.headerText}>Eva Tracker App</Title>
+            </Body>
+            <Right/>
+          </Header>
+        </GradientWrapper>
         <MapView
           style={{ flex: 1 }}
           region={{
@@ -80,7 +98,7 @@ class MainScreen extends React.Component {
             ))
           }
         </MapView>
-        <Footer style={{ padding: 20, justifyContent: 'space-around', backgroundColor: Colors.background }}>
+        <Footer style={{ alignItems: 'center', justifyContent: 'space-around', backgroundColor: Colors.background }}>
           <Button success disabled={this.props.dayStarted} onPress={() => {
             this.props.dayStart()
           }}>

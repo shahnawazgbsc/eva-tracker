@@ -109,7 +109,7 @@ export default {
   brandPrimary: platform === Colors.primary,
   brandInfo: '#62B1F6',
   brandSuccess: Colors.success,
-  brandDanger: '#d9534f',
+  brandDanger: Colors.fire,
   brandWarning: '#f0ad4e',
   brandDark: '#000',
   brandLight: '#f4f4f4',

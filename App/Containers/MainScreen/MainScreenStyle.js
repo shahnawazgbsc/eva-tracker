@@ -4,6 +4,7 @@ import {
 import { Colors, ApplicationStyles } from '../../Themes'
 
 export default StyleSheet.create({
+  ...ApplicationStyles.screen,
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -14,17 +15,6 @@ export default StyleSheet.create({
   body: {
     flex: 1,
     flexDirection: 'column',
-  },
-  header: {
-    height: 22,
-    fontFamily: 'Lato',
-    fontSize: 18,
-    fontWeight: 'bold',
-    fontStyle: 'normal',
-    marginLeft: 20,
-    marginRight: 19,
-    marginTop: 18,
-    color: '#3f403e'
   },
   description: {
     height: 102,

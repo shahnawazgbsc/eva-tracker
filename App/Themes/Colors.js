@@ -3,11 +3,12 @@ const colors = {
   black: '#000',
   white: '#fff',
   primary: '#00a451',
+  fab: '#fcc430',
   success: '#00a451',
   clear: 'rgba(0,0,0,0)',
   facebook: '#3b5998',
   transparent: 'rgba(0,0,0,0)',
-  silver: '#F7F7F7',
+  silver: '#f2f2f2',
   steel: '#CCCCCC',
   error: 'rgba(200, 0, 0, 0.8)',
   ricePaper: 'rgba(255,255,255, 0.75)',
@@ -26,7 +27,7 @@ const colors = {
   border: '#483F53',
   banner: '#5F3E63',
   text: '#E0D7E5',
-  menu:'rgb(0,135,77)'
+  menu: 'rgb(0,135,77)'
 }
 
 export default colors

@@ -156,7 +156,7 @@ class MarketList extends React.PureComponent {
               </Button>
             </Left>
             <Body>
-            <Text style={styles.titleText}>Market</Text>
+            <Title style={styles.headerText}>Market</Title>
             </Body>
             <Right/>
           </Header>
@@ -167,7 +167,7 @@ class MarketList extends React.PureComponent {
           <Button last active={this.state.segment === 2} onPress={this.segmentSearch}><Text>Search</Text></Button>
         </Segment>
         {this.state.segment === 2 &&
-        <Header searchBar rounded style={{ marginTop: 0, paddingTop: 0, height: 20, backgroundColor: 'transparent' }}>
+        <Header searchBar rounded style={{ marginTop: 0, paddingTop: 0, backgroundColor: 'transparent' }}>
           <Item>
             <Icon name='ios-search'/>
             <Input

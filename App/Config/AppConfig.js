@@ -1,6 +1,6 @@
 // Simple React Native specific changes
 
-const baseUrl = 'http://gbsc-erp.azurewebsites.net/etracker/'
+const baseUrl = 'http://gbsc-erp.azurewebsites.net/'
 
 export default {
   // font scaling override - RN default is on

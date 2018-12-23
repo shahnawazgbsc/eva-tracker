@@ -1,8 +1,23 @@
 import React, { Component } from 'react'
-import { View, Alert } from 'react-native'
+import { Alert, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
 import { connect } from 'react-redux'
-import { Body, Button, Container, Form, Header, Icon, Input, Item, Label, Left, Picker, Right, Text } from 'native-base'
+import {
+  Body,
+  Button,
+  Container,
+  Form,
+  Header,
+  Icon,
+  Input,
+  Item,
+  Label,
+  Left,
+  Picker,
+  Right,
+  Text,
+  Title
+} from 'native-base'
 import CircleCheckBox, { LABEL_POSITION } from 'react-native-circle-checkbox'
 import ImagePicker from 'react-native-image-picker'
 import CreateStoreActions from '../Redux/CreateStoreRedux'
@@ -184,7 +199,7 @@ class StoreRegistrationScreen extends Component {
               </Button>
             </Left>
             <Body>
-            <Text style={styles.titleText}>Store Registration</Text>
+            <Title style={styles.headerText}>Store Registration</Title>
             </Body>
             <Right/>
           </Header>

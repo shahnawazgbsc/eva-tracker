@@ -10,6 +10,7 @@ export const reducers = combineReducers({
   login: require('./LoginRedux').reducer,
   store: require('./StoresRedux').reducer,
   gps: require('./GpsLocationRedux').reducer,
+  brands: require('./GetBrandsRedux').reducer,
   createStore: require('./CreateStoreRedux').reducer
 })
 

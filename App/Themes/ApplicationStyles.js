@@ -7,7 +7,11 @@ import Colors from './Colors'
 
 const ApplicationStyles = {
   screen: {
-
+    divider: {
+      backgroundColor: Colors.charcoal,
+      height: 1,
+      alignSelf: 'stretch'
+    },
     header: {
       backgroundColor: 'transparent'
     },

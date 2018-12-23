@@ -1,157 +1,144 @@
 import * as React from 'react'
-import {View,TouchableOpacity,Image,Text} from 'react-native'
-import {List,ListItem,Left,Icon,Body,Thumbnail,Card,CardItem} from 'native-base'
-import Header from '../../Components/Header/Header'
-import {connect} from 'react-redux'
+import { FlatList, Image, View } from 'react-native'
+import {
+  Body,
+  Button,
+  Card,
+  CardItem,
+  Container,
+  Header,
+  Icon,
+  Left,
+  Right,
+  Subtitle,
+  Text,
+  Title
+} from 'native-base'
+import { connect } from 'react-redux'
 import CreateStoreAction from '../../Redux/CreateStoreRedux'
+import GradientWrapper from '../../Components/GradientWrapper'
+import styles from './ShopProfileStyle'
+import { Images } from '../../Themes'
 
 class ShopProfile extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state={
-            shopName:"General Store",
-            shopAddress:"Shahrah.e.Faisal, Karachi.",
-            shopNumber:"03456678432"
-            };
-            this.saveProps(props)
-        }
-        componentWillMount() {
-            
-        }
-        componentWillReceiveProps(newProps) {
-            this.saveProps(newProps)
-    
-        }
-        saveProps (props) {
-            this.setState({
-              shopName:props.shopName,
-              shopAddress:props.shopAddress,
-              shopNumber:props.shopNumber
-            })
-          }
-    render() {
-        return(
-        <View style={{flex:1,backgroundColor:'#F0EFF2'}}>
-            <Header screenName = 'shop profile'/>
-            <View style={{margin:15}}>
-                <Card>
-                    <List>
-                        <ListItem avatar>
-                        <Left>
-                            <Thumbnail source={""} />
-                        </Left>
-                        <Body>
-                            <Text style={{marginBottom:5,fontSize:20,fontWeight:"bold"}}>{this.state.shopName}</Text>
-                            <Text note>{this.state.shopAddress}</Text>
-                            <View style={{flexDirection:"row"}}>
-                                <Icon name = 'phone' type="MaterialIcons"/>
-                                <Text>{this.state.shopNumber}</Text>  
-                            </View>
-                        </Body>
-                        </ListItem>
-                    </List>
-                </Card>
-                <View>
-                    <View style={{flexDirection:"row",justifyContent:'space-between'}}>
-                        <Card>
-                            <View style={{width:'100%'}}>
-                                <CardItem header button onPress={() => alert("This is Card Header")}>
-                                    <Text>Inventory Taking</Text>
-                                </CardItem>
-                            </View>
-                        </Card>
-                        <Card>
-                            <View style={{width:'100%'}}>
-                                <CardItem header button onPress={() => alert("This is Card Header")}>
-                                    <Text>Order Taking</Text>
-                                </CardItem>
-                            </View>
-                        </Card>
-                    </View>
-                    <View style={{flexDirection:"row",justifyContent:"space-between"}}>
-                        <Card>
-                            <View style={{width:'100%'}}>
-                                <CardItem header button onPress={() => alert("This is Card Header")}>
-                                    <Text>Gift Order</Text>
-                                </CardItem>
-                            </View>
-                        </Card>
-                        <Card>
-                            <View style={{width:'100%'}}>
-                                <CardItem header button onPress={() => alert("This is Card Header")}>
-                                    <Text>Market Survey</Text>
-                                </CardItem>
-                            </View>
-                        </Card>
-                    </View>
-                    <View style={{flexDirection:"row",justifyContent:"space-between"}}>
-                        <Card>
-                            <View style={{width:'100%'}}>
-                                <CardItem header button onPress={() => alert("This is Card Header")}>
-                                    <Text>Merchandising</Text>
-                                </CardItem>
-                            </View>
-                        </Card>
-                        <Card>
-                            <View style={{width:'100%'}}>
-                                <CardItem header button onPress={() => alert("This is Card Header")}>
-                                    <Text>Shop Query</Text>
-                                </CardItem>
-                            </View>
-                        </Card>
-                    </View>
-                    <View style={{flexDirection:"row",justifyContent:"center"}}>
-                        <Card>
-                            <View style={{width:'100%'}}>
-                                <CardItem header button onPress={() => alert("This is Card Header")}>
-                                    <Text>Shop History</Text>
-                                </CardItem>
-                            </View>
-                        </Card>
-                    </View>
-                </View>
-            </View>
-        </View>
-        )
-            
+  constructor (props) {
+    super(props)
+    this.state = {
+      enabledOptions: [
+        { title: 'Inventory Taking', icon: 'clipboard', type: 'FontAwesome' },
+        { title: 'Order Taking', icon: 'add-shopping-cart', type: 'MaterialIcons' },
+        { title: 'Gift Order', icon: 'gift', type: 'FontAwesome' },
+        { title: 'Market Survey', icon: 'analytics', type: '' },
+        { title: 'Merchandising', icon: 'cube', type: '' },
+        { title: 'Shop Query', icon: 'question-circle', type: 'FontAwesome' }
+      ]
     }
-    renderItem(image,onPress,children){
-      return (
-        <TouchableOpacity style={styles.itemStyle} onPress={onPress} >
-            <View style={{flex:1}}/>
-            <Image 
-                style={{flex:2}}
-                source={image}
-                 
-                resizeMode="contain"
-                >
-            </Image>
-            <Text style={{flex:2,color:"#2F226E"}}>
-                {children}
-            </Text>
-        </TouchableOpacity>
-      );
-    }
+    this.saveProps(props)
+  }
 
+  componentWillMount () {
+
+  }
+
+  componentWillReceiveProps (newProps) {
+    this.saveProps(newProps)
+
+  }
+
+  saveProps (props) {
+    this.setState({
+      shopName: props.shopName,
+      shopAddress: props.shopAddress,
+      shopNumber: props.shopNumber
+    })
+  }
+
+  back = () => {
+    this.props.navigation.goBack(null)
+  }
+
+  render () {
+    return (
+      <Container>
+        <GradientWrapper>
+          <Header style={[styles.header, styles.headerExtra]}>
+            <Left style={{ alignSelf: 'flex-start' }}>
+              <Button transparent onPress={this.back}>
+                <Icon
+                  name={'arrow-back'}
+                />
+              </Button>
+            </Left>
+            <Body style={{ alignSelf: 'flex-start', marginTop: 10 }}>
+            <Title style={styles.headerText}>Shop Profile</Title>
+            </Body>
+            <Right/>
+          </Header>
+        </GradientWrapper>
+
+        <FlatList
+          style={styles.listStyle}
+          ListHeaderComponent={this.header}
+          numColumns={2}
+          data={this.state.enabledOptions}
+          renderItem={this.renderItem}
+        />
+
+      </Container>
+    )
+  }
+
+  header = () => {
+    const item = this.props.navigation.getParam('item')
+    return (
+      <Card style={styles.cardHeaderContainer}>
+        <CardItem cardBody style={styles.cardItem}>
+          <View style={styles.imageContainer}>
+            <Image
+              style={styles.image}
+              source={
+                item.imageUrl ? { uri: item.imageUrl } : Images.logo
+              }
+              resizeMode={'cover'}
+            />
+          </View>
+          <View>
+            <Title style={styles.darkText}>{item.shopName}</Title>
+            <Subtitle style={styles.lightDarkText}>{item.address}</Subtitle>
+            <Button transparent>
+              <Icon style={[styles.lightDarkText, styles.iconPhone]} name={'phone-square'} type={'FontAwesome'}/>
+              <Text style={[styles.lightDarkText, { marginTop: 10 }]}>{item.contactNo}</Text>
+            </Button>
+          </View>
+        </CardItem>
+      </Card>)
+  }
+
+  renderItem = ({ item }) => {
+    return (
+      <Card style={styles.cardChildContainer}>
+        <CardItem button cardBody style={styles.cardChildItem} onPress={() => {
+          switch (item.title) {
+            case 'Order Taking':
+              this.props.navigation.navigate('OrderTaking')
+              break
+            case 'Inventory Taking':
+              this.props.navigation.navigate('Inventory')
+              break
+          }
+        }}>
+          <Icon
+            style={styles.childIcon}
+            type={item.type}
+            name={item.icon}
+          />
+          <Text>{item.title}</Text>
+        </CardItem>
+      </Card>
+    )
+  }
 }
-const styles = {
-    itemStyle:{
-        alignItems: 'center',
-        flex:1,
-        marginLeft:5,
-        marginRight:5,
-        marginBottom:5,
-        shadowRadius:2,
-        shadowColor:'#000000',
-        shadowOpacity:1.0,
-        shadowOffset:{width:2,height:5},
-        elevation:2, 
-        backgroundColor: '#ffffff',
-        borderRadius: 10,
-        borderWidth: 1,
-        borderColor: '#fff'
-    }
-}
+
 const mapStateToProps = (state) => {
   return {
     shopName: state.createStore && state.createStore.shopName,
