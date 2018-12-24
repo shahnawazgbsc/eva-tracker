@@ -8,6 +8,7 @@ import StoresRedux from '../../Redux/StoresRedux'
 import GpsLocationRedux from '../../Redux/GpsLocationRedux'
 import GradientWrapper from '../../Components/GradientWrapper'
 import styles from './MainScreenStyle'
+import LoginRedux from '../../Redux/LoginRedux'
 
 class MainScreen extends React.Component {
   constructor (props) {
@@ -38,7 +39,11 @@ class MainScreen extends React.Component {
             <Body>
             <Title style={styles.headerText}>Eva Tracker App</Title>
             </Body>
-            <Right/>
+            <Right>
+              <Button transparent onPress={this.props.logout}>
+                <Icon name={'log-out'}/>
+              </Button>
+            </Right>
           </Header>
         </GradientWrapper>
         <MapView
@@ -132,7 +137,8 @@ const mapDispatchToProps = dispatch => ({
   directions: (location) => dispatch(GpsLocationRedux.gpsDirection(location)),
   dayStart: () => dispatch(StoresRedux.dayStartRequest(new Date())),
   dayEnd: () => dispatch(StoresRedux.dayEndRequest()),
-  request: () => dispatch(StoresRedux.storesRequest())
+  request: () => dispatch(StoresRedux.storesRequest()),
+  logout: () => dispatch(LoginRedux.logout())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainScreen)

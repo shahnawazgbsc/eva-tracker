@@ -25,16 +25,14 @@ export const INITIAL_STATE = Immutable({
 /* ------------- Reducers ------------- */
 
 // request the data from an api
-export const update = (state, { data }) =>
-  state.merge({ data })
+export const update = (state, { data }) => Immutable(state).merge({ data })
 
-export const gpsDirection = (state) => state.merge({ fetching: true })
+export const gpsDirection = (state) => Immutable(state).merge({ fetching: true })
 
-export const gpsDirectionSuccess = (state, { waypoint }) => state.merge({ waypoint, fetching: false })
+export const gpsDirectionSuccess = (state, { waypoint }) => Immutable(state).merge({ waypoint, fetching: false })
 
 // Something went wrong somewhere.
-export const failure = (state, { error }) =>
-  state.merge({ error, fetching: false })
+export const failure = (state, { error }) => Immutable(state).merge({ error, fetching: false })
 
 /* ------------- Hookup Reducers To Types ------------- */
 

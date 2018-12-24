@@ -52,7 +52,6 @@ const homeNav = createStackNavigator({
 
 // Manifest of possible screens
 const PrimaryNav = createDrawerNavigator({
-  AddItemScreen: { screen: AddItemScreen },
   'Home': { screen: homeNav },
   'Store Registration': { screen: storeRegistration }
 }, {

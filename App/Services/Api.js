@@ -53,10 +53,10 @@ const create = (baseURL = AppConfig.baseUrl) => {
   const storesByUserId = (id) => from(api.get(`etracker/api/store/getalluserstores/${id}`))
   const subsectionsByUser = (id) => from(api.get(`etracker/api/territory/GetSubsectionsByUser/${id}`))
 
-  const uploadImage = (path, id) => {
+  const uploadImage = (path, name, id) => {
     const form = new FormData()
     form.append('file', {
-      name: 'uploadImage',
+      name: name,
       uri: path,
       type: 'image/jpeg'
     })

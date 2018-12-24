@@ -89,7 +89,9 @@ class OrderScreen extends React.Component {
             <Text style={styles.item4}>{item.unit}</Text>
           </Row>
         </View>
-        <Button transparent style={styles.item5}>
+        <Button transparent style={styles.item5} onPress={() => {
+          this.props.removeItem(item)
+        }}>
           <Icon name={'trash'} style={{ color: Colors.fire, marginLeft: 0, marginRight: 0 }}
           />
         </Button>
@@ -146,6 +148,7 @@ class OrderScreen extends React.Component {
                 <FlatList
                   renderItem={this.renderRow}
                   data={this.props.items}
+                  extraData={this.props.items}
                   ListHeaderComponent={this.header}
                   ItemSeparatorComponent={this.separator}
                 />
@@ -190,7 +193,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    placeOrder: (data) => dispatch(ShopActions.placeOrderRequest(data))
+    placeOrder: (data) => dispatch(ShopActions.placeOrderRequest(data)),
+    removeItem: (item) => dispatch(ShopActions.removeItem(item))
   }
 }
 

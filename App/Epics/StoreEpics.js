@@ -15,7 +15,7 @@ export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
     const companyId = state$.value.login.payload.user.companyId
     const location = state$.value.gps.data
 
-    return api.uploadImage(action.data.image.uri, userId)
+    return api.uploadImage(action.data.image.uri, action.data.image.fileName, userId)
       .pipe(
         map(response => {
           if (response.ok) {
@@ -26,7 +26,7 @@ export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
               image: null,
               userId,
               companyId,
-              imageURL: AppConfig.baseUrl + response.data.filepath
+              imageUrl: response.data.filepath
             }
             return action
           } else {
@@ -35,7 +35,7 @@ export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
         })
       )
   }),
-  mergeMap(action => (action.data.imageURL ? api.createStore(action.data) : of(action))
+  mergeMap(action => (action.data.imageUrl ? api.createStore(action.data) : of(action))
     .pipe(
       mergeMap(response => {
         if (response.ok) {

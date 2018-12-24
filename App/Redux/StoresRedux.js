@@ -25,18 +25,18 @@ export const INITIAL_STATE = Immutable({
 /* ------------- Reducers ------------- */
 
 // successful api lookup
-const request = (state = INITIAL_STATE) => state && state.merge({ fetching: true })
+const request = (state = INITIAL_STATE) => state && Immutable(state).merge({ fetching: true })
 
-const dayStart = (state, { date }) => state.merge({ date })
+const dayStart = (state, { date }) => Immutable(state).merge({ date })
 
-const dayEnd = (state) => state.merge({ date: null })
+const dayEnd = (state) => Immutable(state).merge({ date: null })
 
 export const success = (state, action) => {
   const { payload } = action
-  return state.merge({ payload, fetching: false })
+  return Immutable(state).merge({ payload, fetching: false })
 }
 
-export const failure = (state, action) => state.merge({ fetching: false, error: action.error })
+export const failure = (state, action) => Immutable(state).merge({ fetching: false, error: action.error })
 
 /* ------------- Hookup Reducers To Types ------------- */
 

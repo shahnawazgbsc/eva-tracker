@@ -9,6 +9,7 @@ const { Types, Creators } = createActions({
   checkOutRequest: ['data'],
   checkOutSuccess: null,
   addToCart: ['data'],
+  removeItem: ['item'],
   placeOrderRequest: ['data'],
   placeOrderSuccess: null,
   shopFailure: ['error']
@@ -33,13 +34,19 @@ export const INITIAL_STATE = Immutable({
 
 // request the data from an api
 export const checkIn = (state, { data }) =>
-  state.merge({ fetching: true, shop: data })
+  Immutable(state).merge({ fetching: true, shop: data })
 
-export const checkOut = (state) => state.merge({ fetching: true })
+export const checkOut = (state) => Immutable(state).merge({ fetching: true })
 
-export const addToCart = (state, { data }) => state.set('orderItems', state.orderItems.concat(data))
+export const removeItem = (state, { item }) => {
+  const items = Immutable(state.orderItems).asMutable()
+  const filtered = items.filter(value => value.inventoryItemId !== item.inventoryItemId)
+  return Immutable(state).set('orderItems', Immutable(filtered))
+}
 
-export const checkInSuccess = (state, { data }) => state.merge({
+export const addToCart = (state, { data }) => Immutable(state).set('orderItems', Immutable(state.orderItems).concat(data))
+
+export const checkInSuccess = (state, { data }) => Immutable(state).merge({
   fetching: false,
   checkInParam: data,
   orderItems: [],
@@ -47,15 +54,19 @@ export const checkInSuccess = (state, { data }) => state.merge({
   checkedIn: true
 })
 
-export const placeOrderRequest = (state) => state.merge({ fetching: true })
+export const placeOrderRequest = (state) => Immutable(state).merge({ fetching: true })
 
-export const placeOrderSuccess = (state) => state.merge({ fetching: false, orderPlaced: true, orderItems: [] })
+export const placeOrderSuccess = (state) => Immutable(state).merge({
+  fetching: false,
+  orderPlaced: true,
+  orderItems: []
+})
 
 export const checkOutSuccess = (state) => INITIAL_STATE
 
 // Something went wrong somewhere.
 export const failure = (state, { error }) =>
-  state.merge({ fetching: false, error })
+  Immutable(state).merge({ fetching: false, error })
 
 /* ------------- Hookup Reducers To Types ------------- */
 
@@ -67,5 +78,6 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.PLACE_ORDER_SUCCESS]: placeOrderSuccess,
   [Types.PLACE_ORDER_REQUEST]: placeOrderRequest,
   [Types.ADD_TO_CART]: addToCart,
-  [Types.SHOP_FAILURE]: failure
+  [Types.SHOP_FAILURE]: failure,
+  [Types.REMOVE_ITEM]: removeItem
 })

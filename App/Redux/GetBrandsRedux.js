@@ -31,17 +31,17 @@ export const GetBrandsSelectors = {
 
 // request the data from an api
 export const request = (state, { data }) =>
-  state.merge({ fetching: true, data, payload: null })
+  Immutable(state).merge({ fetching: true, data, payload: null })
 
 // successful api lookup
 export const success = (state, action) => {
   const { payload } = action
-  return state.merge({ fetching: false, error: null, payload })
+  return Immutable(state).merge({ fetching: false, error: null, payload })
 }
 
 // Something went wrong somewhere.
 export const failure = state =>
-  state.merge({ fetching: false, error: true, payload: null })
+  Immutable(state).merge({ fetching: false, error: true, payload: null })
 
 /* ------------- Hookup Reducers To Types ------------- */
 

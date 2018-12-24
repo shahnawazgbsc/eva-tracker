@@ -73,7 +73,7 @@ import com.android.build.OutputFile
  */
 
 project.ext.react = [
-    entryFile: "index.js"
+        entryFile: "index.js"
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -115,10 +115,19 @@ android {
             include "armeabi-v7a", "x86"
         }
     }
+    signingConfigs {
+        release {
+            storeFile file('/Users/syedshahnawazali/Dropbox/Eva Tracker/eva-certificate')
+            storePassword 'eva123!'
+            keyAlias 'eva'
+            keyPassword 'eva123!'
+        }
+    }
     buildTypes {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
         }
     }
     // applicationVariants are e.g. debug, release
@@ -126,7 +135,7 @@ android {
         variant.outputs.each { output ->
             // For each separate APK per architecture, set a unique version code as described here:
             // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
-            def versionCodes = ["armeabi-v7a":1, "x86":2]
+            def versionCodes = ["armeabi-v7a": 1, "x86": 2]
             def abi = output.getFilter(OutputFile.ABI)
             if (abi != null) {  // null for the universal-debug, universal-release variants
                 output.versionCodeOverride =
@@ -137,12 +146,13 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-intl')
     compile project(':react-native-vector-icons')
     compile(project(':react-native-maps')) {
-          exclude group: 'com.android.support'
-          exclude module: 'appcompat-v7'
-          exclude module: 'support-v4'
-        }
+        exclude group: 'com.android.support'
+        exclude module: 'appcompat-v7'
+        exclude module: 'support-v4'
+    }
     compile project(':react-native-linear-gradient')
     compile project(':react-native-image-picker')
     compile project(':react-native-gesture-handler')

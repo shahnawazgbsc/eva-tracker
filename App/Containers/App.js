@@ -5,10 +5,11 @@ import { Provider } from 'react-redux'
 import { Root } from 'native-base'
 import RootContainer from './RootContainer'
 import createStore from '../Redux'
+import { PersistGate } from 'redux-persist/lib/integration/react'
 import LoaderScreen from './LoaderScreen'
 
 // create our store
-const { store, api } = createStore()
+const { store, api, persistor } = createStore()
 
 /**
  * Provides an entry point into our application.  Both index.ios.js and index.android.js
@@ -31,10 +32,12 @@ class App extends Component {
   render () {
     return (
       <Provider store={store}>
-        <Root>
-          <RootContainer api={api} />
-          <LoaderScreen />
-        </Root>
+        <PersistGate loading={<LoaderScreen />} persistor={persistor}>
+          <Root>
+            <RootContainer api={api} />
+            <LoaderScreen />
+          </Root>
+        </PersistGate>
       </Provider>
     )
   }
