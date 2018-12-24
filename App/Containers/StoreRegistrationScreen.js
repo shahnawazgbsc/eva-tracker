@@ -199,7 +199,7 @@ class StoreRegistrationScreen extends Component {
               </Button>
             </Left>
             <Body>
-            <Title style={styles.headerText}>Store Registration</Title>
+            <Text style={styles.headerText}>Store Registration</Text>
             </Body>
             <Right/>
           </Header>
@@ -250,6 +250,7 @@ class StoreRegistrationScreen extends Component {
                   selectedValue={this.state.subsectionId}
                   onValueChange={this.onSubSectionSelected}
                 >
+                  <Picker.Item label={'Select SubSection'} key={'first'} value={''}/>
                   {
                     this.props.subSection &&
                     this.props.subSection.map((value, index) => (
@@ -313,6 +314,7 @@ class StoreRegistrationScreen extends Component {
                   selectedValue={this.state.category}
                   onValueChange={this.onCategorySelected}
                 >
+                  <Picker.Item label={'Select Category'} key={'first'} value={''}/>
                   {
                     this.Categories.map((value, index) => (<Picker.Item label={value} value={index} key={index}/>))
                   }
@@ -329,6 +331,7 @@ class StoreRegistrationScreen extends Component {
                   selectedValue={this.state.classification}
                   onValueChange={this.onClassificationSelected}
                 >
+                  <Picker.Item label={'Select Classification'} key={'first'} value={''}/>
                   {
                     this.Classification.map((value, index) => <Picker.Item label={value} value={index} key={index}/>)
                   }
