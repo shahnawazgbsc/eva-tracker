@@ -19,7 +19,7 @@ export const directionsEpic = (action$, state$, { api }) => action$.pipe(
           })
           return GpsActions.gpsDirectionSuccess(waypoint)
         } else {
-          return GpsActions.gpsFailure(response.data)
+          return GpsActions.gpsFailure(response)
         }
       })
     )

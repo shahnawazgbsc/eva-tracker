@@ -22,6 +22,7 @@ import {
 import styles from './Styles/MarketListStyle'
 import GradientWrapper from '../Components/GradientWrapper'
 import { Images } from '../Themes'
+import ParseImagePath from '../Lib/ParseImagePath'
 
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
 
@@ -61,7 +62,7 @@ class MarketList extends React.PureComponent {
             <Image
               style={styles.profileImg}
               source={
-                item.imageUrl ? { uri: item.imageUrl } : Images.logo
+                item.imageUrl ? { uri: ParseImagePath(item.imageUrl) } : Images.logo
               }
               resizeMode={'cover'}
             />

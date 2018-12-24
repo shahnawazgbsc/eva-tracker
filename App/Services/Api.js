@@ -72,7 +72,7 @@ const create = (baseURL = AppConfig.baseUrl) => {
   const getBrands = (id) => from(api.get(`inventory/api/setup/GetBrandsWithInventoryItems/${id}`))
   const addItems = (data) => from(api.post('etracker/api/storevisit/addmultipleorders', data))
   const addInventories = (data) => from(api.post('etracker/api/storevisit/addmultipleinventorytakings', data))
-  const checkIn = (data) => from(api.post('etracker/api/storevisit/addstorevisit', data))
+  const checkIn = (data) => from(api.post('etracker/api/StoreVisit/AddStoreVisit', data))
   const checkOut = (data) => from(api.post('etracker/api/storevisit/updatestorevisit', data))
   const createStore = (data) => from(api.post('etracker/api/store/createstore', data))
   const setHeaders = (token) => api.setHeader('api_key', token)

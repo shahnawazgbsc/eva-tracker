@@ -1,7 +1,7 @@
 import { combineEpics } from 'redux-observable'
 import LoginEpics from './LoginEpics'
 import { createStoreEpic, storeById } from './StoreEpics'
-import { addItemsEpic, checkInEpic, checkOutEpic } from './OrderTakingEpics'
+import { placeOrderEpics, checkInEpic, checkOutEpic } from './OrderTakingEpics'
 import { directionsEpic } from './MapsEpics'
 
 export default combineEpics(
@@ -10,6 +10,6 @@ export default combineEpics(
   createStoreEpic,
   checkInEpic,
   checkOutEpic,
-  addItemsEpic,
+  placeOrderEpics,
   directionsEpic
 )

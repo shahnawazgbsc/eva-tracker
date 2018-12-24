@@ -1,0 +1,239 @@
+import React from 'react'
+import { connect } from 'react-redux'
+import { Alert, FlatList, Image, View } from 'react-native'
+import { Body, Button, Card, CardItem, Container, Header, Icon, Input, Left, Right, Row, Text } from 'native-base'
+// Styles
+import styles from './Styles/AddItemScreenStyle'
+import Colors from '../Themes/Colors'
+import Images from '../Themes/Images'
+import GradientWrapper from '../Components/GradientWrapper'
+import ShopRedux from '../Redux/ShopRedux'
+import Immutable from 'seamless-immutable'
+
+// More info here: https://facebook.github.io/react-native/docs/flatlist.html
+
+class AddItemScreen extends React.PureComponent {
+  constructor (props) {
+    super(props)
+    const input = new Array(props.items.length)
+    for (let i = 0; i < input.length; i++) {
+      input[i] = '1'
+    }
+
+    this.state = {
+      selected: new Array(props.items.length),
+      quantity: input
+    }
+  }
+
+  /* ***********************************************************
+  * `renderRow` function. How each cell/row should be rendered
+  * It's our best practice to place a single component here:
+  *
+  * e.g.
+    return <MyCustomCell title={item.title} description={item.description} />
+  *************************************************************/
+  renderRow = ({ item, index }) => {
+    return (
+      <Card style={styles.row}>
+        <CardItem header style={{ paddingLeft: 0, paddingBottom: 0, paddingTop: 0, paddingRight: 0 }}>
+          <Icon style={[styles.item1, { color: Colors.success }]} name={'arrow-dropdown'}
+          />
+          <Text style={[styles.item2, { fontSize: 14, fontWeight: 'bold' }]}>Product</Text>
+          <Text style={[styles.item3, { fontSize: 14, fontWeight: 'bold' }]}>Qty</Text>
+          <Text style={[styles.item4, { fontSize: 14, fontWeight: 'bold' }]}>SKU</Text>
+          <View style={styles.item5}
+          />
+        </CardItem>
+        <CardItem cardBody style={{ alignContent: 'flex-start' }}>
+          <Image
+            style={[styles.item1, { color: Colors.success }]}
+            source={Images.logo}
+            resizeMode={'contain'}
+          />
+          <View style={styles.item2}>
+            <Text style={{ fontSize: 10 }}>{item.name}</Text>
+            <Text style={{ fontSize: 10 }}>Product ID: {item.itemCode}</Text>
+          </View>
+          <View style={styles.itemRow}>
+            <Row>
+              <View style={styles.item3}>
+                <Input
+                  style={styles.input}
+                  onChangeText={(text) => {
+                    let isNumber = !isNaN(parseInt(text))
+                    if (isNumber || text.length === 0) {
+                      let clone = JSON.parse(JSON.stringify(this.state))
+                      clone.quantity[index] = text
+                      this.setState(clone)
+                    }
+                  }}
+                  value={this.state.quantity[index]}
+                  keyboardType={'numeric'}
+                />
+              </View>
+              <Text style={styles.item4}>{item.unit}</Text>
+            </Row>
+            <Row>
+              <Text style={styles.item3}>Ltrs / Mes</Text>
+              <Text style={styles.item4}>{item.unit}</Text>
+            </Row>
+            <Row>
+              <Text style={styles.item3}>Trade Price</Text>
+              <Text style={styles.item4}>{item.tradeOfferAmount}</Text>
+            </Row>
+            <Row>
+              <Text style={styles.item3}>Gross Amount</Text>
+              <Text style={styles.item4}>{item.retailPrice}</Text>
+            </Row>
+            <Row>
+              <Text style={styles.item3}>TO / Ltr / Kg</Text>
+              <Text style={styles.item4}>{item.unit}</Text>
+            </Row>
+            <Row>
+              <Text style={styles.item3}>Less TO</Text>
+              <Text style={styles.item4}>{item.unit}</Text>
+            </Row>
+            <Row>
+              <Text style={styles.item3}>RD %</Text>
+              <Text style={styles.item4}>{item.unit}</Text>
+            </Row>
+            <Row>
+              <Text style={styles.item3}>Regular Discount</Text>
+              <Text style={styles.item4}>{item.unit}</Text>
+            </Row>
+            <Row>
+              <Text style={styles.item3}>Extra Discount / Ltr / Kg</Text>
+              <Text style={styles.item4}>{item.unit}</Text>
+            </Row>
+            <Row>
+              <Text style={styles.item3}>Less Extra Discount</Text>
+              <Text style={styles.item4}>{item.unit}</Text>
+            </Row>
+            <Row>
+              <Text style={[styles.item3, { fontWeight: 'bold' }]}>Net Amount</Text>
+              <Text style={styles.item4}>{item.unit}</Text>
+            </Row>
+          </View>
+          <Button transparent style={styles.item5} onPress={() => {
+            let clone = JSON.parse(JSON.stringify(this.state))
+            clone.selected[index] = !clone.selected[index]
+            this.setState(clone)
+          }}>
+            <Icon
+              style={{ color: Colors.fire, marginLeft: 0, marginRight: 0 }}
+              name={this.state.selected && this.state.selected[index] ? 'check-box' : 'check-box-outline-blank'}
+              type={'MaterialIcons'}
+            />
+          </Button>
+        </CardItem>
+      </Card>
+    )
+  }
+
+  /* ***********************************************************
+  * Consider the configurations we've set below.  Customize them
+  * to your liking!  Each with some friendly advice.
+  *************************************************************/
+  renderSeparator = () =>
+    <Text style={styles.label}> - ~~~~~ - </Text>
+
+  // The default function if no Key is provided is index
+  // an identifiable key is important if you plan on
+  // item reordering. Otherwise index is fine
+  keyExtractor = (item, index) => index
+
+  // extraData is for anything that is not indicated in data
+  // for instance, if you kept "favorites" in `this.state.favs`
+  // pass that in, so changes in favorites will cause a re-render
+  // and your renderItem will have access to change depending on state
+  // e.g. `extraData`={this.state.favs}
+
+  // Optimize your list if the height of each item can be calculated
+  // by supplying a constant height, there is no need to measure each
+  // item after it renders. This can save significant time for lists
+  // of a size 100+
+  // e.g. itemLayout={(data, index) => (
+  //   {length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index}
+  // )}
+
+  back = () => {
+    this.props.navigation.goBack(null)
+  }
+
+  addToCart = () => {
+    let cartItems = []
+    this.state.selected.forEach((value, index) => {
+      if (value) {
+        let item = Immutable.asMutable(this.props.items[index])
+        item.quantity = this.state.quantity[index]
+        cartItems.push(item)
+      }
+    })
+    if (cartItems.length > 0) {
+      this.props.addToCart(cartItems)
+      this.props.navigation.goBack(null)
+    } else {
+      Alert.alert(null, 'Please select items to add')
+    }
+  }
+
+  renderFooter = () => {
+    return (
+      <Button danger rounded style={{ alignSelf: 'flex-end', margin: 10 }} onPress={this.addToCart}>
+        <Icon
+          name={'add-shopping-cart'}
+          type={'MaterialIcons'}
+        />
+        <Text>Add To Cart</Text>
+      </Button>
+    )
+  }
+
+  render () {
+    return (
+      <Container>
+        <GradientWrapper>
+          <Header style={styles.header}>
+            <Left>
+              <Button transparent onPress={this.back}>
+                <Icon
+                  name={'arrow-back'}
+                />
+              </Button>
+            </Left>
+            <Body>
+            <Text style={styles.titleText}>
+              Add Items
+            </Text>
+            </Body>
+            <Right/>
+          </Header>
+        </GradientWrapper>
+        <FlatList
+          style={styles.container}
+          data={this.props.items}
+          extraData={this.state}
+          ListFooterComponent={this.renderFooter}
+          renderItem={this.renderRow}
+          keyExtractor={this.keyExtractor}
+        />
+      </Container>
+
+    )
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    items: state.brands && state.brands.payload.find(value => value.brandName === 'Eva').items
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addToCart: (items) => dispatch(ShopRedux.addToCart(items))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddItemScreen)

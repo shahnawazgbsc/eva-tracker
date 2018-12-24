@@ -32,6 +32,7 @@ export default StyleSheet.create({
   cardHeaderContainer: { backgroundColor: Colors.fab, alignSelf: 'stretch', flex: 1 },
   cardItem: { marginHorizontal: 3, backgroundColor: Colors.white, flexDirection: 'row' },
   cardChildContainer: { backgroundColor: Colors.success, alignSelf: 'flex-start', flex: 1 },
+  cardChildContainerDisabled: { backgroundColor: Colors.charcoal, alignSelf: 'flex-start', flex: 1 },
   cardChildItem: {
     marginHorizontal: 3,
     padding: 10,
@@ -51,6 +52,11 @@ export default StyleSheet.create({
     fontSize: 58,
     width: null,
     color: Colors.success
+  },
+  childIconDisabled: {
+    fontSize: 58,
+    width: null,
+    color: Colors.charcoal
   },
   image: {
     height: 80,

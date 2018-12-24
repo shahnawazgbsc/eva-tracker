@@ -1,30 +1,20 @@
 import * as React from 'react'
-import { FlatList, Image, View } from 'react-native'
-import {
-  Body,
-  Button,
-  Card,
-  CardItem,
-  Container,
-  Header,
-  Icon,
-  Left,
-  Right,
-  Subtitle,
-  Text,
-  Title
-} from 'native-base'
+import { Alert, FlatList, Image, View, BackHandler } from 'react-native'
+import { Body, Button, Card, CardItem, Container, Header, Icon, Left, Right, Subtitle, Text, Title } from 'native-base'
 import { connect } from 'react-redux'
-import CreateStoreAction from '../../Redux/CreateStoreRedux'
 import GradientWrapper from '../../Components/GradientWrapper'
 import styles from './ShopProfileStyle'
 import { Images } from '../../Themes'
+import ParseImagePath from '../../Lib/ParseImagePath'
+import ShopRedux from '../../Redux/ShopRedux'
 
 class ShopProfile extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
       enabledOptions: [
+        { title: 'Check In', icon: 'log-in', type: '' },
+        { title: 'Check Out', icon: 'log-out', type: '' },
         { title: 'Inventory Taking', icon: 'clipboard', type: 'FontAwesome' },
         { title: 'Order Taking', icon: 'add-shopping-cart', type: 'MaterialIcons' },
         { title: 'Gift Order', icon: 'gift', type: 'FontAwesome' },
@@ -33,28 +23,6 @@ class ShopProfile extends React.Component {
         { title: 'Shop Query', icon: 'question-circle', type: 'FontAwesome' }
       ]
     }
-    this.saveProps(props)
-  }
-
-  componentWillMount () {
-
-  }
-
-  componentWillReceiveProps (newProps) {
-    this.saveProps(newProps)
-
-  }
-
-  saveProps (props) {
-    this.setState({
-      shopName: props.shopName,
-      shopAddress: props.shopAddress,
-      shopNumber: props.shopNumber
-    })
-  }
-
-  back = () => {
-    this.props.navigation.goBack(null)
   }
 
   render () {
@@ -63,7 +31,7 @@ class ShopProfile extends React.Component {
         <GradientWrapper>
           <Header style={[styles.header, styles.headerExtra]}>
             <Left style={{ alignSelf: 'flex-start' }}>
-              <Button transparent onPress={this.back}>
+              <Button transparent onPress={this.handleBack}>
                 <Icon
                   name={'arrow-back'}
                 />
@@ -72,7 +40,8 @@ class ShopProfile extends React.Component {
             <Body style={{ alignSelf: 'flex-start', marginTop: 10 }}>
             <Title style={styles.headerText}>Shop Profile</Title>
             </Body>
-            <Right/>
+            <Right
+            />
           </Header>
         </GradientWrapper>
 
@@ -81,6 +50,7 @@ class ShopProfile extends React.Component {
           ListHeaderComponent={this.header}
           numColumns={2}
           data={this.state.enabledOptions}
+          extraData={this.props.checkedIn}
           renderItem={this.renderItem}
         />
 
@@ -97,7 +67,7 @@ class ShopProfile extends React.Component {
             <Image
               style={styles.image}
               source={
-                item.imageUrl ? { uri: item.imageUrl } : Images.logo
+                item.imageUrl ? { uri: ParseImagePath(item.imageUrl) } : Images.logo
               }
               resizeMode={'cover'}
             />
@@ -106,7 +76,8 @@ class ShopProfile extends React.Component {
             <Title style={styles.darkText}>{item.shopName}</Title>
             <Subtitle style={styles.lightDarkText}>{item.address}</Subtitle>
             <Button transparent>
-              <Icon style={[styles.lightDarkText, styles.iconPhone]} name={'phone-square'} type={'FontAwesome'}/>
+              <Icon style={[styles.lightDarkText, styles.iconPhone]} name={'phone-square'} type={'FontAwesome'}
+              />
               <Text style={[styles.lightDarkText, { marginTop: 10 }]}>{item.contactNo}</Text>
             </Button>
           </View>
@@ -114,21 +85,59 @@ class ShopProfile extends React.Component {
       </Card>)
   }
 
+  componentDidMount (): void {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBack)
+  }
+
+  componentWillUnmount (): void {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBack)
+  }
+
+  handleBack = () => {
+    if (!this.props.checkedIn) {
+      this.props.navigation.goBack(null)
+    }
+    return true
+  }
+
   renderItem = ({ item }) => {
+    let button = true
+    if (item.title === 'Check In') button = !this.props.checkedIn
+    else if (item.title === 'Check Out') button = this.props.checkedIn
+
     return (
-      <Card style={styles.cardChildContainer}>
-        <CardItem button cardBody style={styles.cardChildItem} onPress={() => {
+      <Card style={button ? styles.cardChildContainer : styles.cardChildContainerDisabled}>
+        <CardItem button={button} cardBody style={styles.cardChildItem} onPress={() => {
           switch (item.title) {
             case 'Order Taking':
-              this.props.navigation.navigate('OrderTaking')
+              if (this.props.checkedIn) {
+                this.props.navigation.navigate('OrderTaking')
+              } else {
+                Alert.alert(null, 'Please check in first to place order')
+              }
               break
             case 'Inventory Taking':
-              this.props.navigation.navigate('Inventory')
+              if (this.props.checkedIn) {
+                this.props.navigation.navigate('Inventory')
+              } else {
+                Alert.alert(null, 'Please check in first to place order')
+              }
+              break
+            case 'Check In':
+              this.props.checkIn(this.props.navigation.getParam('item'))
+              break
+            case 'Check Out':
+              if (this.props.orderPlaced) {
+                this.props.checkOut({ ...this.props.checkInParam, onSuccess: () => this.props.navigation.goBack(null) })
+              } else {
+                // TODO show reason for not placing order
+                Alert.alert(null, 'Order Not Placed')
+              }
               break
           }
         }}>
           <Icon
-            style={styles.childIcon}
+            style={button ? styles.childIcon : styles.childIconDisabled}
             type={item.type}
             name={item.icon}
           />
@@ -141,17 +150,16 @@ class ShopProfile extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    shopName: state.createStore && state.createStore.shopName,
-    shopAddress: state.createStore && state.createStore.shopAddress,
-    shopNumber: state.createStore && state.createStore.shopNumber
+    checkedIn: state.shop && state.shop.checkedIn,
+    checkInParam: state.shop && state.shop.checkInParam,
+    orderPlaced: state.shop && state.shop.orderPlaced
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    selectShopName: (payload) => dispatch(CreateStoreAction.selectShopName(payload)),
-    selectShopAddress: (payload) => dispatch(CreateStoreAction.selectShopAddress(payload)),
-    selectShopNumber: (payload) => dispatch(CreateStoreAction.selectShopNumber(payload)),
+    checkIn: (data) => dispatch(ShopRedux.checkInRequest(data)),
+    checkOut: (data) => dispatch(ShopRedux.checkOutRequest(data))
   }
 }
 

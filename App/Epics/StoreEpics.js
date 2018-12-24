@@ -26,7 +26,7 @@ export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
               image: null,
               userId,
               companyId,
-              imageURL: AppConfig.baseUrl + response.data.filepath.split('\\').join('/')
+              imageURL: AppConfig.baseUrl + response.data.filepath
             }
             return action
           } else {

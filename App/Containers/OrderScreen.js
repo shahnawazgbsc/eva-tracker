@@ -1,16 +1,16 @@
 import * as React from 'react'
-import { FlatList, Image, View } from 'react-native'
-import { Button, Card, Row, CardItem, Container, Content, Fab, Footer, Icon, Text } from 'native-base'
+import { Alert, FlatList, Image, View } from 'react-native'
+import { Button, Card, CardItem, Container, Content, Fab, Footer, Icon, Row, Text } from 'native-base'
 import { connect } from 'react-redux'
 import GradientWrapper from '../Components/GradientWrapper'
 import styles from './Styles/OrderScreenStyle'
 import ConvertToCurrency from '../Transforms/ConvertToCurrency'
 import { Colors, Images } from '../Themes'
+import ShopActions from '../Redux/ShopRedux'
 
 class OrderScreen extends React.Component {
 
   addOrder = () => {
-    console.log('Add Item')
     this.props.navigation.navigate('AddNewItem')
   }
 
@@ -141,7 +141,6 @@ class OrderScreen extends React.Component {
         </GradientWrapper>
         <Content style={styles.containerContent}>
           {
-            !!this.props.items &&
             <Card>
               <CardItem>
                 <FlatList
@@ -157,7 +156,7 @@ class OrderScreen extends React.Component {
         <GradientWrapper>
           <Footer style={[styles.header, styles.footer]}>
             <Text style={styles.amountText}>TOTAL PAYMENT = {ConvertToCurrency(0)}</Text>
-            <Button danger>
+            <Button danger onPress={this.checkout}>
               <Icon
                 name={'arrow-dropleft'}
               />
@@ -168,16 +167,31 @@ class OrderScreen extends React.Component {
       </Container>
     )
   }
+
+  checkout = () => {
+    if ((this.props.items && this.props.items.length > 0)) {
+      this.props.placeOrder({
+        items: this.props.items,
+        onSuccess: () => {
+          Alert.alert('Success', 'Your order for this shop has been placed')
+        }
+      })
+    } else {
+      Alert.alert('Error', 'Please add items to checkout')
+    }
+  }
 }
 
 const mapStateToProps = (state) => {
   return {
-    items: state.brands && state.brands.payload[2].items
+    items: state.shop && state.shop.orderItems
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return {}
+  return {
+    placeOrder: (data) => dispatch(ShopActions.placeOrderRequest(data))
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrderScreen)
