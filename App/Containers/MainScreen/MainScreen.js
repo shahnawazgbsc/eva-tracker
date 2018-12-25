@@ -10,22 +10,46 @@ import GradientWrapper from '../../Components/GradientWrapper'
 import styles from './MainScreenStyle'
 import LoginRedux from '../../Redux/LoginRedux'
 
+import firebase from '../../firebaseconfig';
+
+
 class MainScreen extends React.Component {
   constructor (props) {
     super(props)
+    this.ref = firebase.firestore().collection('tbl_users');
     this.state = {}
   }
 
   componentDidMount () {
     this.props.request()
   }
+  componentWillUpdate(){
+    this.senddatatofirebase
+  }
+
+
 
   menu = () => {
     if (this.props.dayStarted) {
       this.props.navigation.openDrawer()
     }
   }
+  senddatatofirebase = () => {
+    console.warn('sending data1')
+    firebase.firestore().collection('tbl_users').doc('222').collection('user_history').add({
+      lang: this.props.longitude,
+      latitude:this.props.latitude,
+      timestamp:new Date()
 
+    }).then((docRef) => {
+      console.warn('done1 ')
+    })
+      .catch((error) => {
+        console.warn("Error adding document: ", error);
+
+      });
+    console.warn('req end now')
+  }
   render () {
     return (
       <Container>
