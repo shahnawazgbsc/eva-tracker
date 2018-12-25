@@ -21,7 +21,9 @@ class MainScreen extends React.Component {
   }
 
   menu = () => {
-    this.props.navigation.openDrawer()
+    if (this.props.dayStarted) {
+      this.props.navigation.openDrawer()
+    }
   }
 
   render () {
@@ -81,32 +83,32 @@ class MainScreen extends React.Component {
                   latitude: parseFloat(value.latitude),
                   longitude: parseFloat(value.longitude)
                 }}
+                onPress={() => {
+                  if (this.props.dayStarted) {
+                    Alert.alert(
+                      'Select option',
+                      `Please select an action on ${value.shopName}`,
+                      [
+                        { text: 'Cancel', style: 'cancel' },
+                        {
+                          text: 'Details',
+                          onPress: () => this.props.navigation.navigate('ShopDetail', { item: value })
+                        },
+                        {
+                          text: 'Directions',
+                          onPress: () => this.props.directions({ latitude: value.latitude, longitude: value.longitude })
+                        }
+                      ]
+                    )
+                  }
+                }}
                 image={Images.pin}
-              >
-                <MapView.Callout onPress={() => {
-                  Alert.alert(
-                    'Select option',
-                    'Please select an action on this shop',
-                    [
-                      { text: 'Cancel', style: 'cancel' },
-                      { text: 'Details', onPress: () => this.props.navigation.navigate('ShopDetail', { item: value }) },
-                      {
-                        text: 'Directions',
-                        onPress: () => this.props.directions({ latitude: value.latitude, longitude: value.longitude })
-                      }
-                    ]
-                  )
-                }}>
-                  <Text>{value.shopName}</Text>
-                </MapView.Callout>
-              </MapView.Marker>
+              />
             ))
           }
         </MapView>
         <Footer style={{ alignItems: 'center', justifyContent: 'space-around', backgroundColor: Colors.background }}>
-          <Button success disabled={this.props.dayStarted} onPress={() => {
-            this.props.dayStart()
-          }}>
+          <Button success disabled={this.props.dayStarted} onPress={this.props.dayStart}>
             <Text>Day Start</Text>
           </Button>
           <Button success disabled={!this.props.dayStarted} onPress={() => {
@@ -114,9 +116,7 @@ class MainScreen extends React.Component {
           }}>
             <Text>Market</Text>
           </Button>
-          <Button success disabled={!this.props.dayStarted} onPress={() => {
-            this.props.dayEnd()
-          }}>
+          <Button success disabled={!this.props.dayStarted} onPress={this.props.dayEnd}>
             <Text>End Day</Text>
           </Button>
         </Footer>
@@ -126,7 +126,7 @@ class MainScreen extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  dayStarted: !!(state.store && state.store.date),
+  dayStarted: state.store.dayStarted,
   stores: state.store && state.store.payload,
   waypoint: state.gps && state.gps.waypoint,
   latitude: state.gps && state.gps.data && state.gps.data.latitude,
@@ -135,7 +135,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   directions: (location) => dispatch(GpsLocationRedux.gpsDirection(location)),
-  dayStart: () => dispatch(StoresRedux.dayStartRequest(new Date())),
+  dayStart: () => dispatch(StoresRedux.dayStartRequest()),
   dayEnd: () => dispatch(StoresRedux.dayEndRequest()),
   request: () => dispatch(StoresRedux.storesRequest()),
   logout: () => dispatch(LoginRedux.logout())

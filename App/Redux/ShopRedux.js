@@ -7,7 +7,7 @@ const { Types, Creators } = createActions({
   checkInRequest: ['data'],
   checkInSuccess: ['data'],
   checkOutRequest: ['data'],
-  checkOutSuccess: null,
+  checkOutSuccess: ['id'],
   addToCart: ['data'],
   removeItem: ['item'],
   placeOrderRequest: ['data'],

@@ -38,28 +38,28 @@ export const checkOutEpic = (action$, state$, { api }) => action$.pipe(
   mergeMap(action => {
     const latitude = state$.value.gps.data.latitude
     const longitude = state$.value.gps.data.longitude
+    const checkInParam = state$.value.shop.checkInParam
 
     const data = {
-      StoreId: action.data.StoreId,
-      companyId: action.data.companyId,
+      StoreId: checkInParam.StoreId,
+      companyId: checkInParam.companyId,
       latitude,
       longitude,
       ContactPersonName: '',
       ContactNo: '',
-      StartTime: action.data.StartTime,
+      StartTime: checkInParam.StartTime,
       NextScheduledVisit: '',
       Location: '',
       Notes: '',
       EndTime: moment().format('YYYY-MM-DD LT'),
-      StoreVisitId: action.data.storeVisitId,
+      StoreVisitId: checkInParam.storeVisitId,
       Status: 'Achieved'
     }
-
     return api.checkOut(data).pipe(
       map(response => {
         if (response.ok) {
           if (action.data.onSuccess) action.data.onSuccess()
-          return ShopActions.checkOutSuccess(response.data)
+          return ShopActions.checkOutSuccess(checkInParam.StoreId)
         } else {
           return ShopActions.shopFailure(response)
         }
@@ -73,8 +73,7 @@ export const placeOrderEpics = (action$, state$, { api }) => action$.pipe(
   mergeMap(action => {
     const checkInParams = state$.value.shop.checkInParam
     const Order = action.data.items.map(value => ({
-      inventoryItemId: value.inventoryItemId,
-      quantity: value.quantity,
+      ...value,
       storeVisitId: checkInParams.storeVisitId,
       companyId: checkInParams.companyId,
       StoreId: checkInParams.StoreId

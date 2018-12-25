@@ -174,7 +174,7 @@ class OrderScreen extends React.Component {
   checkout = () => {
     if ((this.props.items && this.props.items.length > 0)) {
       this.props.placeOrder({
-        items: this.props.items,
+        items: this.props.items.map(value => ({ quantity: value.quantity, inventoryItemId: value.inventoryItemId })),
         onSuccess: () => {
           Alert.alert('Success', 'Your order for this shop has been placed')
         }

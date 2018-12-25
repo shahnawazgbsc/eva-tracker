@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { Alert, FlatList, Image, View, BackHandler } from 'react-native'
+import { Alert, BackHandler, FlatList, Image, View } from 'react-native'
+import { withNavigationFocus } from 'react-navigation'
 import { Body, Button, Card, CardItem, Container, Header, Icon, Left, Right, Subtitle, Text, Title } from 'native-base'
 import { connect } from 'react-redux'
 import GradientWrapper from '../../Components/GradientWrapper'
@@ -95,7 +96,7 @@ class ShopProfile extends React.Component {
   }
 
   handleBack = () => {
-    if (!this.props.checkedIn) {
+    if (!this.props.checkedIn || !this.props.isFocused) {
       this.props.navigation.goBack(null)
     }
     return true
@@ -129,10 +130,10 @@ class ShopProfile extends React.Component {
               break
             case 'Check Out':
               if (this.props.orderPlaced) {
-                this.props.checkOut({ ...this.props.checkInParam, onSuccess: () => this.props.navigation.goBack(null) })
+                this.props.checkOut({ onSuccess: () => this.props.navigation.goBack(null) })
               } else {
                 // TODO show reason for not placing order
-                Alert.alert(null, 'Order Not Placed')
+                this.props.navigation.navigate('Reason')
               }
               break
           }
@@ -152,7 +153,6 @@ class ShopProfile extends React.Component {
 const mapStateToProps = (state) => {
   return {
     checkedIn: state.shop && state.shop.checkedIn,
-    checkInParam: state.shop && state.shop.checkInParam,
     orderPlaced: state.shop && state.shop.orderPlaced
   }
 }
@@ -164,4 +164,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ShopProfile)
+export default connect(mapStateToProps, mapDispatchToProps)(withNavigationFocus(ShopProfile))

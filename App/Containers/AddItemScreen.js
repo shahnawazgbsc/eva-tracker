@@ -1,7 +1,23 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Alert, FlatList, Image, View } from 'react-native'
-import { Body, Button, Card, CardItem, Container, Header, Icon, Input, Left, Right, Row, Text } from 'native-base'
+import {
+  Body,
+  Button,
+  Card,
+  CardItem,
+  Container,
+  Header,
+  Icon,
+  Input,
+  Item,
+  Label,
+  Left,
+  Picker,
+  Right,
+  Row,
+  Text
+} from 'native-base'
 // Styles
 import styles from './Styles/AddItemScreenStyle'
 import Colors from '../Themes/Colors'
@@ -15,14 +31,12 @@ import Immutable from 'seamless-immutable'
 class AddItemScreen extends React.PureComponent {
   constructor (props) {
     super(props)
-    const input = new Array(props.items.length)
-    for (let i = 0; i < input.length; i++) {
-      input[i] = '1'
-    }
 
     this.state = {
-      selected: new Array(props.items.length),
-      quantity: input
+      selected: [],
+      quantity: [],
+      selectedValue: '',
+      data: []
     }
   }
 
@@ -33,6 +47,40 @@ class AddItemScreen extends React.PureComponent {
   * e.g.
     return <MyCustomCell title={item.title} description={item.description} />
   *************************************************************/
+  onCategorySelect = (index) => {
+    this.setState({ selectedValue: index })
+    if (index === '') return
+    const item = Immutable(this.props.items[index]).asMutable()
+    item.quantity = '1'
+    let quantity = this.state.quantity
+    quantity[this.state.data.length] = '1'
+
+    this.state.data.push(item)
+    this.setState({ data: this.state.data, quantity: quantity })
+  }
+
+  renderHeader = () => (
+    <Item fixedLabel>
+      <Label>Category</Label>
+      <Picker
+        mode='dropdown'
+        placeholder='Select Category'
+        iosIcon={<Icon name='ios-arrow-down-outline'
+        />}
+        itemTextStyle={{ color: '#788ad2', fontSize: 12 }}
+        selectedValue={this.state.selectedValue}
+        onValueChange={this.onCategorySelect}
+      >
+        <Picker.Item label={'Select Category'} key={'first'} value={''}/>
+        {
+          this.props.items &&
+          this.props.items.map((value, index) => (
+            <Picker.Item label={value.name} value={index} key={index}/>))
+        }
+      </Picker>
+    </Item>
+  )
+
   renderRow = ({ item, index }) => {
     return (
       <Card style={styles.row}>
@@ -212,9 +260,10 @@ class AddItemScreen extends React.PureComponent {
         </GradientWrapper>
         <FlatList
           style={styles.container}
-          data={this.props.items}
-          extraData={this.state}
+          data={this.state.data}
+          extraData={this.state.selectedValue}
           ListFooterComponent={this.renderFooter}
+          ListHeaderComponent={this.renderHeader}
           renderItem={this.renderRow}
           keyExtractor={this.keyExtractor}
         />
