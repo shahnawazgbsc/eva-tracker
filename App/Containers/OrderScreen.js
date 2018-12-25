@@ -7,6 +7,7 @@ import styles from './Styles/OrderScreenStyle'
 import ConvertToCurrency from '../Transforms/ConvertToCurrency'
 import { Colors, Images } from '../Themes'
 import ShopActions from '../Redux/ShopRedux'
+import firebase from '../firebaseconfig';
 
 class OrderScreen extends React.Component {
 
@@ -173,6 +174,37 @@ class OrderScreen extends React.Component {
 
   checkout = () => {
     if ((this.props.items && this.props.items.length > 0)) {
+
+      firebase.firestore().collection('tbl_shops').doc('1').collection('shop_events').add({
+        device_name: 'ABC_Device',
+        lang: '00000', // need to  put dynamic
+        latitude: '09000',
+        shopid: '22',
+        user_id: '22'
+
+      }).then((docRef) => {
+        console.log('done')
+      })
+        .catch((error) => {
+          console.warn("Error adding document: ", error);
+
+        });
+      firebase.firestore().collection('tbl_shops').doc('1').collection('Visit_Summary').add({
+       PJP: true,
+        Productive: true,
+        lat :"2.11111",
+        lng:"2.3333",
+        shop_id:22,
+        user_id:22,
+
+      }).then((docRef) => {
+          console.log('done')
+        })
+        .catch((error) => {
+          console.warn("Error adding document: ", error);
+
+        });
+
       this.props.placeOrder({
         items: this.props.items.map(value => ({ quantity: value.quantity, inventoryItemId: value.inventoryItemId })),
         onSuccess: () => {
