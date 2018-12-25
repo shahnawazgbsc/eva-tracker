@@ -31,14 +31,15 @@ class ShopProfile extends React.Component {
         <GradientWrapper>
           <Header style={[styles.header, styles.headerExtra]}>
             <Left style={{ alignSelf: 'flex-start' }}>
-              <Button transparent onPress={this.handleBack}>
+              <Button transparent light onPress={this.handleBack}>
                 <Icon
                   name={'arrow-back'}
                 />
+                <Text>Back</Text>
               </Button>
             </Left>
             <Body style={{ alignSelf: 'flex-start', marginTop: 10 }}>
-            <Title style={styles.headerText}>Shop Profile</Title>
+            <Text style={styles.titleText}>Shop Profile</Text>
             </Body>
             <Right
             />
@@ -78,7 +79,7 @@ class ShopProfile extends React.Component {
             <Button transparent>
               <Icon style={[styles.lightDarkText, styles.iconPhone]} name={'phone-square'} type={'FontAwesome'}
               />
-              <Text style={[styles.lightDarkText, { marginTop: 10 }]}>{item.contactNo}</Text>
+              <Text style={[styles.lightDarkText, { marginTop: 10, flexWrap: 'wrap' }]}>{item.contactNo}</Text>
             </Button>
           </View>
         </CardItem>

@@ -1,51 +1,46 @@
-import { map, mergeMap } from 'rxjs/operators'
+import { mergeMap } from 'rxjs/operators'
 import { from, of, zip } from 'rxjs'
 import { Alert } from 'react-native'
 import { ofType } from 'redux-observable'
 import StoresRedux, { StoresTypes } from '../Redux/StoresRedux'
 import CreateStoreActions, { CreateStoreTypes } from '../Redux/CreateStoreRedux'
-import AppConfig from '../Config/AppConfig'
 import GetBrandsActions from '../Redux/GetBrandsRedux'
 
 export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
   ofType(CreateStoreTypes.CREATE_STORE_REQUEST),
   mergeMap(action => {
-    console.log(state$)
     const userId = state$.value.login.payload.user.userid
-    const companyId = state$.value.login.payload.user.companyId
+    const companyId = state$.value.login.payload.user.companyid
     const location = state$.value.gps.data
 
     return api.uploadImage(action.data.image.uri, action.data.image.fileName, userId)
       .pipe(
-        map(response => {
+        mergeMap(response => {
           if (response.ok) {
-            action.data = {
+            const params = {
               ...action.data,
+              image: null,
               latitude: location.latitude,
               longitude: location.longitude,
-              image: null,
-              userId,
-              companyId,
+              userId: userId,
+              companyId: companyId,
               imageUrl: response.data.filepath
             }
-            return action
+            return api.createStore(params)
           } else {
-            return response
+            return of(response)
+          }
+        }),
+        mergeMap(response => {
+          if (response.ok) {
+            Alert.alert('Success', 'Store created successfully')
+            return of(CreateStoreActions.createStoreSuccess(response.data), StoresRedux.storesRequest())
+          } else {
+            return of(CreateStoreActions.createStoreFailure(response))
           }
         })
       )
-  }),
-  mergeMap(action => (action.data.imageUrl ? api.createStore(action.data) : of(action))
-    .pipe(
-      mergeMap(response => {
-        if (response.ok) {
-          Alert.alert('Success', 'Store created successfully')
-          return of(CreateStoreActions.createStoreSuccess(response.data), StoresRedux.storesRequest())
-        } else {
-          return of(CreateStoreActions.createStoreFailure(response))
-        }
-      })
-    ))
+  })
 )
 
 export const storeById = (action$, state$, { api }) => action$.pipe(

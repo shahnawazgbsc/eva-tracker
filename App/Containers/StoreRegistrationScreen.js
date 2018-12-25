@@ -199,7 +199,7 @@ class StoreRegistrationScreen extends Component {
               </Button>
             </Left>
             <Body>
-            <Text style={styles.headerText}>Store Registration</Text>
+            <Text style={styles.titleText}>Store Registration</Text>
             </Body>
             <Right/>
           </Header>

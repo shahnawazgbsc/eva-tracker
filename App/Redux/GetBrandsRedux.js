@@ -43,10 +43,13 @@ export const success = (state, action) => {
 export const failure = state =>
   Immutable(state).merge({ fetching: false, error: true, payload: null })
 
+export const startUp = (state) => Immutable(state).merge({ fetching: false })
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.GET_BRANDS_REQUEST]: request,
   [Types.GET_BRANDS_SUCCESS]: success,
-  [Types.GET_BRANDS_FAILURE]: failure
+  [Types.GET_BRANDS_FAILURE]: failure,
+  'STARTUP': startUp
 })

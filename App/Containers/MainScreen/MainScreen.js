@@ -30,17 +30,17 @@ class MainScreen extends React.Component {
         <GradientWrapper>
           <Header style={styles.header}>
             <Left>
-              <Button transparent onPress={this.menu}>
+              <Button transparent light onPress={this.menu}>
                 <Icon
                   name={'menu'}
                 />
               </Button>
             </Left>
             <Body>
-            <Title style={styles.headerText}>Eva Tracker App</Title>
+            <Text style={styles.titleText}>Eva Tracker App</Text>
             </Body>
             <Right>
-              <Button transparent onPress={this.props.logout}>
+              <Button transparent light onPress={this.props.logout}>
                 <Icon name={'log-out'}/>
               </Button>
             </Right>

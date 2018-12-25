@@ -68,6 +68,8 @@ export const checkOutSuccess = (state) => INITIAL_STATE
 export const failure = (state, { error }) =>
   Immutable(state).merge({ fetching: false, error })
 
+export const startUp = (state) => Immutable(state).merge({ fetching: false })
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -79,5 +81,6 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.PLACE_ORDER_REQUEST]: placeOrderRequest,
   [Types.ADD_TO_CART]: addToCart,
   [Types.SHOP_FAILURE]: failure,
-  [Types.REMOVE_ITEM]: removeItem
+  [Types.REMOVE_ITEM]: removeItem,
+  'STARTUP': startUp
 })

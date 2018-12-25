@@ -157,7 +157,7 @@ class MarketList extends React.PureComponent {
               </Button>
             </Left>
             <Body>
-            <Title style={styles.headerText}>Market</Title>
+            <Text style={styles.titleText}>Market</Text>
             </Body>
             <Right/>
           </Header>

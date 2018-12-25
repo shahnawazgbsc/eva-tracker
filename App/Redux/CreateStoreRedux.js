@@ -32,7 +32,7 @@ export const INITIAL_STATE = Immutable({
 export const request = (state, { data }) => Immutable(state).merge({ fetching: true, data, payload: null })
 
 // successful api lookup
-export const success = (state, {payload}) => Immutable(state).merge({ fetching: false, error: null, payload })
+export const success = (state, { payload }) => Immutable(state).merge({ fetching: false, error: null, payload })
 
 export const subSectionSuccess = (state, { payload }) => Immutable(state).merge({ subSection: payload })
 
@@ -42,6 +42,7 @@ export const resetDays = (state) => Immutable(state).merge({ days: null })
 
 // Something went wrong somewhere.
 export const failure = (state, { error }) => Immutable(state).merge({ fetching: false, error, payload: null })
+export const startUp = (state) => Immutable(state).merge({ fetching: false })
 
 /* ------------- Hookup Reducers To Types ------------- */
 
@@ -51,5 +52,6 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.CREATE_STORE_FAILURE]: failure,
   [Types.SUB_SECTION_SUCCESS]: subSectionSuccess,
   [Types.RESET_DAYS]: resetDays,
-  [Types.SELECT_DAYS]: selectDays
+  [Types.SELECT_DAYS]: selectDays,
+  'STARTUP': startUp
 })

@@ -34,11 +34,14 @@ export const gpsDirectionSuccess = (state, { waypoint }) => Immutable(state).mer
 // Something went wrong somewhere.
 export const failure = (state, { error }) => Immutable(state).merge({ error, fetching: false })
 
+export const startUp = (state) => Immutable(state).merge({ fetching: false })
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.GPS_UPDATE]: update,
   [Types.GPS_DIRECTION]: gpsDirection,
   [Types.GPS_DIRECTION_SUCCESS]: gpsDirectionSuccess,
-  [Types.GPS_FAILURE]: failure
+  [Types.GPS_FAILURE]: failure,
+  'STARTUP': startUp
 })

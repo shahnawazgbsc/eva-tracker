@@ -14,7 +14,6 @@ export default StyleSheet.create({
     borderRadius: 18,
     height: 36,
     fontSize: 10,
-    width: 90,
     textAlign: 'right',
     paddingLeft: 10,
     paddingRight: 10

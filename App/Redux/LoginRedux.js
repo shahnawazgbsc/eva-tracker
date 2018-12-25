@@ -41,11 +41,14 @@ export const failure = (state, action) =>
 
 export const logout = (state) => INITIAL_STATE
 
+export const startUp = (state) => Immutable(state).merge({ fetching: false })
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.LOGIN_REQUEST]: request,
   [Types.LOGIN_SUCCESS]: success,
   [Types.LOGIN_FAILURE]: failure,
-  [Types.LOGOUT]: logout
+  [Types.LOGOUT]: logout,
+  'STARTUP': startUp
 })
