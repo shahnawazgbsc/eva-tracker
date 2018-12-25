@@ -1,7 +1,7 @@
 import React from 'react'
 import { Alert } from 'react-native'
 import { connect } from 'react-redux'
-import { Button, Title, Right, Body, Left, Icon, Container, Footer, Text, Header } from 'native-base'
+import { Body, Button, Container, Footer, Header, Icon, Left, Right, Text } from 'native-base'
 import MapView from 'react-native-maps'
 import { Colors, Images } from '../../Themes'
 import StoresRedux from '../../Redux/StoresRedux'
@@ -51,8 +51,8 @@ class MainScreen extends React.Component {
         <MapView
           style={{ flex: 1 }}
           region={{
-            latitude: parseFloat(this.props.latitude) || 0,
-            longitude: parseFloat(this.props.longitude) || 0,
+            latitude: parseFloat(this.props.latitude) || 24.8625802,
+            longitude: parseFloat(this.props.longitude) || 67.0165537,
             latitudeDelta: 0.008,
             longitudeDelta: 0.008
           }}
