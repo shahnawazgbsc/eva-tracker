@@ -13,7 +13,6 @@ import LoginRedux from '../../Redux/LoginRedux'
 class MainScreen extends React.Component {
   constructor (props) {
     super(props)
-    this.ref = firebase.firestore().collection('tbl_users')
     this.state = {}
   }
 

@@ -155,11 +155,11 @@ class ShopProfile extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   return {
     checkedIn: state.shop && state.shop.checkedIn,
     orderPlaced: state.shop && state.shop.orderPlaced,
-    pjp: !R.contains(state.shop.shop.storeId)(state.store.achieved)
+    pjp: !R.contains(ownProps.navigation.getParam('item').storeId)(state.store.achieved)
   }
 }
 

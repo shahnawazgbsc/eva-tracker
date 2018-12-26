@@ -6,6 +6,7 @@ import storage from 'redux-persist/lib/storage'
 import { createReactNavigationReduxMiddleware } from 'react-navigation-redux-helpers'
 import { createEpicMiddleware } from 'redux-observable'
 import rootEpics from '../Epics'
+import firebase from '../Lib/Firebase'
 
 // creates the store
 export default (rootReducer, api) => {
@@ -28,7 +29,7 @@ export default (rootReducer, api) => {
   const epicMiddleware = createEpicMiddleware({
     dependencies: {
       api,
-      firebase: require('../Lib/Firebase')
+      firebase
     }
   })
   middleware.push(epicMiddleware)

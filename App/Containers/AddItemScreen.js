@@ -49,14 +49,15 @@ class AddItemScreen extends React.PureComponent {
   *************************************************************/
   onCategorySelect = (index) => {
     this.setState({ selectedValue: index })
-    if (index === '') return
-    const item = Immutable(this.props.items[index]).asMutable()
-    item.quantity = '1'
-    let quantity = this.state.quantity
-    quantity[this.state.data.length] = '1'
+    if (index === '') {
+      this.setState({ data: [], quantity: [] })
+      return
+    }
 
-    this.state.data.push(item)
-    this.setState({ data: this.state.data, quantity: quantity })
+    let data = this.props.items[index].items
+    let quantity = []
+    for (let i = 0; i < data.length; i++) quantity[i] = '1'
+    this.setState({ data, quantity, selected: [] })
   }
 
   renderHeader = () => (
@@ -75,7 +76,7 @@ class AddItemScreen extends React.PureComponent {
         {
           this.props.items &&
           this.props.items.map((value, index) => (
-            <Picker.Item label={value.name} value={index} key={index}/>))
+            <Picker.Item label={value.productType} value={index} key={index}/>))
         }
       </Picker>
     </Item>
@@ -213,7 +214,7 @@ class AddItemScreen extends React.PureComponent {
     let cartItems = []
     this.state.selected.forEach((value, index) => {
       if (value) {
-        let item = Immutable.asMutable(this.props.items[index])
+        let item = Immutable.asMutable(this.props.items[this.state.selectedValue].items[index])
         item.quantity = this.state.quantity[index]
         cartItems.push(item)
       }

@@ -1,9 +1,8 @@
-import * as firebase from 'firebase'
-import 'firebase/firestore';
 import { ofType } from 'redux-observable'
 import { map, mergeMap } from 'rxjs/operators'
 import ShopActions, { ShopTypes } from '../Redux/ShopRedux'
 import moment from 'moment'
+import 'firebase/firestore'
 
 export const checkInEpic = (action$, state$, { api }) => action$.pipe(
   ofType(ShopTypes.CHECK_IN_REQUEST),
@@ -81,7 +80,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
               console.warn('Error adding document: ', error)
             })
 
-            firebase.firestore()
+          firebase.firestore()
             .collection('tbl_shops')
             .doc(checkInParam.StoreId)
             .set({
@@ -96,7 +95,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
             .catch((error) => {
               console.warn('Error adding document: ', error)
             })
-            
+
           firebase.firestore().collection('tbl_shops').doc(checkInParam.StoreId).collection('visit_summary').add({
             PJP: action.data.pjp,
             Productive: action.data.productive,
