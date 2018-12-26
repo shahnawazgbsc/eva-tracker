@@ -33,12 +33,15 @@ export const checkInEpic = (action$, state$, { api }) => action$.pipe(
   })
 )
 
-export const checkOutEpic = (action$, state$, { api }) => action$.pipe(
+export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe(
   ofType(ShopTypes.CHECK_OUT_REQUEST),
   mergeMap(action => {
     const latitude = state$.value.gps.data.latitude
     const longitude = state$.value.gps.data.longitude
     const checkInParam = state$.value.shop.checkInParam
+    const userId = state$.value.login.payload.user.userid
+
+    console.log(action.data)
 
     const data = {
       StoreId: checkInParam.StoreId,
@@ -58,6 +61,36 @@ export const checkOutEpic = (action$, state$, { api }) => action$.pipe(
     return api.checkOut(data).pipe(
       map(response => {
         if (response.ok) {
+          firebase.firestore()
+            .collection('tbl_shops')
+            .doc(checkInParam.StoreId)
+            .collection('shop_events')
+            .add({
+              device_name: 'ABC_Device',
+              lng: latitude, // need to  put dynamic
+              lat: longitude,
+              shop_id: checkInParam.StoreId,
+              user_id: userId
+            })
+            .then((docRef) => {
+              console.log('done')
+            })
+            .catch((error) => {
+              console.warn('Error adding document: ', error)
+            })
+          firebase.firestore().collection('tbl_shops').doc('1').collection('Visit_Summary').add({
+            PJP: action.data.pjp,
+            Productive: action.data.productive,
+            lat: latitude,
+            lng: longitude,
+            shop_id: checkInParam.StoreId,
+            user_id: userId
+          }).then((docRef) => {
+            console.log('done')
+          }).catch((error) => {
+            console.warn('Error adding document: ', error)
+          })
+
           if (action.data.onSuccess) action.data.onSuccess()
           return ShopActions.checkOutSuccess(checkInParam.StoreId)
         } else {

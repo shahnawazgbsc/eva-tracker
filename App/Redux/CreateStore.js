@@ -27,7 +27,8 @@ export default (rootReducer, api) => {
 
   const epicMiddleware = createEpicMiddleware({
     dependencies: {
-      api
+      api,
+      firebase: require('../Lib/Firebase')
     }
   })
   middleware.push(epicMiddleware)

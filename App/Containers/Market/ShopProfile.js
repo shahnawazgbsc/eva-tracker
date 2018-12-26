@@ -8,6 +8,7 @@ import styles from './ShopProfileStyle'
 import { Images } from '../../Themes'
 import ParseImagePath from '../../Lib/ParseImagePath'
 import ShopRedux from '../../Redux/ShopRedux'
+import * as R from 'ramda'
 
 class ShopProfile extends React.Component {
   constructor (props) {
@@ -130,7 +131,11 @@ class ShopProfile extends React.Component {
               break
             case 'Check Out':
               if (this.props.orderPlaced) {
-                this.props.checkOut({ onSuccess: () => this.props.navigation.goBack(null) })
+                this.props.checkOut({
+                  onSuccess: () => this.props.navigation.goBack(null),
+                  productive: true,
+                  pjp: this.props.pjp
+                })
               } else {
                 // TODO show reason for not placing order
                 this.props.navigation.navigate('Reason')
@@ -153,7 +158,8 @@ class ShopProfile extends React.Component {
 const mapStateToProps = (state) => {
   return {
     checkedIn: state.shop && state.shop.checkedIn,
-    orderPlaced: state.shop && state.shop.orderPlaced
+    orderPlaced: state.shop && state.shop.orderPlaced,
+    pjp: !R.contains(state.shop.shop.storeId)(state.store.achieved)
   }
 }
 

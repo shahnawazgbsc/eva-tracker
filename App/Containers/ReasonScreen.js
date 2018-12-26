@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Text, TextInput } from 'react-native'
+import * as R from 'ramda'
 import {
   Body,
   Button,
@@ -58,7 +59,11 @@ class ReasonScreen extends Component {
       reason = this.state.otherText ? this.state.otherText : reason
     }
     this.props.placeOrder({ items: [{ noorderreason: reason }] })
-    this.props.checkOutRequest({ onSuccess: () => this.props.navigation.dispatch(StackActions.popToTop()) })
+    this.props.checkOutRequest({
+      onSuccess: () => this.props.navigation.dispatch(StackActions.popToTop()),
+      productive: false,
+      pjp: this.props.pjp
+    })
   }
 
   otherText = (text) => {
@@ -128,7 +133,9 @@ class ReasonScreen extends Component {
 }
 
 const mapStateToProps = (state) => {
-  return {}
+  return {
+    pjp: !R.contains(state.shop.shop.storeId)(state.store.achieved)
+  }
 }
 
 const mapDispatchToProps = (dispatch) => {
