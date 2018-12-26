@@ -1,3 +1,5 @@
+import * as firebase from 'firebase'
+import 'firebase/firestore';
 import { ofType } from 'redux-observable'
 import { map, mergeMap } from 'rxjs/operators'
 import ShopActions, { ShopTypes } from '../Redux/ShopRedux'
@@ -78,7 +80,24 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
             .catch((error) => {
               console.warn('Error adding document: ', error)
             })
-          firebase.firestore().collection('tbl_shops').doc('1').collection('Visit_Summary').add({
+
+            firebase.firestore()
+            .collection('tbl_shops')
+            .doc(checkInParam.StoreId)
+            .set({
+              lng: latitude, // need to  put dynamic
+              lat: longitude,
+              shop_id: checkInParam.StoreId,
+              user_id: userId
+            })
+            .then((docRef) => {
+              console.log('done')
+            })
+            .catch((error) => {
+              console.warn('Error adding document: ', error)
+            })
+            
+          firebase.firestore().collection('tbl_shops').doc(checkInParam.StoreId).collection('visit_summary').add({
             PJP: action.data.pjp,
             Productive: action.data.productive,
             lat: latitude,
