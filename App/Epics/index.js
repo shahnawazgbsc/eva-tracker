@@ -4,6 +4,7 @@ import { createStoreEpic, storeById } from './StoreEpics'
 import { checkInEpic, checkOutEpic, placeOrderEpics } from './OrderTakingEpics'
 import { directionsEpic } from './MapsEpics'
 import GpsUpdateEpic from './GpsUpdateEpic'
+import { selectProductsListEpics } from './InventoryTakingEpics'
 
 export default combineEpics(
   LoginEpics,
@@ -13,5 +14,6 @@ export default combineEpics(
   checkOutEpic,
   placeOrderEpics,
   directionsEpic,
-  GpsUpdateEpic
+  GpsUpdateEpic,
+  selectProductsListEpics
 )
