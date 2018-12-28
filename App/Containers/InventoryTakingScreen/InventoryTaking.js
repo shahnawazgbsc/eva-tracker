@@ -197,6 +197,8 @@ class InventoryTaking extends React.Component {
     submit() {
     }
     renderProductItems(brand,product) {
+
+        if(productSubCategories[brand][product]!=null) {
         productsList = [{
             title:brandNames[brand],
             content:{
@@ -205,7 +207,6 @@ class InventoryTaking extends React.Component {
                 "inventoryItemId":inventoryItemsIds[brand][product]
             }
         }]
-        if(productSubCategories[brand][product]!=null)
             return(
                 <View style={{margin:5}}>
                     <Accordion
@@ -214,6 +215,7 @@ class InventoryTaking extends React.Component {
                     />
                 </View>
             )
+        }
         else 
             return(
                 <View style={{height:0}}/>
