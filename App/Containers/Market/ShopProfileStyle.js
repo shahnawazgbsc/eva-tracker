@@ -15,7 +15,9 @@ export default StyleSheet.create({
   },
   darkText: {
     color: Colors.black,
-    textAlign: 'left'
+    textAlign: 'left',
+    display:'flex',
+    flex:1
   },
   iconPhone: {
     marginLeft: 0,

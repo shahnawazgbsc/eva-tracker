@@ -129,7 +129,7 @@ class InventoryTaking extends React.Component {
               flexDirection: 'row',
               alignItems: 'center',
               flex: 1,
-              right: 10
+              margin:5
             }}>
               <Button rounded danger>
                 <Text>Submit</Text>
@@ -168,13 +168,13 @@ class InventoryTaking extends React.Component {
                   <Text>{category}</Text>
                 </Left>
                 <Body style={{ marginTop: 5, marginBottom: 5, marginLeft: 15 }}>
-                <Item style={{ width: 50, height: 25 }} rounded>
-                  <Input/>
+                <Item style={{ width: 50, height: 25,backgroundColor:'white' }} rounded>
+                  <Input />
                 </Item>
                 </Body>
                 <Right style={{ marginRight: 15, marginBottom: 5, marginLeft: 15 }}>
-                  <Item style={{ width: 45, height: 25 }} rounded>
-                    <Input/>
+                  <Item style={{ width: 45, height: 22,backgroundColor:'white' }} rounded>
+                    <Input />
                   </Item>
                 </Right>
               </Row>
@@ -213,7 +213,7 @@ class InventoryTaking extends React.Component {
             <Text>Note</Text>
           </Left>
           <Body>
-          <Item regular>
+          <Item regular style={{backgroundColor:'white'}}>
             <Input placeholder='Quantity'/>
           </Item>
           </Body>

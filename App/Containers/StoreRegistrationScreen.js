@@ -321,7 +321,7 @@ class StoreRegistrationScreen extends Component {
                 </Picker>
               </Item>
               <Item fixedLabel>
-                <Label>Classification</Label>
+
                 <Picker
                   mode='dropdown'
                   placeholder='Select Classification'

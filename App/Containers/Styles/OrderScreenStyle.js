@@ -30,8 +30,8 @@ export default StyleSheet.create({
     color: Colors.white
   },
   footer: {
-    justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent:'space-between'
   },
   listHeader: {
     flexDirection: 'row'
@@ -66,8 +66,10 @@ export default StyleSheet.create({
   },
   headerText: {
     color: Colors.white,
-    fontSize: 24,
-    textAlign: 'center'
+
+  },
+  iconStyle:{
+    color:'white'
   }
 
 })

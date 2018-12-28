@@ -131,11 +131,12 @@ class OrderScreen extends React.Component {
             <Fab
               active
               position={'topRight'}
-              style={[styles.fab]}
+              style={[styles.fab, { position: 'relative', marginTop: 10, marginRight: 10 }]}
               onPress={this.addOrder}
             >
               <Icon
                 name={'add'}
+                style={styles.iconStyle}
               />
             </Fab>
           </View>
@@ -158,7 +159,7 @@ class OrderScreen extends React.Component {
         <GradientWrapper>
           <Footer style={[styles.header, styles.footer]}>
             <Text style={styles.amountText}>TOTAL PAYMENT = {ConvertToCurrency(0)}</Text>
-            <Button danger onPress={this.checkout}>
+            <Button danger onPress={this.checkout} style={{margin:5,    justifyContent:'flex-end'}}>
               <Icon
                 name={'arrow-dropleft'}
               />
