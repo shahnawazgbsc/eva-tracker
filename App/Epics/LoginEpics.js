@@ -3,6 +3,7 @@ import LoginActions, { LoginTypes } from '../Redux/LoginRedux'
 import CreateStoreActions from '../Redux/CreateStoreRedux'
 import { mergeMap } from 'rxjs/operators'
 import { of } from 'rxjs'
+import { Alert } from 'react-native'
 
 export default (action$, state$, { api }) => action$.pipe(
   ofType(LoginTypes.LOGIN_REQUEST),
@@ -22,6 +23,7 @@ export default (action$, state$, { api }) => action$.pipe(
         if (response.ok) {
           return of(LoginActions.loginSuccess(login), CreateStoreActions.subSectionSuccess(response.data))
         } else {
+          if (response.status === 400) Alert.alert('Wrong credentials', 'Please provide correct username and password')
           return of(LoginActions.loginFailure(response))
         }
       })

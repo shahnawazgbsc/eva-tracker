@@ -35,6 +35,7 @@ export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
         mergeMap(response => {
           if (response.ok) {
             Alert.alert('Success', 'Store created successfully')
+            if (action.data.onSuccess) action.data.onSuccess()
             return of(CreateStoreActions.createStoreSuccess(response.data), StoresRedux.storesRequest())
           } else {
             return of(CreateStoreActions.createStoreFailure(response))

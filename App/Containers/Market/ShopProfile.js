@@ -27,6 +27,7 @@ class ShopProfile extends React.Component {
     }
   }
 
+
   render () {
     return (
       <Container>

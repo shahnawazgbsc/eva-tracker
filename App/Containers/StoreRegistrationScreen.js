@@ -62,7 +62,8 @@ class StoreRegistrationScreen extends Component {
         subsectionId: this.props.subSection[this.state.subsectionId].subsectionId,
         category: this.Categories[this.state.category],
         classification: this.Classification[this.state.classification],
-        VisitDays: this.props.days.map(value => ({ day: value }))
+        VisitDays: this.props.days.map(value => ({ day: value })),
+        onSuccess: () => this.props.navigation.goBack(null)
       })
     } else {
       Alert.alert('Info', msg)
