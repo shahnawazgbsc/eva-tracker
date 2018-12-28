@@ -13,6 +13,7 @@ export const checkInEpic = (action$, state$, { api }) => action$.pipe(
 
     const data = {
       StoreId: action.data.storeId,
+      pjp: action.data.pjp,
       companyId,
       latitude,
       longitude,
@@ -42,10 +43,9 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
     const checkInParam = state$.value.shop.checkInParam
     const userId = state$.value.login.payload.user.userid
 
-    console.log(action.data)
-
     const data = {
       StoreId: checkInParam.StoreId,
+      pjp: action.data.pjp,
       companyId: checkInParam.companyId,
       latitude,
       longitude,
@@ -64,7 +64,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
         if (response.ok) {
           firebase.firestore()
             .collection('tbl_shops')
-            .doc(checkInParam.StoreId)
+            .doc(checkInParam.StoreId.toString())
             .collection('shop_events')
             .add({
               device_name: 'ABC_Device',
@@ -82,7 +82,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
 
           firebase.firestore()
             .collection('tbl_shops')
-            .doc(checkInParam.StoreId)
+            .doc(checkInParam.StoreId.toString())
             .set({
               lng: latitude, // need to  put dynamic
               lat: longitude,
@@ -96,18 +96,25 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
               console.warn('Error adding document: ', error)
             })
 
-          firebase.firestore().collection('tbl_shops').doc(checkInParam.StoreId).collection('visit_summary').add({
-            PJP: action.data.pjp,
-            Productive: action.data.productive,
-            lat: latitude,
-            lng: longitude,
-            shop_id: checkInParam.StoreId,
-            user_id: userId
-          }).then((docRef) => {
-            console.log('done')
-          }).catch((error) => {
-            console.warn('Error adding document: ', error)
-          })
+          firebase
+            .firestore()
+            .collection('tbl_shops')
+            .doc(checkInParam.StoreId.toString())
+            .collection('visit_summary')
+            .add({
+              PJP: action.data.pjp,
+              Productive: action.data.productive,
+              lat: latitude,
+              lng: longitude,
+              shop_id: checkInParam.StoreId,
+              user_id: userId
+            })
+            .then((docRef) => {
+              console.log('done')
+            })
+            .catch((error) => {
+              console.warn('Error adding document: ', error)
+            })
 
           if (action.data.onSuccess) action.data.onSuccess()
           return ShopActions.checkOutSuccess(checkInParam.StoreId)

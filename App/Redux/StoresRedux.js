@@ -1,8 +1,10 @@
-import { createReducer, createActions } from 'reduxsauce'
+import { createActions, createReducer } from 'reduxsauce'
 import Immutable from 'seamless-immutable'
 import { ShopTypes } from './ShopRedux'
 import * as R from 'ramda'
-import moment, { StartOf } from 'moment'
+import moment from 'moment'
+import GetVisitDay from '../Lib/GetVisitDay'
+import { LoginTypes } from './LoginRedux'
 
 /* ------------- Types and Action Creators ------------- */
 
@@ -21,6 +23,8 @@ export default Creators
 
 export const INITIAL_STATE = Immutable({
   payload: null,
+  pjpShops: null,
+  others: null,
   achieved: [],
   fetching: false,
   dayStarted: false,
@@ -35,7 +39,30 @@ const request = (state = INITIAL_STATE) => state && Immutable(state).merge({ fet
 
 const dayStart = (state) => {
   if (!state.dayStartDate || moment(state.dayStartDate).isBefore(new Date(), 'D')) {
-    return Immutable(state).merge({ dayStartDate: new Date(), dayStarted: true })
+    let pjpShops = R.filter(
+      R.compose(
+        R.contains(GetVisitDay()),
+        R.map(value => value.day),
+        R.prop('visitDays')
+      ))(state.payload)
+
+    let pjpArr = []
+    pjpShops.forEach(value => {
+      let obj = Immutable(value).asMutable()
+      obj.pjp = true
+      pjpArr.push(obj)
+    })
+    pjpShops = pjpArr
+    let others = R.filter(
+      R.compose(
+        R.not,
+        R.contains(GetVisitDay()),
+        R.map(value => value.day),
+        R.prop('visitDays')
+      )
+    )(state.payload)
+
+    return Immutable(state).merge({ dayStartDate: new Date(), dayStarted: true, pjpShops, others })
   } else return state
 }
 
@@ -55,6 +82,13 @@ export const checkOutCheck = (state, { id }) =>
     achieved: Immutable(state.achieved).concat(id)
   })
 
+export const reset = state => Immutable(state).merge({
+  shops: null,
+  pjpShops: null,
+  achieved: null,
+  others: null,
+  dayStartDate: __DEV__ ? null : state.dayStartDate
+})
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -63,6 +97,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.STORES_FAILURE]: failure,
   [Types.DAY_START_REQUEST]: dayStart,
   [Types.DAY_END_REQUEST]: dayEnd,
+  [LoginTypes.LOGOUT]: reset,
   [ShopTypes.CHECK_OUT_SUCCESS]: checkOutCheck,
   'STARTUP': startUp
 })

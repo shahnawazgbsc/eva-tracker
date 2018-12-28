@@ -11,7 +11,7 @@ export default (action$, state$, { api }) => action$.pipe(
     return api.login(action.data).pipe(
       mergeMap(response => {
         if (response.ok) {
-          login = JSON.parse(response.data)
+          login = response.data
           api.setHeaders(login.response.auth_token)
           return api.subsectionsByUser(login.user.userid)
         } else {

@@ -24,6 +24,7 @@ import styles from './Styles/MarketListStyle'
 import GradientWrapper from '../Components/GradientWrapper'
 import { Images } from '../Themes'
 import ParseImagePath from '../Lib/ParseImagePath'
+import GetVisitDay from '../Lib/GetVisitDay'
 
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
 
@@ -82,7 +83,7 @@ class MarketList extends React.PureComponent {
   onChangeText = (text) => {
     this.setState({
       text,
-      dataObjects: this.props.shops.filter(value => value.shopName.toLowerCase().includes(text.toLowerCase()))
+      dataObjects: this.props.otherShops.filter(value => value.shopName.toLowerCase().includes(text.toLowerCase()))
     })
   }
 
@@ -139,12 +140,12 @@ class MarketList extends React.PureComponent {
         list = R.filter(
           R.compose(
             R.flip(R.compose(R.not, R.contains))(props.achieved),
-            R.prop('storeId'))
-          ,
-          props.shops)
+            R.prop('storeId')),
+          props.pjpShops)
         break
       case 1:
-        list = R.filter(R.compose(R.flip(R.contains)(props.achieved), R.prop('storeId')), props.shops)
+        list = R.filter(R.compose(R.flip(R.contains)(props.achieved), R.prop('storeId')),
+          R.concat(props.pjpShops, props.otherShops))
         break
     }
     return list
@@ -170,7 +171,7 @@ class MarketList extends React.PureComponent {
     this.setState({
       text: '',
       segment: 2,
-      dataObjects: this.props.shops
+      dataObjects: this.props.otherShops
     })
   }
 
@@ -193,8 +194,8 @@ class MarketList extends React.PureComponent {
         </GradientWrapper>
         <Segment>
           <Button first active={this.state.segment === 0} onPress={this.segmentNearMe}><Text>PJP</Text></Button>
-          <Button active={this.state.segment === 1} onPress={this.segmentShopList}><Text>Achieved</Text></Button>
-          <Button last active={this.state.segment === 2} onPress={this.segmentSearch}><Text>Search</Text></Button>
+          <Button active={this.state.segment === 1} onPress={this.segmentShopList}><Text>Visited</Text></Button>
+          <Button last active={this.state.segment === 2} onPress={this.segmentSearch}><Text>Others</Text></Button>
         </Segment>
         {this.state.segment === 2 &&
         <Header searchBar rounded style={{ marginTop: 0, paddingTop: 0, backgroundColor: 'transparent' }}>
@@ -214,7 +215,7 @@ class MarketList extends React.PureComponent {
           renderItem={this.renderRow}
           style={styles.listContent}
           data={this.state.dataObjects}
-          extraData={this.state.dataObjects.length}
+          extraData={this.state.dataObjects && this.state.dataObjects.length}
           initialNumToRender={20}
           keyExtractor={this.keyExtractor}
         />
@@ -233,7 +234,8 @@ class MarketList extends React.PureComponent {
 
 const mapStateToProps = (state) => {
   return {
-    shops: state.store && state.store.payload,
+    pjpShops: state.store && state.store.pjpShops,
+    otherShops: state.store && state.store.others,
     achieved: state.store && state.store.achieved
   }
 }

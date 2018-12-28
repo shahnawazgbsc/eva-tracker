@@ -134,11 +134,11 @@ class ShopProfile extends React.Component {
                 this.props.checkOut({
                   onSuccess: () => this.props.navigation.goBack(null),
                   productive: true,
-                  pjp: this.props.pjp
+                  pjp: this.props.navigation.getParam('item').pjp
                 })
               } else {
                 // TODO show reason for not placing order
-                this.props.navigation.navigate('Reason')
+                this.props.navigation.navigate('Reason', { item: this.props.navigation.getParam('item') })
               }
               break
           }
@@ -159,7 +159,6 @@ const mapStateToProps = (state, ownProps) => {
   return {
     checkedIn: state.shop && state.shop.checkedIn,
     orderPlaced: state.shop && state.shop.orderPlaced,
-    pjp: !R.contains(ownProps.navigation.getParam('item').storeId)(state.store.achieved)
   }
 }
 

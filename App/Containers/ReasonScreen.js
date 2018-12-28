@@ -132,9 +132,9 @@ class ReasonScreen extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   return {
-    pjp: !R.contains(state.shop.shop.storeId)(state.store.achieved)
+    pjp: ownProps.navigation.getParam('item').pjp
   }
 }
 

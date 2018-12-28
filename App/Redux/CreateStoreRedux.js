@@ -9,7 +9,8 @@ const { Types, Creators } = createActions({
   subSectionSuccess: ['payload'],
   selectDays: ['payload'],
   resetDays: null,
-  createStoreFailure: ['error']
+  createStoreFailure: ['error'],
+  clear: null
 })
 
 export const CreateStoreTypes = Types
@@ -43,6 +44,7 @@ export const resetDays = (state) => Immutable(state).merge({ days: null })
 // Something went wrong somewhere.
 export const failure = (state, { error }) => Immutable(state).merge({ fetching: false, error, payload: null })
 export const startUp = (state) => Immutable(state).merge({ fetching: false })
+export const clear = (state) => INITIAL_STATE
 
 /* ------------- Hookup Reducers To Types ------------- */
 

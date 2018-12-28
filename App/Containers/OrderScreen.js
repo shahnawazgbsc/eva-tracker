@@ -10,7 +10,11 @@ import ShopActions from '../Redux/ShopRedux'
 
 class OrderScreen extends React.Component {
   addOrder = () => {
-    this.props.navigation.navigate('AddNewItem')
+    if (this.props.itemsBrands) {
+      this.props.navigation.navigate('AddNewItem')
+    } else {
+      Alert.alert('No Company Added', 'Please add company from portal')
+    }
   }
 
   back = () => {
@@ -25,7 +29,7 @@ class OrderScreen extends React.Component {
         <Text style={[styles.item2, { fontSize: 14, fontWeight: 'bold' }]}>Product</Text>
         <Text style={[styles.item3, { fontSize: 14, fontWeight: 'bold' }]}>Qty</Text>
         <Text style={[styles.item4, { fontSize: 14, fontWeight: 'bold' }]}>SKU</Text>
-        <View style={styles.item5} />
+        <View style={styles.item5}/>
       </View>
     )
   }
@@ -186,7 +190,9 @@ class OrderScreen extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    items: state.shop && state.shop.orderItems
+    items: state.shop && state.shop.orderItems,
+    itemsBrands: state.brands && state.brands.payload.find(value => value.brandName === 'Eva') &&
+      state.brands.payload.find(value => value.brandName === 'Eva').items
   }
 }
 

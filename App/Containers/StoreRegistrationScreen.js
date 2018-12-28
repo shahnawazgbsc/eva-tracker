@@ -46,7 +46,7 @@ class StoreRegistrationScreen extends Component {
       city: '',
       landMark: '',
       cnic: '',
-      status: true,
+      activeStatus: true,
       category: undefined,
       subsectionId: undefined,
       classification: undefined
@@ -340,16 +340,16 @@ class StoreRegistrationScreen extends Component {
               <Item fixedLabel>
                 <Label style={{ marginVertical: 15 }}>Status</Label>
                 <CircleCheckBox
-                  checked={this.state.status}
-                  onToggle={(checked) => this.setState({ status: true })}
+                  checked={this.state.activeStatus}
+                  onToggle={(checked) => this.setState({ activeStatus: true })}
                   labelPosition={LABEL_POSITION.RIGHT}
                   outerColor='rgb(35, 92, 114)'
                   label='Active'
                   style={{ marginBottom: 7, width: 10, height: 10 }}
                 />
                 <CircleCheckBox
-                  checked={!this.state.status}
-                  onToggle={(checked) => this.setState({ status: false })}
+                  checked={!this.state.activeStatus}
+                  onToggle={(checked) => this.setState({ activeStatus: false })}
                   labelPosition={LABEL_POSITION.RIGHT}
                   label='Inactive'
                   outerColor='rgb(35, 92, 114)'
