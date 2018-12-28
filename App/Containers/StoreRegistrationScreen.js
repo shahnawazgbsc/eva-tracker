@@ -37,6 +37,7 @@ class StoreRegistrationScreen extends Component {
 
     this.state = {
       image: undefined,
+      StartTime: new Date(),
       shopName: '',
       shopKeeper: '',
       contactNo: '',

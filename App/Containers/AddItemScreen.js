@@ -276,7 +276,7 @@ class AddItemScreen extends React.PureComponent {
 
 const mapStateToProps = (state) => {
   return {
-    items: state.brands && state.brands.payload.find(value => value.brandName === 'Eva').items
+    items: state.brands && state.brands.payload.find(value => value.brandName === 'EVA').items
   }
 }
 

@@ -85,9 +85,10 @@ export const checkOutCheck = (state, { id }) =>
 export const reset = state => Immutable(state).merge({
   shops: null,
   pjpShops: null,
-  achieved: null,
+  achieved: [],
   others: null,
-  dayStartDate: __DEV__ ? null : state.dayStartDate
+  dayStartDate: __DEV__ ? null : state.dayStartDate,
+  dayStarted: false
 })
 /* ------------- Hookup Reducers To Types ------------- */
 

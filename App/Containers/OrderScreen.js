@@ -192,8 +192,8 @@ class OrderScreen extends React.Component {
 const mapStateToProps = (state) => {
   return {
     items: state.shop && state.shop.orderItems,
-    itemsBrands: state.brands && state.brands.payload.find(value => value.brandName === 'Eva') &&
-      state.brands.payload.find(value => value.brandName === 'Eva').items
+    itemsBrands: state.brands && state.brands.payload.find(value => value.brandName === 'EVA') &&
+      state.brands.payload.find(value => value.brandName === 'EVA').items
   }
 }
 
