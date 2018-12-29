@@ -27,7 +27,6 @@ class ShopProfile extends React.Component {
     }
   }
 
-
   render () {
     return (
       <Container>
@@ -122,7 +121,7 @@ class ShopProfile extends React.Component {
               break
             case 'Inventory Taking':
               if (this.props.checkedIn) {
-                this.props.navigation.navigate('Inventory')
+                this.props.navigation.navigate('Inventory', { item: this.props.navigation.getParam('item') })
               } else {
                 Alert.alert(null, 'Please check in first to place order')
               }

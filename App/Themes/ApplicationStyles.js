@@ -7,6 +7,13 @@ import Colors from './Colors'
 
 const ApplicationStyles = {
   screen: {
+    shadow: {
+      shadowColor: Colors.charcoal,
+      elevation: 2,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.8,
+      shadowRadius: 2,
+    },
     divider: {
       backgroundColor: Colors.charcoal,
       height: 1,

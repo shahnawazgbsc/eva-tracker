@@ -1,12 +1,12 @@
-import { createReducer, createActions } from 'reduxsauce'
+import { createActions, createReducer } from 'reduxsauce'
 import Immutable from 'seamless-immutable'
 
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
-  selectProductsList: null,
-  selectProductsListFailure: ['error'],
-  selectProductsListSuccess: ['data']
+  inventoryRequest: ['data'],
+  inventoryFailure: ['error'],
+  inventorySuccess: ['data']
 })
 
 export const InventoryTakingType = Types
@@ -15,32 +15,24 @@ export default Creators
 /* ------------- Initial State ------------- */
 
 export const INITIAL_STATE = Immutable({
-  fetching: null,
-  payload: null,
-  error: null,
-  inventoryTaken:false
+  fetching: false,
+  error: null
 })
 
 /* ------------- Reducers ------------- */
 
 // request the data from an api
-export const selectProductsList = (state = INITIAL_STATE) => state && 
-    Immutable(state).merge({ fetching: true })
 
-export const selectProductsListSuccess = (state, { data }) => Immutable(state).merge({
-  fetching: false,
-  payload: data,
-  error:null,
-  inventoryTaken: true
-})
+export const request = (state, { data }) => Immutable(state).merge({ fetching: true })
 
-  // Something went wrong somewhere.
-export const selectProductsListFailure = (state, { error }) =>
-    Immutable(state).merge({ fetching: false, error })
+export const success = (state, { data }) => Immutable(state).merge({ fetching: false, error: null })
+
+// Something went wrong somewhere.
+export const failure = (state, { error }) => Immutable(state).merge({ fetching: false, error })
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
-  [Types.SELECT_PRODUCTS_LIST]: selectProductsList,
-  [Types.SELECT_PRODUCTS_LIST_SUCCESS]: selectProductsListSuccess,
-  [Types.SELECT_PRODUCTS_LIST_FAILURE]: selectProductsListFailure,
+  [Types.INVENTORY_REQUEST]: request,
+  [Types.INVENTORY_SUCCESS]: success,
+  [Types.INVENTORY_FAILURE]: failure
 })

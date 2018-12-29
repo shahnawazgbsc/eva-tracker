@@ -31,7 +31,7 @@ export default StyleSheet.create({
   },
   footer: {
     alignItems: 'center',
-    justifyContent:'space-between'
+    justifyContent: 'space-between'
   },
   listHeader: {
     flexDirection: 'row'
@@ -68,8 +68,8 @@ export default StyleSheet.create({
     color: Colors.white,
 
   },
-  iconStyle:{
-    color:'white'
+  iconStyle: {
+    color: 'white'
   }
 
 })

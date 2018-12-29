@@ -23,7 +23,9 @@ export default (action$, state$, { api }) => action$.pipe(
         if (response.ok) {
           return of(LoginActions.loginSuccess(login), CreateStoreActions.subSectionSuccess(response.data))
         } else {
-          if (response.status === 400) Alert.alert('Wrong credentials', 'Please provide correct username and password')
+          if (response.status === 400) {
+            Alert.alert('Wrong credentials', 'Please provide correct username and password')
+          }
           return of(LoginActions.loginFailure(response))
         }
       })

@@ -13,7 +13,7 @@ export const checkInEpic = (action$, state$, { api }) => action$.pipe(
 
     const data = {
       StoreId: action.data.storeId,
-      pjp: action.data.pjp,
+      pjp: !!action.data.pjp,
       companyId,
       latitude,
       longitude,
@@ -45,7 +45,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
 
     const data = {
       StoreId: checkInParam.StoreId,
-      pjp: action.data.pjp,
+      pjp: !!action.data.pjp,
       companyId: checkInParam.companyId,
       latitude,
       longitude,
@@ -102,7 +102,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
             .doc(checkInParam.StoreId.toString())
             .collection('visit_summary')
             .add({
-              PJP: action.data.pjp,
+              PJP: !!action.data.pjp,
               Productive: action.data.productive,
               lat: latitude,
               lng: longitude,

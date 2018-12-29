@@ -1,24 +1,20 @@
 import MainScreen from '../Containers/MainScreen/MainScreen'
 import { createAppContainer, createDrawerNavigator, createStackNavigator } from 'react-navigation'
+import InventoryScreen from '../Containers/InventoryScreen'
 import ReasonScreen from '../Containers/ReasonScreen'
 import AddItemScreen from '../Containers/AddItemScreen'
 import MarketList from '../Containers/MarketList'
 import DaySelection from '../Containers/DaySelection'
 import StoreRegistrationScreen from '../Containers/StoreRegistrationScreen'
-import React from 'react'
-import { connect } from 'react-redux'
 import styles from './Styles/NavigationStyles'
 import ShopProfile from '../Containers/Market/ShopProfile'
 import OrderScreen from '../Containers/OrderScreen'
-import InventoryTaking from '../Containers/InventoryTakingScreen/InventoryTaking'
-import { Body, Container, Content, Header, ListItem, Text } from 'native-base'
-import { Image, View } from 'react-native'
-import GradientWrapper from '../Components/GradientWrapper'
+import CustomDrawer from '../Components/CustomDrawer'
 
 const storeRegistration = createStackNavigator({
   StoreMain: { screen: StoreRegistrationScreen },
   DaySelection: { screen: DaySelection },
-  'Main': { screen: MainScreen },
+  'Main': { screen: MainScreen }
 
 }, {
   initialRouteName: 'StoreMain',
@@ -31,7 +27,7 @@ const MarketStack = createStackNavigator({
   'ShopDetail': { screen: ShopProfile },
   'OrderTaking': { screen: OrderScreen },
   'Reason': { screen: ReasonScreen },
-  'Inventory': { screen: InventoryTaking },
+  'Inventory': { screen: InventoryScreen },
   'AddNewItem': { screen: AddItemScreen }
 }, {
   headerMode: 'none',
@@ -51,55 +47,17 @@ const homeNav = createStackNavigator({
     headerStyle: styles.header
   }
 })
-const CoustomDrawer = (props) => (
-
-  <Container>
-    <GradientWrapper>
-      <Header style={styles.drawerHeader}>
-        <Body>
-        <View style={{
-          display: 'flex',
-          flex: 1,
-          justifyContent: 'center',
-          alignSelf: 'center',
-
-        }}>
-          <Image style={styles.drawerImage} source={require('../Images/logo.png')}/>
-          <Text style={{ textAlign: 'center', fontSize: 18, color: 'white' }}>{props.name}</Text>
-          <Text style={{ textAlign: 'center', fontSize: 12, color: 'white' }}>{props.email}</Text>
-        </View>
-        </Body>
-      </Header>
-    </GradientWrapper>
-    <Content>
-      {props.dayStarted &&
-      <ListItem button onPress={() => props.navigation.navigate('Store Registration')}>
-        <Text>Store Registration</Text>
-      </ListItem>
-      }
-
-    </Content>
-  </Container>
-
-)
-
-const mapDrawerStateToProps = (state) => ({
-  dayStarted: state.store.dayStarted,
-  name: state.login.payload && state.login.payload.user.firstname + ' ' + state.login.payload.user.lastname,
-  email: state.login.payload && state.login.payload.user.email
-})
 
 // Manifest of possible screens
 const PrimaryNav = createDrawerNavigator({
   'Home': {
     screen: homeNav
   },
-  'Store Registration': { screen: storeRegistration },
-  logout: { screen: 'Logout' }
+  'Store Registration': { screen: storeRegistration }
 }, {
   initialRouteName: 'Home',
   drawerPosition: 'left',
-  contentComponent: connect(mapDrawerStateToProps, null)(CoustomDrawer),
+  contentComponent: CustomDrawer,
   drawerLockMode: 'locked-close',
   drawerOpenRoute: 'DrawerOpen',
   drawerCloseRoute: 'DrawerClose',

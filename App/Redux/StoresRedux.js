@@ -39,34 +39,27 @@ const request = (state = INITIAL_STATE) => state && Immutable(state).merge({ fet
 
 const dayStart = (state) => {
   if (!state.dayStartDate || moment(state.dayStartDate).isBefore(new Date(), 'D')) {
-    return Immutable(state).merge({ dayStartDate: new Date(), dayStarted: true, pjpShops, others })
+    return Immutable(state).merge({ dayStartDate: new Date(), dayStarted: true })
   } else return state
 }
 
 const dayEnd = (state) => Immutable(state).merge({ dayEndDate: new Date(), dayStarted: false, achieved: [] })
 
-export const success = (state, action) => {
-  const { payload } = action
+export const success = (state, { payload }) => {
+  let pjpShops =
+    R.map(R.assoc('pjp', true))(
+      R.filter(
+        R.compose(
+          R.contains(GetVisitDay()),
+          R.map(R.prop('day')),
+          R.prop('visitDays')
+        ))(payload))
 
-  let pjpShops = R.filter(
-    R.compose(
-      R.contains(GetVisitDay()),
-      R.map(value => value.day),
-      R.prop('visitDays')
-    ))(payload)
-
-  let pjpArr = []
-  pjpShops.forEach(value => {
-    let obj = Immutable(value).asMutable()
-    obj.pjp = true
-    pjpArr.push(obj)
-  })
-  pjpShops = pjpArr
   let others = R.filter(
     R.compose(
       R.not,
       R.contains(GetVisitDay()),
-      R.map(value => value.day),
+      R.map(R.prop('day')),
       R.prop('visitDays')
     )
   )(payload)
@@ -88,7 +81,7 @@ export const reset = state => Immutable(state).merge({
   achieved: [],
   others: null,
   dayStartDate: __DEV__ ? null : state.dayStartDate,
-  dayStarted: false
+  dayStarted: __DEV__ ? false : state.dayStarted
 })
 /* ------------- Hookup Reducers To Types ------------- */
 

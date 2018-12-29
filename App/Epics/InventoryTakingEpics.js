@@ -1,21 +1,29 @@
 import { ofType } from 'redux-observable'
 import { map, mergeMap } from 'rxjs/operators'
 import InventoryActions, { InventoryTakingType } from '../Redux/InventoryTakingRedux'
-import GetBrandsActions from '../Redux/GetBrandsRedux'
 
 export const selectProductsListEpics = (action$, state$, { api }) => action$.pipe(
-  ofType(InventoryTakingType.SELECT_PRODUCTS_LIST),
+  ofType(InventoryTakingType.INVENTORY_REQUEST),
   mergeMap(action => {
-     const companyId = state$.value.login.payload == null? 194 : 
-          state$.value.login.payload.user.companyid
-    return api.getBrands(companyId).pipe(
+    const checkInParam = state$.value.shop.checkInParam
+    const data = {
+      InventoryTaking: action.data.items.map(value => ({
+        inventoryItemId: value.inventoryItemId,
+        quantity: value.quantity,
+        storeVisitId: checkInParam.storeVisitId,
+        companyId: checkInParam.companyId,
+        StoreId: checkInParam.StoreId
+      }))
+    }
+
+    return api.addInventories(data).pipe(
       map(response => {
-        //alert(JSON.stringify(response.data))
-         if (response.ok) {
-           return InventoryActions.selectProductsListSuccess(response.data)
-         } else {
-           return InventoryTakingType.selectProductsListFailure(response)
-         }
+        if (response.ok) {
+          if (action.data.onSuccess) action.data.onSuccess()
+          return InventoryActions.inventorySuccess(response.data)
+        } else {
+          return InventoryActions.inventoryFailure(response)
+        }
       })
     )
   })
