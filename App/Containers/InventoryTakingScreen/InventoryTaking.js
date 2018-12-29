@@ -184,7 +184,8 @@ class InventoryTaking extends React.Component {
                             flexDirection: 'row',
                             alignItems: 'center',
                             flex:1,
-                            right:10}}>
+                            right:10,
+                            marginBottom:15}}>
                             <Button rounded danger onPress={this.submit}>
                                 <Text>Submit</Text>
                             </Button>
@@ -198,7 +199,8 @@ class InventoryTaking extends React.Component {
     }
     renderProductItems(brand,product) {
 
-        if(productSubCategories[brand][product]!=null) {
+        if(productSubCategories[brand]!=null) {
+            if(productSubCategories[brand][product]!=null) {
         productsList = [{
             title:brandNames[brand],
             content:{
@@ -220,6 +222,7 @@ class InventoryTaking extends React.Component {
             return(
                 <View style={{height:0}}/>
             )
+        }
     }
     renderProductTypes(brand) {
         if(productTypes.length > 0) {
