@@ -10,7 +10,7 @@ export const checkInEpic = (action$, state$, { api }) => action$.pipe(
     const companyId = state$.value.login.payload.user.companyid
     const latitude = state$.value.gps.data.latitude
     const longitude = state$.value.gps.data.longitude
-
+    if(latitude != null || longitude != null) {
     const data = {
       StoreId: action.data.storeId,
       pjp: !!action.data.pjp,
@@ -32,6 +32,10 @@ export const checkInEpic = (action$, state$, { api }) => action$.pipe(
         }
       })
     )
+  }
+  else {
+    alert("Failed to grab your location. Please try again")
+  }
   })
 )
 
@@ -42,7 +46,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
     const longitude = state$.value.gps.data.longitude
     const checkInParam = state$.value.shop.checkInParam
     const userId = state$.value.login.payload.user.userid
-
+if(latitude != null || longitude != null) {
     const data = {
       StoreId: checkInParam.StoreId,
       pjp: !!action.data.pjp,
@@ -123,6 +127,10 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
         }
       })
     )
+  }
+  else {
+    alert("Failed to grab your location. Please try again")
+  }
   })
 )
 
