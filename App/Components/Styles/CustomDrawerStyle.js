@@ -9,8 +9,6 @@ export default StyleSheet.create({
     height: 200,
     backgroundColor: 'transparent',
     alignItems: 'center',
-    display: 'flex',
-    flex: 1,
     justifyContent: 'center',
     alignSelf: 'center'
   },
@@ -22,7 +20,6 @@ export default StyleSheet.create({
     width: scale(160),
     alignSelf: 'center',
     marginBottom: 10,
-
     justifyContent: 'center',
     alignItems: 'center'
   }
