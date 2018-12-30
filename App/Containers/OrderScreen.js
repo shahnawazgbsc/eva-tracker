@@ -16,7 +16,6 @@ class OrderScreen extends React.Component {
       Alert.alert('No Company Added', 'Please add company from portal')
     }
   }
-
   back = () => {
     this.props.navigation.goBack(null)
   }
@@ -192,8 +191,8 @@ class OrderScreen extends React.Component {
 const mapStateToProps = (state) => {
   return {
     items: state.shop && state.shop.orderItems,
-    itemsBrands: state.brands && state.brands.payload.find(value => value.brandName === 'EVA') &&
-      state.brands.payload.find(value => value.brandName === 'EVA').items
+    itemsBrands: state.brands && state.brands.payload.find(value => value.brandName.toLowerCase() === 'EVA'.toLowerCase()) &&
+      state.brands.payload.find(value => value.brandName.toLowerCase() === 'EVA'.toLowerCase()).items
   }
 }
 
