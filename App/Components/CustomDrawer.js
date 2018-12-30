@@ -20,24 +20,22 @@ class CustomDrawer extends PureComponent {
 
   render () {
     return (
-      <Container>
+      <Container style={{flex:3}}>
         <GradientWrapper>
           <Header style={styles.drawerHeader}>
             <Body>
             <View style={{
-              display: 'flex',
-              flex: 1,
               justifyContent: 'center',
               alignSelf: 'center'
             }}>
               <Image style={styles.drawerImage} source={require('../Images/logo.png')}/>
               <Text style={{ textAlign: 'center', fontSize: 18, color: 'white' }}>{this.props.name}</Text>
-              <Text style={{ textAlign: 'center', fontSize: 12, color: 'white' }}>{this.  props.email}</Text>
+              <Text style={{ textAlign: 'center', fontSize: 12, color: 'white' }}>{this.props.email}</Text>
             </View>
             </Body>
           </Header>
         </GradientWrapper>
-        <Content>
+        <Content style={{flex:2}}>
           {this.props.dayStarted &&
           <ListItem button onPress={() => this.props.navigation.navigate('Store Registration')}>
             <Text>Store Registration</Text>
