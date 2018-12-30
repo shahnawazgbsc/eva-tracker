@@ -59,7 +59,6 @@ class AddItemScreen extends React.PureComponent {
     for (let i = 0; i < data.length; i++) quantity[i] = '1'
     this.setState({ data, quantity, selected: [] })
   }
-
   renderHeader = () => (
     <Item fixedLabel>
       <Label>Category</Label>
@@ -81,7 +80,7 @@ class AddItemScreen extends React.PureComponent {
       </Picker>
     </Item>
   )
-
+  
   renderRow = ({ item, index }) => {
     return (
       <Card style={styles.row}>
@@ -276,7 +275,7 @@ class AddItemScreen extends React.PureComponent {
 
 const mapStateToProps = (state) => {
   return {
-    items: state.brands && state.brands.payload.find(value => value.brandName === 'EVA').items
+    items: state.brands && state.brands.payload.find(value => value.brandName.toLowerCase() === 'EVA'.toLowerCase()).items
   }
 }
 
