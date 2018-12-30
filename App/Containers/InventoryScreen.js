@@ -140,6 +140,8 @@ class InventoryScreen extends Component {
                   <Input
                     style={styles.inputText}
                     value={this.state.unit[this.state.selectedBrand][index][indx]}
+                    disabled={true}
+                    editable={false}
                     onChangeText={text => {
                       let clone = JSON.parse(JSON.stringify(this.state.unit))
                       clone[this.state.selectedBrand][index][indx] = text
