@@ -12,39 +12,39 @@ export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
     const userId = state$.value.login.payload.user.userid
     const companyId = state$.value.login.payload.user.companyid
     const location = state$.value.gps.data
-    if(location!=null) {
-    return api.uploadImage(action.data.image.uri, action.data.image.fileName, userId)
-      .pipe(
-        mergeMap(response => {
-          if (response.ok) {
-            const params = {
-              ...action.data,
-              image: null,
-              latitude: location.latitude,
-              longitude: location.longitude,
-              EndTime: new Date(),
-              userId: userId,
-              companyId: companyId,
-              imageUrl: response.data.filepath
+
+    if (location != null) {
+      return api.uploadImage(action.data.image.uri, action.data.image.fileName, userId)
+        .pipe(
+          mergeMap(response => {
+            if (response.ok) {
+              const params = {
+                ...action.data,
+                image: null,
+                latitude: location.latitude,
+                longitude: location.longitude,
+                EndTime: new Date(),
+                userId: userId,
+                companyId: companyId,
+                imageUrl: response.data.filepath
+              }
+              return api.createStore(params)
+            } else {
+              return of(response)
             }
-            return api.createStore(params)
-          } else {
-            return of(response)
-          }
-        }),
-        mergeMap(response => {
-          if (response.ok) {
-            Alert.alert('Success', 'Store created successfully')
-            if (action.data.onSuccess) action.data.onSuccess()
-            return of(CreateStoreActions.createStoreSuccess(response.data), StoresRedux.storesRequest())
-          } else {
-            return of(CreateStoreActions.createStoreFailure(response))
-          }
-        })
-      )
-    }
-    else {
-      alert("Failed to grab your location, Please try again")
+          }),
+          mergeMap(response => {
+            if (response.ok) {
+              Alert.alert('Success', 'Store created successfully')
+              if (action.data.onSuccess) action.data.onSuccess()
+              return of(CreateStoreActions.createStoreSuccess(response.data), StoresRedux.storesRequest())
+            } else {
+              return of(CreateStoreActions.createStoreFailure(response))
+            }
+          })
+        )
+    } else {
+      Alert.alert('Failed to grab your location, Please try again')
     }
   })
 )
