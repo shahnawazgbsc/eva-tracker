@@ -1,7 +1,7 @@
 import React from 'react'
 import { Alert } from 'react-native'
 import { connect } from 'react-redux'
-import { Body, Button, Container, Footer, Header, Icon, Left, Right, Text } from 'native-base'
+import { Body, Button, ActionSheet, Container, Footer, Header, Icon, Left, Right, Text } from 'native-base'
 import MapView from 'react-native-maps'
 import { Colors, Images } from '../../Themes'
 import StoresRedux from '../../Redux/StoresRedux'
@@ -9,6 +9,7 @@ import GpsLocationRedux from '../../Redux/GpsLocationRedux'
 import GradientWrapper from '../../Components/GradientWrapper'
 import styles from './MainScreenStyle'
 import LoginRedux from '../../Redux/LoginRedux'
+import * as R from 'ramda'
 
 class MainScreen extends React.Component {
   constructor (props) {
@@ -108,7 +109,26 @@ class MainScreen extends React.Component {
           }
         </MapView>
         <Footer style={{ alignItems: 'center', justifyContent: 'space-around', backgroundColor: Colors.background }}>
-          <Button success disabled={this.props.dayStarted} onPress={this.props.dayStart}>
+          <Button success disabled={this.props.dayStarted} onPress={() => {
+            if (this.props.subSection && this.props.subSection.length > 0) {
+              ActionSheet.show(
+                {
+                  options: R.concat(R.map(R.prop('name'))(this.props.subSection), ['Cancel']),
+                  cancelButtonIndex: this.props.subSection.length,
+                  title: 'Select Subsection'
+                },
+                buttonIndex => {
+                  console.log(buttonIndex)
+                  if (buttonIndex < this.props.subSection.length) {
+                    this.props.dayStart(this.props.subSection[buttonIndex].subsectionId)
+                  }
+                }
+              )
+            } else {
+              // No subsection Logic
+            }
+          }
+          }>
             <Text>Day Start</Text>
           </Button>
           <Button success disabled={!this.props.dayStarted} onPress={() => {
@@ -116,7 +136,9 @@ class MainScreen extends React.Component {
           }}>
             <Text>Market</Text>
           </Button>
-          <Button success disabled={!this.props.dayStarted} onPress={this.props.dayEnd}>
+          <Button success disabled={!this.props.dayStarted} onPress={() => {
+            this.props.dayEnd('')
+          }}>
             <Text>End Day</Text>
           </Button>
         </Footer>
@@ -128,6 +150,7 @@ class MainScreen extends React.Component {
 const mapStateToProps = state => ({
   dayStarted: state.store.dayStarted,
   stores: state.store && state.store.payload,
+  subSection: state.createStore && state.createStore.subSection,
   waypoint: state.gps && state.gps.waypoint,
   latitude: state.gps && state.gps.data && state.gps.data.latitude,
   longitude: state.gps && state.gps.data && state.gps.data.longitude
@@ -135,8 +158,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   directions: (location) => dispatch(GpsLocationRedux.gpsDirection(location)),
-  dayStart: () => dispatch(StoresRedux.dayStartRequest()),
-  dayEnd: () => dispatch(StoresRedux.dayEndRequest()),
+  dayStart: (subsection) => dispatch(StoresRedux.dayStartRequest(subsection)),
+  dayEnd: (note) => dispatch(StoresRedux.dayEndRequest(note)),
   request: () => dispatch(StoresRedux.storesRequest()),
   logout: () => dispatch(LoginRedux.logout())
 })

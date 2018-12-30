@@ -5,6 +5,7 @@ import { checkInEpic, checkOutEpic, placeOrderEpics } from './OrderTakingEpics'
 import { directionsEpic } from './MapsEpics'
 import GpsUpdateEpic from './GpsUpdateEpic'
 import { selectProductsListEpics } from './InventoryTakingEpics'
+import { dayEndEpic, dayStartEpic } from './DayEpics'
 
 export default combineEpics(
   LoginEpics,
@@ -15,5 +16,7 @@ export default combineEpics(
   placeOrderEpics,
   directionsEpic,
   GpsUpdateEpic,
-  selectProductsListEpics
+  selectProductsListEpics,
+  dayStartEpic,
+  dayEndEpic
 )

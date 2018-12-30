@@ -92,28 +92,10 @@ class MarketList extends React.PureComponent {
   * Consider the configurations we've set below.  Customize them
   * to your liking!  Each with some friendly advice.
   *************************************************************/
-  // Render a header?
-  renderHeader = () =>
-    <Text style={[styles.label, styles.sectionHeader]}> - Header - </Text>
-
-  // Render a footer?
-  renderFooter = () =>
-    <Text style={[styles.label, styles.sectionHeader]}> - Footer - </Text>
-
-  // Show this when data is empty
-  renderEmpty = () =>
-    <Text style={styles.label}> - Nothing to See Here - </Text>
-
-  renderSeparator = () =>
-    <Text style={styles.label}> - ~~~~~ - </Text>
-
   // The default function if no Key is provided is index
   // an identifiable key is important if you plan on
   // item reordering.  Otherwise index is fine
   keyExtractor = (item, index) => index
-
-  // How many items should be kept im memory as we scroll?
-  oneScreensWorth = 20
 
   // extraData is for anything that is not indicated in data
   // for instance, if you kept "favorites" in `this.state.favs`
@@ -236,7 +218,7 @@ const mapStateToProps = (state) => {
   return {
     pjpShops: state.store && state.store.pjpShops,
     otherShops: state.store && state.store.others,
-    achieved: state.store && state.store.achieved
+    achieved: state.store && R.map(R.prop('id'), state.store.achieved)
   }
 }
 

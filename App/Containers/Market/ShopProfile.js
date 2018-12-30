@@ -8,7 +8,6 @@ import styles from './ShopProfileStyle'
 import { Images } from '../../Themes'
 import ParseImagePath from '../../Lib/ParseImagePath'
 import ShopRedux from '../../Redux/ShopRedux'
-import * as R from 'ramda'
 
 class ShopProfile extends React.Component {
   constructor (props) {
@@ -75,13 +74,13 @@ class ShopProfile extends React.Component {
               resizeMode={'cover'}
             />
           </View>
-          <View>
+          <View style={{ display: 'flex', flex: 1 }}>
             <Title style={styles.darkText}>{item.shopName}</Title>
             <Subtitle style={styles.lightDarkText}>{item.address}</Subtitle>
             <Button transparent>
               <Icon style={[styles.lightDarkText, styles.iconPhone]} name={'phone-square'} type={'FontAwesome'}
               />
-              <Text style={[styles.lightDarkText, { marginTop: 10, flexWrap: 'wrap' }]}>{item.contactNo}</Text>
+              <Text style={[styles.lightDarkText, { marginTop: 10, flexWrap: 'wrap', flex: 1 }]}>{item.contactNo}</Text>
             </Button>
           </View>
         </CardItem>
@@ -158,7 +157,7 @@ class ShopProfile extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     checkedIn: state.shop && state.shop.checkedIn,
-    orderPlaced: state.shop && state.shop.orderPlaced,
+    orderPlaced: state.shop && state.shop.orderPlaced
   }
 }
 

@@ -2,7 +2,6 @@ import { ofType } from 'redux-observable'
 import { Alert } from 'react-native'
 import { map, mergeMap } from 'rxjs/operators'
 import ShopActions, { ShopTypes } from '../Redux/ShopRedux'
-import moment from 'moment'
 import 'firebase/firestore'
 
 export const checkInEpic = (action$, state$, { api }) => action$.pipe(
@@ -21,7 +20,7 @@ export const checkInEpic = (action$, state$, { api }) => action$.pipe(
         longitude,
         ContactPersonName: '',
         ContactNo: '',
-        StartTime: moment().format('YYYY-MM-DD LT'),
+        StartTime: new Date(),
         Status: 'Pending',
         NextScheduledVisit: ''
       }
@@ -62,39 +61,28 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
         NextScheduledVisit: '',
         Location: '',
         Notes: '',
-        EndTime: moment().format('YYYY-MM-DD LT'),
+        EndTime: new Date(),
         StoreVisitId: checkInParam.storeVisitId,
         Status: 'Achieved'
       }
+      const dateNow = String(new Date().getMilliseconds())
+
       return api.checkOut(data).pipe(
         map(response => {
           if (response.ok) {
             firebase.firestore()
               .collection('tbl_shops')
-              .doc(checkInParam.StoreId.toString())
+              .doc(String(checkInParam.StoreId))
               .collection('shop_events')
+              .doc(dateNow)
               .add({
                 device_name: 'ABC_Device',
-                lng: latitude, // need to  put dynamic
+                lng: latitude,
                 lat: longitude,
-                shop_id: checkInParam.StoreId,
-                user_id: userId
-              })
-              .then((docRef) => {
-                console.log('done')
-              })
-              .catch((error) => {
-                console.warn('Error adding document: ', error)
-              })
-
-            firebase.firestore()
-              .collection('tbl_shops')
-              .doc(checkInParam.StoreId.toString())
-              .set({
-                lng: latitude, // need to  put dynamic
-                lat: longitude,
-                shop_id: checkInParam.StoreId,
-                user_id: userId
+                shopId: String(checkInParam.StoreId),
+                eventId: dateNow,
+                userId: String(userId),
+                timestamp: new Date()
               })
               .then((docRef) => {
                 console.log('done')
@@ -106,15 +94,18 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
             firebase
               .firestore()
               .collection('tbl_shops')
-              .doc(checkInParam.StoreId.toString())
+              .doc(String(checkInParam.StoreId))
               .collection('visit_summary')
+              .doc(dateNow)
               .add({
-                PJP: !!action.data.pjp,
-                Productive: action.data.productive,
+                pjp: !!action.data.pjp,
+                productive: action.data.productive,
                 lat: latitude,
                 lng: longitude,
-                shop_id: checkInParam.StoreId,
-                user_id: userId
+                shopId: checkInParam.StoreId,
+                userId: userId,
+                visitId: dateNow,
+                timestamp: new Date()
               })
               .then((docRef) => {
                 console.log('done')
@@ -124,7 +115,13 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
               })
 
             if (action.data.onSuccess) action.data.onSuccess()
-            return ShopActions.checkOutSuccess(checkInParam.StoreId)
+            return ShopActions.checkOutSuccess(
+              {
+                id: checkInParam.StoreId,
+                pjp: !!action.data.pjp,
+                productive: action.data.productive
+              }
+            )
           } else {
             return ShopActions.shopFailure(response)
           }

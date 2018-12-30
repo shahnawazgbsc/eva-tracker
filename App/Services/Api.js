@@ -75,6 +75,10 @@ const create = (baseURL = AppConfig.baseUrl) => {
   const checkIn = (data) => from(api.post('etracker/api/StoreVisit/AddStoreVisit', data))
   const checkOut = (data) => from(api.post('etracker/api/storevisit/updatestorevisit', data))
   const createStore = (data) => from(api.post('etracker/api/store/createstore', data))
+
+  const dayStart = (data) => from(api.post('etracker/api/pjp/AddPJP', data))
+  const dayEnd = (data) => from(api.put('etracker/api/pjp/UpdatePjp', data))
+
   const setHeaders = (token) => api.setHeader('api_key', token)
 
   // ------
@@ -102,7 +106,9 @@ const create = (baseURL = AppConfig.baseUrl) => {
     subsectionsByUser,
     uploadImage,
     createStore,
-    setHeaders
+    setHeaders,
+    dayStart,
+    dayEnd
   }
 }
 
