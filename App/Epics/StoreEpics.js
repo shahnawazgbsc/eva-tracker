@@ -12,7 +12,7 @@ export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
     const userId = state$.value.login.payload.user.userid
     const companyId = state$.value.login.payload.user.companyid
     const location = state$.value.gps.data
-
+    if(location!=null) {
     return api.uploadImage(action.data.image.uri, action.data.image.fileName, userId)
       .pipe(
         mergeMap(response => {
@@ -42,6 +42,10 @@ export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
           }
         })
       )
+    }
+    else {
+      alert("Failed to grab your location, Please try again")
+    }
   })
 )
 
