@@ -1,6 +1,7 @@
 import { ofType } from 'redux-observable'
 import { Alert } from 'react-native'
 import { map, mergeMap } from 'rxjs/operators'
+import { of } from 'rxjs'
 import ShopActions, { ShopTypes } from '../Redux/ShopRedux'
 import 'firebase/firestore'
 
@@ -35,6 +36,7 @@ export const checkInEpic = (action$, state$, { api }) => action$.pipe(
       )
     } else {
       Alert.alert('Failed to grab your location. Please try again')
+      return of(ShopActions.shopFailure(null))
     }
   })
 )
@@ -129,6 +131,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
       )
     } else {
       Alert.alert('GPS Error', 'Failed to grab your location. Please try again')
+      return of(ShopActions.shopFailure(null))
     }
   })
 )

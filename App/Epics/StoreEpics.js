@@ -45,6 +45,7 @@ export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
         )
     } else {
       Alert.alert('Failed to grab your location, Please try again')
+      return of(CreateStoreActions.createStoreFailure(null))
     }
   })
 )
