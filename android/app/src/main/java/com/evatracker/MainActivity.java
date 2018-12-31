@@ -1,4 +1,4 @@
-package com.evatracker;
+package com.tracking.store;
 
 import com.facebook.react.ReactActivity;
 

@@ -98,11 +98,11 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.evatracker"
+        applicationId "com.tracking.store"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 40
+        versionName " 2.12"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -117,7 +117,7 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file('/Users/syedshahnawazali/Dropbox/Eva Tracker/eva-certificate')
+            storeFile file('C:/Users/Muhammad Bilal/eva-certificate')
             storePassword 'eva123!'
             keyAlias 'eva'
             keyPassword 'eva123!'

@@ -1,4 +1,4 @@
-package com.evatracker;
+package com.tracking.store;
 
 import android.app.Application;
 
