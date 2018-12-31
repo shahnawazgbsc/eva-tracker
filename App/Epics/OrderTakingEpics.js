@@ -11,7 +11,7 @@ export const checkInEpic = (action$, state$, { api }) => action$.pipe(
     const latitude = state$.value.gps.data && state$.value.gps.data.latitude
     const longitude = state$.value.gps.data && state$.value.gps.data.longitude
 
-    if (latitude != null || longitude != null) {
+    if (latitude && longitude) {
       const data = {
         StoreId: action.data.storeId,
         pjp: !!action.data.pjp,
@@ -48,7 +48,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
     const checkInParam = state$.value.shop.checkInParam
     const userId = state$.value.login.payload.user.userid
 
-    if (latitude != null || longitude != null) {
+    if (latitude && longitude) {
       const data = {
         StoreId: checkInParam.StoreId,
         pjp: !!action.data.pjp,
@@ -75,7 +75,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
               .doc(String(checkInParam.StoreId))
               .collection('shop_events')
               .doc(dateNow)
-              .add({
+              .set({
                 device_name: 'ABC_Device',
                 lng: latitude,
                 lat: longitude,
@@ -97,7 +97,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
               .doc(String(checkInParam.StoreId))
               .collection('visit_summary')
               .doc(dateNow)
-              .add({
+              .set({
                 pjp: !!action.data.pjp,
                 productive: action.data.productive,
                 lat: latitude,

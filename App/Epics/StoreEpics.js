@@ -13,7 +13,7 @@ export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
     const companyId = state$.value.login.payload.user.companyid
     const location = state$.value.gps.data
 
-    if (location != null) {
+    if (location) {
       return api.uploadImage(action.data.image.uri, action.data.image.fileName, userId)
         .pipe(
           mergeMap(response => {

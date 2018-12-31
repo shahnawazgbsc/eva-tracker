@@ -91,16 +91,16 @@ export const startUp = (state) => {
 export const checkOutCheck = (state, { data }) =>
   R.contains(
     data.id,
-    R.map(R.prop('id'))
-  )(state.achieved) ? state : Immutable(state).merge({ achieved: Immutable(state.achieved).concat(data) })
+    R.map(R.prop('id'))(state.achieved)
+  ) ? state : Immutable(state).merge({ achieved: Immutable(state.achieved).concat(data) })
 
 export const reset = state => Immutable(state).merge({
   shops: null,
   pjpShops: null,
   achieved: [],
   others: null,
-  dayStartDate: __DEV__ ? null : state.dayStartDate,
-  dayStarted: __DEV__ ? false : state.dayStarted
+  dayStartDate: null, // __DEV__ ? null : state.dayStartDate,
+  dayStarted: false // __DEV__ ? false : state.dayStarted
 })
 /* ------------- Hookup Reducers To Types ------------- */
 

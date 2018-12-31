@@ -1,5 +1,6 @@
 import { createReducer, createActions } from 'reduxsauce'
 import Immutable from 'seamless-immutable'
+import { LoginTypes } from './LoginRedux'
 
 /* ------------- Types and Action Creators ------------- */
 
@@ -41,6 +42,8 @@ export const selectDays = (state, { payload }) => Immutable(state).merge({ days:
 
 export const resetDays = (state) => Immutable(state).merge({ days: null })
 
+export const reset = (state) => Immutable(state).merge({ subSection: null })
+
 // Something went wrong somewhere.
 export const failure = (state, { error }) => Immutable(state).merge({ fetching: false, error, payload: null })
 export const startUp = (state) => Immutable(state).merge({ fetching: false })
@@ -54,6 +57,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.CREATE_STORE_FAILURE]: failure,
   [Types.SUB_SECTION_SUCCESS]: subSectionSuccess,
   [Types.RESET_DAYS]: resetDays,
+  [LoginTypes.LOGOUT]: reset,
   [Types.SELECT_DAYS]: selectDays,
   'STARTUP': startUp
 })
