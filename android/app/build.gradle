@@ -78,6 +78,15 @@ project.ext.react = [
 
 apply from: "../../node_modules/react-native/react.gradle"
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+def keystore = properties.getProperty('keystore')
+def alias = properties.getProperty('alias')
+def pass.store = properties.getProperty('pass.store')
+def pass.key = properties.getProperty('pass.key')
+
+
 /**
  * Set this to true to create two separate APKs instead of one:
  *   - An APK that only works on ARM devices
@@ -117,10 +126,10 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file('/Users/syedshahnawazali/Dropbox/Eva Tracker/eva-certificate')
-            storePassword 'eva123!'
-            keyAlias 'eva'
-            keyPassword 'eva123!'
+            storeFile file(keystore)
+            storePassword pass.store
+            keyAlias alias
+            keyPassword pass.key
         }
     }
     buildTypes {
