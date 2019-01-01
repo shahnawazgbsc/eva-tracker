@@ -117,7 +117,7 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file('C:/Users/Muhammad Bilal/eva-certificate')
+            storeFile file('/Users/syedshahnawazali/Dropbox/Eva Tracker/eva-certificate')
             storePassword 'eva123!'
             keyAlias 'eva'
             keyPassword 'eva123!'

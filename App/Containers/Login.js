@@ -35,7 +35,7 @@ class Login extends Component {
                 <Input
                   onChangeText={this.onEmailChange}
                   keyboardType={'email-address'}
-                  placeholder='Email Address'
+                  placeholder='Username'
                 />
               </Item>
               <Item rounded style={{ marginTop: 10, backgroundColor: '#c0b46a' }}>

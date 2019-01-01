@@ -9,7 +9,7 @@ const config = {
   databaseURL: 'https://walturndemo.firebaseio.com',
   projectId: 'trackingsystemdemo',
   storageBucket: 'trackingsystemdemo.appspot.com',
-  messagingSenderId: '494586801404'
+  messagingSenderId: '58044608671'
 }
 
 if (!firebase.apps.length) {

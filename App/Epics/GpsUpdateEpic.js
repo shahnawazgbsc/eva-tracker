@@ -23,6 +23,19 @@ export default (action$, state$, { firebase }) => action$.pipe(
         })
         .then(docRef => { })
         .catch(error => { })
+
+
+        firebase.firestore()
+        .collection('tbl_users')
+        .doc(userId.toString())
+        .set({
+          lng: longitude,
+          user_id: userId,
+          lat: latitude,
+          timestamp: new Date()
+        })
+        .then(docRef => { })
+        .catch(error => { })
     }
 
     return of(StartupActions.voidAction())
