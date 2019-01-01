@@ -75,7 +75,7 @@ class StoreRegistrationScreen extends Component {
       return 'Shop name is required'
     } else if (this.state.shopKeeper.length === 0) {
       return 'Shopkeeper name is required'
-    } else if (this.state.contactNo.length === 0) {
+    } else if (this.state.contactNo.length !== 11) {
       return 'Contact number is required'
     } else if (this.state.subsectionId === undefined) {
       return 'Subsection is required'
@@ -227,6 +227,7 @@ class StoreRegistrationScreen extends Component {
                 <Label>Contact Number</Label>
                 <Input
                   keyboardType={'phone-pad'}
+                  maxLength={11}
                   onChangeText={this.onContact}
                   value={this.state.contactNo}
                 />
@@ -236,6 +237,7 @@ class StoreRegistrationScreen extends Component {
                 <Label>Land Line</Label>
                 <Input
                   onChangeText={this.onLandLine}
+                  maxLength={11}
                   value={this.state.landline}
                   keyboardType={'phone-pad'}
                 />
