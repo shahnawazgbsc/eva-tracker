@@ -37,7 +37,7 @@ export default StyleSheet.create({
   cardChildContainerDisabled: { backgroundColor: Colors.charcoal, alignSelf: 'stretch', flex: 1 },
   cardChildItem: {
     marginHorizontal: 3,
-    padding: 10,
+    padding: 5,
     paddingTop: 15,
     paddingBottom: 15,
     backgroundColor: Colors.white,
