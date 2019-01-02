@@ -8,7 +8,17 @@ import ConvertToCurrency from '../Transforms/ConvertToCurrency'
 import { Colors, Images } from '../Themes'
 import ShopActions from '../Redux/ShopRedux'
 
+var netTotal = 0
 class OrderScreen extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state={
+      netTotal:0
+    }
+  }
+  componentWillMount() {
+    netTotal = 0;
+  }
   addOrder = () => {
     if (this.props.itemsBrands) {
       this.props.navigation.navigate('AddNewItem')
@@ -34,6 +44,8 @@ class OrderScreen extends React.Component {
   }
 
   renderRow = ({ item }) => {
+    this.setState({
+      netTotal:this.state.netTotal+=item.netAmount})
     return (
       <View style={styles.listHeader}>
         <Image
@@ -52,46 +64,48 @@ class OrderScreen extends React.Component {
           </Row>
           <Row>
             <Text style={styles.item3}>Ltrs / Mes</Text>
-            <Text style={styles.item4}>{item.unit}</Text>
+            <Text style={styles.item4}>{item.litresMes}</Text>
           </Row>
           <Row>
             <Text style={styles.item3}>Trade Price</Text>
-            <Text style={styles.item4}>{item.tradeOfferAmount}</Text>
-          </Row>
-          <Row>
-            <Text style={styles.item3}>Gross Amount</Text>
             <Text style={styles.item4}>{item.retailPrice}</Text>
           </Row>
           <Row>
+            <Text style={styles.item3}>Gross Amount</Text>
+            <Text style={styles.item4}>{item.grossAmount}</Text>
+          </Row>
+          <Row>
             <Text style={styles.item3}>TO / Ltr / Kg</Text>
-            <Text style={styles.item4}>{item.unit}</Text>
+            <Text style={styles.item4}>{item.tradeOfferAmount}</Text>
           </Row>
           <Row>
             <Text style={styles.item3}>Less TO</Text>
-            <Text style={styles.item4}>{item.unit}</Text>
+            <Text style={styles.item4}>{item.lessTO}</Text>
           </Row>
           <Row>
             <Text style={styles.item3}>RD %</Text>
-            <Text style={styles.item4}>{item.unit}</Text>
+            <Text style={styles.item4}>-</Text>
           </Row>
           <Row>
             <Text style={styles.item3}>Regular Discount</Text>
-            <Text style={styles.item4}>{item.unit}</Text>
+            <Text style={styles.item4}>-</Text>
           </Row>
           <Row>
             <Text style={styles.item3}>Extra Discount / Ltr / Kg</Text>
-            <Text style={styles.item4}>{item.unit}</Text>
+            <Text style={styles.item4}>{item.extraDiscount}</Text>
           </Row>
           <Row>
             <Text style={styles.item3}>Less Extra Discount</Text>
-            <Text style={styles.item4}>{item.unit}</Text>
+            <Text style={styles.item4}>{item.lessExtraDiscount}</Text>
           </Row>
           <Row>
             <Text style={[styles.item3, { fontWeight: 'bold' }]}>Net Amount</Text>
-            <Text style={styles.item4}>{item.unit}</Text>
+            <Text style={styles.item4}>{item.netAmount}</Text>
           </Row>
         </View>
         <Button transparent style={styles.item5} onPress={() => {
+    this.setState({
+      netTotal:this.state.netTotal-=item.netAmount})
           this.props.removeItem(item)
         }}>
           <Icon name={'trash'} style={{ color: Colors.fire, marginLeft: 0, marginRight: 0 }}
@@ -160,26 +174,38 @@ class OrderScreen extends React.Component {
           }
         </Content>
         <GradientWrapper>
-          <Footer style={[styles.header, styles.footer]}>
-            <Text style={styles.amountText}>TOTAL PAYMENT = {ConvertToCurrency(0)}</Text>
-            <Button danger onPress={this.checkout} style={{margin:5,    justifyContent:'flex-end'}}>
-              <Icon
-                name={'arrow-dropleft'}
-              />
-              <Text>CheckOut</Text>
-            </Button>
+      <Footer style={[styles.header, styles.footer]}>
+            <Text style={styles.amountText}>TOTAL PAYMENT = {ConvertToCurrency(this.state.netTotal)}</Text>
+          {this.renderCheckoutButton()}
           </Footer>
         </GradientWrapper>
       </Container>
     )
   }
-
+renderCheckoutButton = () => {
+  if((this.props.items && this.props.items.length > 0)) {
+    return(
+    <Button danger onPress={this.checkout} style={{margin:5,justifyContent:'flex-end'}}>
+        <Icon
+          name={'arrow-dropleft'}
+        />
+        <Text>CheckOut</Text>
+    </Button>
+    )
+  }
+    else {
+      return(
+        <View style={{height:0}}/>
+      )
+    }
+}
   checkout = () => {
     if ((this.props.items && this.props.items.length > 0)) {
+      let extraItem = 
       this.props.placeOrder({
         items: this.props.items.map(value => ({ quantity: value.quantity, inventoryItemId: value.inventoryItemId })),
         onSuccess: () => {
-          Alert.alert('Success', 'Your order for this shop has been placed')
+            this.props.navigation.navigate('OrderSMS',{orderItem:this.props.navigation.getParam('extraItem')})
         }
       })
     } else {
