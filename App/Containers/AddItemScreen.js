@@ -27,6 +27,11 @@ import ShopRedux from '../Redux/ShopRedux'
 import Immutable from 'seamless-immutable'
 
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
+    var litresMes=[]
+    var grossAmount=[]
+    var lessTO = []
+    var lessExtraDiscount = []
+    var netAmount=[]
 
 class AddItemScreen extends React.PureComponent {
   constructor (props) {
@@ -35,6 +40,7 @@ class AddItemScreen extends React.PureComponent {
     this.state = {
       selected: [],
       quantity: [],
+      extraDiscount:[],
       selectedValue: '',
       data: []
     }
@@ -50,14 +56,21 @@ class AddItemScreen extends React.PureComponent {
   onCategorySelect = (index) => {
     this.setState({ selectedValue: index })
     if (index === '') {
-      this.setState({ data: [], quantity: [] })
+      litresMes=[]
+      grossAmount=[]
+      lessTO = []
+      lessExtraDiscount = []
+      netAmount=[]
+      this.setState({ data: [], quantity: [],extraDiscount:[] })
       return
     }
 
     let data = this.props.items[index].items
     let quantity = []
-    for (let i = 0; i < data.length; i++) quantity[i] = '1'
-    this.setState({ data, quantity, selected: [] })
+    let extraDiscount = []
+    for (let i = 0; i < data.length; i++){ quantity[i] = '1'
+  extraDiscount[i] = '0'}
+    this.setState({ data, quantity, extraDiscount,selected: [] })
   }
   renderHeader = () => (
     <Item fixedLabel>
@@ -82,6 +95,11 @@ class AddItemScreen extends React.PureComponent {
   )
   
   renderRow = ({ item, index }) => {
+    litresMes[index] = 0
+    grossAmount[index] = item.retailPrice*this.state.quantity[index];
+    lessTO[index] = item.tradeOfferAmount*litresMes[index];
+    lessExtraDiscount[index] = this.state.extraDiscount[index] * litresMes[index]
+    netAmount[index] = grossAmount[index] - lessTO[index] - lessExtraDiscount[index];
     return (
       <Card style={styles.row}>
         <CardItem header style={{ paddingLeft: 0, paddingBottom: 0, paddingTop: 0, paddingRight: 0 }}>
@@ -124,43 +142,57 @@ class AddItemScreen extends React.PureComponent {
             </Row>
             <Row>
               <Text style={styles.item3}>Ltrs / Mes</Text>
-              <Text style={styles.item4}>{item.unit}</Text>
+              <Text style={styles.item4}>{litresMes[index]}</Text>
             </Row>
             <Row>
               <Text style={styles.item3}>Trade Price</Text>
-              <Text style={styles.item4}>{item.tradeOfferAmount}</Text>
-            </Row>
-            <Row>
-              <Text style={styles.item3}>Gross Amount</Text>
               <Text style={styles.item4}>{item.retailPrice}</Text>
             </Row>
             <Row>
+              <Text style={styles.item3}>Gross Amount</Text>
+              <Text style={styles.item4}>{grossAmount[index]}</Text>
+            </Row>
+            <Row>
               <Text style={styles.item3}>TO / Ltr / Kg</Text>
-              <Text style={styles.item4}>{item.unit}</Text>
+              <Text style={styles.item4}>{item.tradeOfferAmount}</Text>
             </Row>
             <Row>
               <Text style={styles.item3}>Less TO</Text>
-              <Text style={styles.item4}>{item.unit}</Text>
+              <Text style={styles.item4}>{lessTO[index]}</Text>
             </Row>
             <Row>
               <Text style={styles.item3}>RD %</Text>
-              <Text style={styles.item4}>{item.unit}</Text>
+              <Text style={styles.item4}>-</Text>
             </Row>
             <Row>
               <Text style={styles.item3}>Regular Discount</Text>
-              <Text style={styles.item4}>{item.unit}</Text>
+              <Text style={styles.item4}>-</Text>
             </Row>
             <Row>
               <Text style={styles.item3}>Extra Discount / Ltr / Kg</Text>
-              <Text style={styles.item4}>{item.unit}</Text>
+              <View style={styles.item3}>
+                <Input
+                  style={styles.input}
+                  onChangeText={(text) => {
+                    let isNumber = !isNaN(parseInt(text))
+                    if (isNumber || text.length === 0) {
+                      let clone = JSON.parse(JSON.stringify(this.state))
+                      clone.extraDiscount[index] = text
+                      this.setState(clone)
+                    }
+                  }}
+                  value={this.state.extraDiscount[index]==null?0:this.state.extraDiscount[index]}
+                  keyboardType={'numeric'}
+                />
+              </View>
             </Row>
             <Row>
               <Text style={styles.item3}>Less Extra Discount</Text>
-              <Text style={styles.item4}>{item.unit}</Text>
+              <Text style={styles.item4}>{lessExtraDiscount[index]}</Text>
             </Row>
             <Row>
               <Text style={[styles.item3, { fontWeight: 'bold' }]}>Net Amount</Text>
-              <Text style={styles.item4}>{item.unit}</Text>
+              <Text style={styles.item4}>{netAmount[index]}</Text>
             </Row>
           </View>
           <Button transparent style={styles.item5} onPress={() => {
@@ -215,6 +247,11 @@ class AddItemScreen extends React.PureComponent {
       if (value) {
         let item = Immutable.asMutable(this.props.items[this.state.selectedValue].items[index])
         item.quantity = this.state.quantity[index]
+        item.extraDiscount = this.state.extraDiscount[index]
+        item.litresMes = litresMes[index]
+        item.netAmount = netAmount[index]
+        item.grossAmount = grossAmount[index]
+        item.lessTO = lessTO[index]
         cartItems.push(item)
       }
     })
@@ -228,7 +265,7 @@ class AddItemScreen extends React.PureComponent {
 
   renderFooter = () => {
     return (
-      <Button danger rounded style={{ alignSelf: 'flex-end', margin: 10 }} onPress={this.addToCart}>
+      <Button danger rounded style={{ alignSelf: 'flex-end', margin: 10,marginBottom:30 }} onPress={this.addToCart}>
         <Icon
           name={'add-shopping-cart'}
           type={'MaterialIcons'}
