@@ -4,11 +4,10 @@ import { Button, Card, CardItem, Container, Content, Fab, Footer, Icon, Row, Tex
 import { connect } from 'react-redux'
 import GradientWrapper from '../Components/GradientWrapper'
 import styles from './Styles/OrderScreenStyle'
-import ConvertToCurrency from '../Transforms/ConvertToCurrency'
 import { Colors, Images } from '../Themes'
 import ShopActions from '../Redux/ShopRedux'
 
-var netTotal = 0
+var Total = 0
 class OrderScreen extends React.Component {
   constructor(props) {
     super(props)
@@ -17,7 +16,7 @@ class OrderScreen extends React.Component {
     }
   }
   componentWillMount() {
-    netTotal = 0;
+    Total=0
   }
   addOrder = () => {
     if (this.props.itemsBrands) {
@@ -44,8 +43,9 @@ class OrderScreen extends React.Component {
   }
 
   renderRow = ({ item }) => {
+    Total=item.netAmount
     this.setState({
-      netTotal:this.state.netTotal+=item.netAmount})
+      netTotal:Total})
     return (
       <View style={styles.listHeader}>
         <Image
@@ -104,9 +104,10 @@ class OrderScreen extends React.Component {
           </Row>
         </View>
         <Button transparent style={styles.item5} onPress={() => {
-    this.setState({
-      netTotal:this.state.netTotal-=item.netAmount})
           this.props.removeItem(item)
+          Total-=item.netAmount
+          this.setState({
+            netTotal:Total})
         }}>
           <Icon name={'trash'} style={{ color: Colors.fire, marginLeft: 0, marginRight: 0 }}
           />
@@ -175,7 +176,7 @@ class OrderScreen extends React.Component {
         </Content>
         <GradientWrapper>
       <Footer style={[styles.header, styles.footer]}>
-            <Text style={styles.amountText}>TOTAL PAYMENT = {ConvertToCurrency(this.state.netTotal)}</Text>
+            <Text style={styles.amountText}>TOTAL PAYMENT = {Total}</Text>
           {this.renderCheckoutButton()}
           </Footer>
         </GradientWrapper>
@@ -205,7 +206,10 @@ renderCheckoutButton = () => {
       this.props.placeOrder({
         items: this.props.items.map(value => ({ quantity: value.quantity, inventoryItemId: value.inventoryItemId })),
         onSuccess: () => {
-            this.props.navigation.navigate('OrderSMS',{orderItem:this.props.navigation.getParam('extraItem')})
+            this.props.navigation.navigate('OrderSMS',{
+              orderItem:this.props.navigation.getParam('extraItem'),
+              inventoryDetails:this.props.items
+          })
         }
       })
     } else {
