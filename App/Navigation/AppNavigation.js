@@ -10,6 +10,7 @@ import styles from './Styles/NavigationStyles'
 import ShopProfile from '../Containers/Market/ShopProfile'
 import OrderScreen from '../Containers/OrderScreen'
 import CustomDrawer from '../Components/CustomDrawer'
+import OrderSMS from '../Containers/OrderSMS'
 
 const storeRegistration = createStackNavigator({
   StoreMain: { screen: StoreRegistrationScreen },
@@ -28,7 +29,8 @@ const MarketStack = createStackNavigator({
   'OrderTaking': { screen: OrderScreen },
   'Reason': { screen: ReasonScreen },
   'Inventory': { screen: InventoryScreen },
-  'AddNewItem': { screen: AddItemScreen }
+  'AddNewItem': { screen: AddItemScreen },
+  'OrderSMS': { screen: OrderSMS }
 }, {
   headerMode: 'none',
   initialRouteName: 'MarketMain',
