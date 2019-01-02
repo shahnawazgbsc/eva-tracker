@@ -150,6 +150,23 @@ export const placeOrderEpics = (action$, state$, { api }) => action$.pipe(
     return api.addItems({ Order }).pipe(
       map(response => {
         if (response.ok) {
+
+
+          const sendtoapi = action.data.items.map(value => ({
+            ...value,
+            storeVisitId: checkInParams.storeVisitId,
+            companyId: checkInParams.companyId,
+            StoreId: checkInParams.StoreId
+          }))
+          console.log(sendtoapi, 'datasnd')
+          if (sendtoapi) {
+          return api.salesindent({ sendtoapi }).pipe(
+              map(response => {
+                console.log(response)
+            }))
+          }
+
+
           if (action.data.onSuccess) action.data.onSuccess()
           return ShopActions.placeOrderSuccess()
         } else {
