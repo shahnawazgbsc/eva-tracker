@@ -113,7 +113,7 @@ class ShopProfile extends React.Component {
           switch (item.title) {
             case 'Order Taking':
               if (this.props.checkedIn) {
-                this.props.navigation.navigate('OrderTaking')
+                this.props.navigation.navigate('OrderTaking', { extraItem: this.props.navigation.getParam('item') })
               } else {
                 Alert.alert(null, 'Please check in first to place order')
               }
