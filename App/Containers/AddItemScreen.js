@@ -172,7 +172,7 @@ class AddItemScreen extends React.PureComponent {
               <Text style={styles.item3}>Extra Discount / Ltr / Kg</Text>
               <View style={styles.item3}>
                 <Input
-                  style={styles.input}
+                  style={styles.discountInput}
                   onChangeText={(text) => {
                     let isNumber = !isNaN(parseInt(text))
                     if (isNumber || text.length === 0) {
