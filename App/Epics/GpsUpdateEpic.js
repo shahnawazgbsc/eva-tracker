@@ -17,7 +17,7 @@ export default (action$, state$, { firebase }) => action$.pipe(
         .collection('user_history')
         .add({
           lng: longitude,
-          user_id: userId,
+          userId: userId,
           lat: latitude,
           timestamp: new Date()
         })
@@ -30,7 +30,7 @@ export default (action$, state$, { firebase }) => action$.pipe(
         .doc(userId.toString())
         .set({
           lng: longitude,
-          user_id: userId,
+          userId: userId,
           lat: latitude,
           timestamp: new Date()
         })
