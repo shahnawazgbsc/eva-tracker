@@ -134,6 +134,7 @@ class InventoryScreen extends Component {
                         this.setState({ quantity: clone })
                       }
                     }}
+                    keyboardType={'numeric'}
                   />
                 </Item>
                 <Item rounded style={styles.input}>

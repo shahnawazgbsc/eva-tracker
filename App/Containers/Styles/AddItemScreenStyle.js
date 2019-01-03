@@ -18,6 +18,16 @@ export default StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10
   },
+  discountInput: {
+    borderColor: Colors.border,
+    borderWidth: 1,
+    borderRadius: 18,
+    height: 10,
+    fontSize: 10,
+    textAlign: 'right',
+    paddingLeft: 10,
+    paddingRight: 10
+  },
   row: {
     flex: 1,
     padding: 10,
