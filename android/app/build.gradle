@@ -83,8 +83,8 @@ properties.load(project.rootProject.file('local.properties').newDataInputStream(
 
 def keystore = properties.getProperty('keystore')
 def alias = properties.getProperty('alias')
-def pass.store = properties.getProperty('pass.store')
-def pass.key = properties.getProperty('pass.key')
+def passStore = properties.getProperty('pass.store')
+def passKey = properties.getProperty('pass.key')
 
 
 /**
@@ -127,9 +127,9 @@ android {
     signingConfigs {
         release {
             storeFile file(keystore)
-            storePassword pass.store
+            storePassword passStore
             keyAlias alias
-            keyPassword pass.key
+            keyPassword passKey
         }
     }
     buildTypes {
@@ -155,7 +155,6 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-intl')
     compile project(':react-native-vector-icons')
     compile(project(':react-native-maps')) {
         exclude group: 'com.android.support'

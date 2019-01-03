@@ -67,7 +67,9 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
         StoreVisitId: checkInParam.storeVisitId,
         Status: 'Achieved'
       }
-      const dateNow = String(new Date().getMilliseconds())
+
+      const dateNowNum = new Date().getTime()
+      const dateNow = String(dateNowNum)
 
       return api.checkOut(data).pipe(
         map(response => {
@@ -82,7 +84,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
                 lng: latitude,
                 lat: longitude,
                 shopId: String(checkInParam.StoreId),
-                eventId: dateNow,
+                eventId: dateNowNum,
                 userId: String(userId),
                 timestamp: new Date()
               })
@@ -106,7 +108,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
                 lng: longitude,
                 shopId: checkInParam.StoreId,
                 userId: userId,
-                visitId: dateNow,
+                visitId: dateNowNum,
                 timestamp: new Date()
               })
               .then((docRef) => {

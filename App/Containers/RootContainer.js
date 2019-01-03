@@ -3,6 +3,7 @@ import { View, StatusBar, Platform, PermissionsAndroid } from 'react-native'
 import { Root, StyleProvider, Text } from 'native-base'
 import ReduxNavigation from '../Navigation/ReduxNavigation'
 import { connect } from 'react-redux'
+// import PlayServiceLocation from 'react-native-android-play-services-location'
 import StartupActions from '../Redux/StartupRedux'
 import getTheme from '../../native-base-theme/components'
 import platform from '../../native-base-theme/variables/platform'
@@ -12,6 +13,7 @@ import styles from './Styles/RootContainerStyles'
 import GpsLocation from '../Redux/GpsLocationRedux'
 
 class RootContainer extends Component {
+
   constructor (props) {
     super(props)
     this.state = {
@@ -32,9 +34,9 @@ class RootContainer extends Component {
         this.startWatch()
       } else {
         this.setState({
-          error: { message: 'Camera permission denied' }
+          error: { message: 'Location permission denied' }
         })
-        console.log('Camera permission denied')
+        console.log('Location permission denied')
       }
     } catch (err) {
       console.warn(err)
@@ -45,7 +47,6 @@ class RootContainer extends Component {
     this.watchID = navigator.geolocation.watchPosition(
       position => {
         const { latitude, longitude } = position.coords
-        console.log({ latitude, longitude })
         this.props.updateGps({ latitude, longitude })
         this.setState({ error: null })
       },

@@ -17,20 +17,19 @@ export default (action$, state$, { firebase }) => action$.pipe(
         .collection('user_history')
         .add({
           lng: longitude,
-          user_id: userId,
+          userId,
           lat: latitude,
           timestamp: new Date()
         })
         .then(docRef => { })
         .catch(error => { })
 
-
-        firebase.firestore()
+      firebase.firestore()
         .collection('tbl_users')
         .doc(userId.toString())
         .set({
           lng: longitude,
-          user_id: userId,
+          userId,
           lat: latitude,
           timestamp: new Date()
         })

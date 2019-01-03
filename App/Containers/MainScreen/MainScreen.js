@@ -52,24 +52,21 @@ class MainScreen extends React.Component {
         <MapView
           style={{ flex: 1 }}
           region={{
-            latitude: parseFloat(this.props.latitude) || 24.8625802,
-            longitude: parseFloat(this.props.longitude) || 67.0165537,
-            latitudeDelta: 0.008,
-            longitudeDelta: 0.008
+            latitude: parseFloat(this.props.latitude),
+            longitude: parseFloat(this.props.longitude),
+            latitudeDelta: 0.02,
+            longitudeDelta: 0.02
           }}
           followsUserLocation
         >
-          {
-            this.props.latitude &&
-            <MapView.Marker
-              coordinate={{
-                latitude: parseFloat(this.props.latitude),
-                longitude: parseFloat(this.props.longitude)
-              }}
-              image={Images.marker}
-            />
-          }
-          {this.props.waypoint &&
+          <MapView.Marker
+            coordinate={{
+              latitude: parseFloat(this.props.latitude),
+              longitude: parseFloat(this.props.longitude)
+            }}
+            image={Images.marker}
+          />
+          {!!this.props.waypoint &&
           <MapView.Polyline
             coordinates={this.props.waypoint}
             strokeWidth={4}
@@ -77,7 +74,7 @@ class MainScreen extends React.Component {
           />
           }
           {
-            this.props.stores &&
+            !!this.props.stores &&
             this.props.stores.filter(value => value.latitude !== null).map(value => (
               <MapView.Marker
                 coordinate={{
@@ -97,7 +94,10 @@ class MainScreen extends React.Component {
                         },
                         {
                           text: 'Directions',
-                          onPress: () => this.props.directions({ latitude: value.latitude, longitude: value.longitude })
+                          onPress: () => this.props.directions({
+                            latitude: value.latitude,
+                            longitude: value.longitude
+                          })
                         }
                       ]
                     )
@@ -108,6 +108,7 @@ class MainScreen extends React.Component {
             ))
           }
         </MapView>
+
         <Footer style={{ alignItems: 'center', justifyContent: 'space-around', backgroundColor: Colors.background }}>
           <Button success disabled={this.props.dayStarted} onPress={() => {
             if (this.props.subSection && this.props.subSection.length > 0) {

@@ -16,7 +16,7 @@ export default Creators
 /* ------------- Initial State ------------- */
 
 export const INITIAL_STATE = Immutable({
-  data: null,
+  data: { latitude: 24.8632645, longitude: 67.0739113 },
   waypoint: null,
   fetching: false,
   error: null

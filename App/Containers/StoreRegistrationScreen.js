@@ -2,22 +2,7 @@ import React, { Component } from 'react'
 import { Alert, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
 import { connect } from 'react-redux'
-import {
-  Body,
-  Button,
-  Container,
-  Form,
-  Header,
-  Icon,
-  Input,
-  Item,
-  Label,
-  Left,
-  Picker,
-  Right,
-  Text,
-  Title
-} from 'native-base'
+import { Body, Button, Container, Form, Header, Icon, Input, Item, Label, Left, Picker, Right, Text } from 'native-base'
 import CircleCheckBox, { LABEL_POSITION } from 'react-native-circle-checkbox'
 import ImagePicker from 'react-native-image-picker'
 import CreateStoreActions from '../Redux/CreateStoreRedux'
@@ -161,10 +146,10 @@ class StoreRegistrationScreen extends Component {
   selectPhotoTapped () {
     const options = {
       quality: 1.0,
-      maxWidth: 500,
-      maxHeight: 500,
+      mediaType: 'photo',
       storageOptions: {
-        skipBackup: true
+        skipBackup: true,
+        waitUntilSaved: true
       }
     }
 
@@ -175,8 +160,7 @@ class StoreRegistrationScreen extends Component {
         console.log('User cancelled photo picker')
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error)
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton)
+        Alert.alert(null, String(response.error))
       } else {
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };

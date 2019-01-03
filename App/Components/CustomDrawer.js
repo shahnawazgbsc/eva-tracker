@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 // import PropTypes from 'prop-types';
 import { Image, Text, View } from 'react-native'
 import styles from './Styles/CustomDrawerStyle'
@@ -20,7 +20,7 @@ class CustomDrawer extends PureComponent {
 
   render () {
     return (
-      <Container style={{flex:3}}>
+      <Container style={{ flex: 3 }}>
         <GradientWrapper>
           <Header style={styles.drawerHeader}>
             <Body>
@@ -35,7 +35,13 @@ class CustomDrawer extends PureComponent {
             </Body>
           </Header>
         </GradientWrapper>
-        <Content style={{flex:2}}>
+        <Content style={{ flex: 2 }}>
+          <ListItem button onPress={() => {
+            this.props.navigation.navigate('Home')
+            this.props.navigation.toggleDrawer()
+          }}>
+            <Text>Home</Text>
+          </ListItem>
           {this.props.dayStarted &&
           <ListItem button onPress={() => this.props.navigation.navigate('Store Registration')}>
             <Text>Store Registration</Text>

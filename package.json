@@ -43,7 +43,6 @@
     "react-native-circle-checkbox": "^0.1.6",
     "react-native-gesture-handler": "^1.0.12",
     "react-native-image-picker": "^0.27.2",
-    "react-native-intl": "^1.0.0",
     "react-native-keyboard-aware-scrollview": "^2.0.0",
     "react-native-linear-gradient": "^2.5.3",
     "react-native-maps": "^0.22.1",
