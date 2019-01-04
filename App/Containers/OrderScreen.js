@@ -37,7 +37,7 @@ class OrderScreen extends React.Component {
         <Text style={[styles.item2, { fontSize: 14, fontWeight: 'bold' }]}>Product</Text>
         <Text style={[styles.item3, { fontSize: 14, fontWeight: 'bold' }]}>Qty</Text>
         <Text style={[styles.item4, { fontSize: 14, fontWeight: 'bold' }]}>SKU</Text>
-        <View style={styles.item5}/>
+        <View style={styles.item5} />
       </View>
     )
   }
@@ -50,7 +50,7 @@ class OrderScreen extends React.Component {
       <View style={styles.listHeader}>
         <Image
           style={[styles.item1, { color: Colors.success }]}
-          source={Images.logo}
+          source={Images.evalogo}
           resizeMode={'contain'}
         />
         <View style={styles.item2}>
@@ -159,6 +159,7 @@ class OrderScreen extends React.Component {
             </Fab>
           </View>
         </GradientWrapper>
+        <View style={{ width: '100%', height: 5, backgroundColor:'#fcc430' }} />
         <Content style={styles.containerContent}>
           {
             <Card>
@@ -174,6 +175,7 @@ class OrderScreen extends React.Component {
             </Card>
           }
         </Content>
+        <View style={{ width: '100%', height: 5, backgroundColor:'#fcc430' }} />
         <GradientWrapper>
       <Footer style={[styles.header, styles.footer]}>
             <Text style={styles.amountText}>TOTAL PAYMENT = {Total}</Text>

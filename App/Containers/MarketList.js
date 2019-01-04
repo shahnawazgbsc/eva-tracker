@@ -25,6 +25,7 @@ import GradientWrapper from '../Components/GradientWrapper'
 import { Images } from '../Themes'
 import ParseImagePath from '../Lib/ParseImagePath'
 import GetVisitDay from '../Lib/GetVisitDay'
+import colors from '../Themes/Colors';
 
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
 
@@ -38,9 +39,13 @@ class MarketList extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
-      dataObjects: this.getList(0, props),
+      dataObjects: [],
       segment: 0
     }
+  }
+  componentWillMount() {
+
+    this.setState({ dataObjects: this.getList(0, this.props) })
   }
 
   /* ***********************************************************
@@ -157,55 +162,61 @@ class MarketList extends React.PureComponent {
     })
   }
 
-  render () {
+  render() {
+    const { dataObjects } = this.state;
     return (
       <Container>
         <GradientWrapper>
           <Header style={styles.header}>
             <Left>
               <Button light transparent onPress={this.back}>
-                <Icon name={'arrow-back'}/>
+                <Icon name={'arrow-back'} />
                 <Text>Back</Text>
               </Button>
             </Left>
-            <Body>
-            <Text style={styles.titleText}>Market</Text>
+            <Body style={{}}>
+              <Text style={styles.titleText}>Market</Text>
             </Body>
-            <Right/>
+            <Right >
+              <Text style={{ color: 'white', fontSize: 14 }}>Counter= {dataObjects.length}</Text>
+            </Right>
           </Header>
         </GradientWrapper>
-        <Segment>
-          <Button first active={this.state.segment === 0} onPress={this.segmentNearMe}><Text>PJP</Text></Button>
-          <Button active={this.state.segment === 1} onPress={this.segmentShopList}><Text>Visited</Text></Button>
-          <Button last active={this.state.segment === 2} onPress={this.segmentSearch}><Text>Others</Text></Button>
+        <Segment style={{}}>
+          <Button style={{ flex: 1, marginLeft: 20, alignItems: 'center', justifyContent: 'center' }} first active={this.state.segment === 0} onPress={this.segmentNearMe}><Text>PJP</Text></Button>
+          <Button style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} active={this.state.segment === 1} onPress={this.segmentShopList}><Text>Visited</Text></Button>
+          <Button style={{ flex: 1, marginRight: 20, alignItems: 'center', justifyContent: 'center' }} last active={this.state.segment === 2} onPress={this.segmentSearch}><Text>Others</Text></Button>
         </Segment>
         {this.state.segment === 2 &&
-        <Header searchBar rounded style={{ marginTop: 0, paddingTop: 0, backgroundColor: 'transparent' }}>
-          <Item>
-            <Icon name='ios-search'/>
-            <Input
-              value={this.state.text}
-              placeholder='Search'
-              onChangeText={this.onChangeText}
-            />
-          </Item>
-        </Header>
+          <View searchBar rounded style={{ width: '100%', height: 40, backgroundColor: 'white' }}>
+            <View style={{ flex: 1, marginLeft: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+              <Icon name='ios-search' />
+              <Input
+                style={{ width: '70%' }}
+                value={this.state.text}
+                placeholder='Search'
+                onChangeText={this.onChangeText}
+              />
+            </View>
+          </View>
         }
 
-
-        <FlatList
-          renderItem={this.renderRow}
-          style={styles.listContent}
-          data={this.state.dataObjects}
-          extraData={this.state.dataObjects && this.state.dataObjects.length}
-          initialNumToRender={20}
-          keyExtractor={this.keyExtractor}
-        />
+        {dataObjects && dataObjects.length ?
+          <FlatList
+            renderItem={this.renderRow}
+            style={styles.listContent}
+            data={this.state.dataObjects}
+            extraData={this.state.dataObjects && this.state.dataObjects.length}
+            initialNumToRender={20}
+            keyExtractor={this.keyExtractor}
+          /> : <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={{ fontSize: 22, color: Colors.black }}>{this.state.segment === 0 ? "PJP is not available" : this.state.segment === 1 ? "Visited is not availabe" : this.state.segment === 2 ? "Others is not availabe" : "Not available"}</Text>
+          </View>}
       </Container>
     )
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     console.log(nextProps)
 
     if (nextProps) {
@@ -213,6 +224,7 @@ class MarketList extends React.PureComponent {
     }
   }
 }
+
 
 const mapStateToProps = (state) => {
   return {

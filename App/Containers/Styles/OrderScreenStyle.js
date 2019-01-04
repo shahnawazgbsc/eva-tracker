@@ -18,12 +18,12 @@ export default StyleSheet.create({
     flex: 1,
     alignSelf: 'stretch',
     backgroundColor: Colors.silver,
-    borderTopColor: Colors.fab,
-    borderBottomColor: Colors.fab,
+    // borderTopColor: Colors.fab,
+    // borderBottomColor: Colors.fab,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderTopWidth: Metrics.smallMargin,
-    borderBottomWidth: Metrics.smallMargin
+    // borderTopWidth: Metrics.smallMargin,
+    // borderBottomWidth: Metrics.smallMargin
   },
   headerIcon: {
     fontSize: 54,

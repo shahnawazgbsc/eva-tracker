@@ -11,7 +11,7 @@ export default StyleSheet.create({
   listStyle: {
     marginTop: -60,
     flex: 1,
-    marginHorizontal: 50
+    marginHorizontal: 10
   },
   darkText: {
     color: Colors.black,

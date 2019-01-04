@@ -114,7 +114,7 @@ class AddItemScreen extends React.PureComponent {
         <CardItem cardBody style={{ alignContent: 'flex-start' }}>
           <Image
             style={[styles.item1, { color: Colors.success }]}
-            source={Images.logo}
+            source={Images.evalogo}
             resizeMode={'contain'}
           />
           <View style={styles.item2}>
@@ -265,7 +265,8 @@ class AddItemScreen extends React.PureComponent {
 
   renderFooter = () => {
     return (
-      <Button danger rounded style={{ alignSelf: 'flex-end', margin: 10,marginBottom:30 }} onPress={this.addToCart}>
+
+      <Button danger rounded style={{ alignSelf: 'flex-end', marginVertical: 20}} onPress={this.addToCart}>
         <Icon
           name={'add-shopping-cart'}
           type={'MaterialIcons'}

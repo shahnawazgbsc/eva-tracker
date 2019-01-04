@@ -43,7 +43,8 @@ export default StyleSheet.create({
     margin: 5
   },
   accordion: {
-    marginTop: 15
+    backgroundColor: "white",
+    marginTop: 15,
   },
   inputText: {
     textAlign: 'right',
