@@ -139,24 +139,26 @@ class ShopHistory extends Component {
         return (
             <Container style={{ backgroundColor: Colors.silver }}>
                 <GradientWrapper>
-                    <View style={[styles.header, styles.headerContainer]}>
-                        <Button
-                            style={{ position: 'absolute' }}
-                            transparent
-                            light
-                            onPress={this.back}
-                        >
-                            <Icon name={'arrow-back'}/>
-                        </Button>
-                        <View style={{ marginVertical: 10, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <Header style={styles.header}>
+                        <Left>
+                            <Button transparent light onPress={this.back}>
+                                <Icon name={'arrow-back'}
+                                />
+                                <Text>Back</Text>
+                            </Button>
+                        </Left>
+                        <Body
+                            style={{ marginVertical: 10, justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
                             <Icon
-                            style={styles.headerIcon}
-                            name={'history'}
-                            type={'FontAwesome'}
+                                style={styles.headerIcon}
+                                name={'graph-bar'}
+                                type={'Foundation'}
                             />
-                            <Text style={styles.headerText}>Shop History</Text>
-                        </View>
-                    </View>
+                            <Text style={styles.titleText}>Shop History</Text>
+                        </Body>
+                        <Right
+                        />
+                    </Header>
                 </GradientWrapper>
                 <Content padder>
                     <FlatList
