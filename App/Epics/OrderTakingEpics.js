@@ -2,6 +2,7 @@ import { ofType } from 'redux-observable'
 import { Alert } from 'react-native'
 import { map, mergeMap } from 'rxjs/operators'
 import { of } from 'rxjs'
+import * as R from 'ramda'
 import ShopActions, { ShopTypes } from '../Redux/ShopRedux'
 import 'firebase/firestore'
 
@@ -146,32 +147,34 @@ export const placeOrderEpics = (action$, state$, { api }) => action$.pipe(
       storeVisitId: checkInParams.storeVisitId,
       companyId: checkInParams.companyId,
       StoreId: checkInParams.StoreId,
-      userId:userId
+      userId: userId
     }))
 
+    const hasReason = R.has('noorderreason')(action.data.items[0])
+
     return api.addItems({ Order }).pipe(
-      map(response => {
-        if (response.ok) {
-          alert(JSON.stringify(response.data.response[0].orderTakings))
-          const RESP = response.data.response[0].orderTakings.map(value=>({
+      mergeMap(response => {
+        if (!response.ok || hasReason) {
+          return of(response)
+        } else {
+          const RESP = response.data.response[0].orderTakings.map(value => ({
             orderTakingId: value.orderTakingId,
             inventoryItemId: value.inventoryItemId,
-            quantity:value.quantity,
-            storeVisitId:value.storeVisitId,
-            companyId:value.companyId,
-            storeId:value.storeId,
-            userId:userId
+            quantity: value.quantity,
+            storeVisitId: value.storeVisitId,
+            companyId: value.companyId,
+            storeId: value.storeId,
+            userId: userId
           }))
-          alert(JSON.stringify(RESP))
-          return api.salesIndents({RESP}).pipe(
-               map(response => {
-                 if(response.ok) {
-                    if (action.data.onSuccess) action.data.onSuccess()
-                    return ShopActions.placeOrderSuccess()
-                  } else {
-                    return ShopTypes.shopFailure(response)
-                 }
-             }))
+          return api.salesIndents({ RESP })
+        }
+      }),
+      mergeMap(response => {
+        if (response.ok) {
+          if (action.data.onSuccess) action.data.onSuccess()
+          return of(ShopActions.placeOrderSuccess())
+        } else {
+          return of(ShopActions.shopFailure(response))
         }
       })
     )
