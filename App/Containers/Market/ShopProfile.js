@@ -21,7 +21,8 @@ class ShopProfile extends React.Component {
         { title: 'Gift Order', icon: 'gift', type: 'FontAwesome' },
         { title: 'Market Survey', icon: 'analytics', type: '' },
         { title: 'Merchandising', icon: 'cube', type: '' },
-        { title: 'Shop Query', icon: 'question-circle', type: 'FontAwesome' }
+        { title: 'Shop Query', icon: 'question-circle', type: 'FontAwesome' },
+        { title: 'Shop History', icon: 'history', type: 'FontAwesome' }
       ]
     }
   }
@@ -140,6 +141,14 @@ class ShopProfile extends React.Component {
                 this.props.navigation.navigate('Reason', { item: this.props.navigation.getParam('item') })
               }
               break
+            case 'Shop History':
+              if (this.props.checkedIn) {
+                this.props.navigation.navigate('ShopHistory')
+              } else {
+                Alert.alert(null, 'Please check in first to view order history')
+              }
+              break
+
           }
         }}>
           <Icon
