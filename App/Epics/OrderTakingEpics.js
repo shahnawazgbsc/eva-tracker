@@ -72,12 +72,14 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
       return api.checkOut(data).pipe(
         map(response => {
           if (response.ok) {
-            firebase.firestore()
+              firebase
+              .firestore().batch().set(
+                firebase.firestore()
               .collection('tbl_shops')
               .doc(String(checkInParam.StoreId))
               .collection('shop_events')
-              .doc(dateNow)
-              .set({
+              .doc(dateNow),
+              {
                 device_name: 'ABC_Device',
                 lng: latitude,
                 lat: longitude,
@@ -85,21 +87,14 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
                 eventId: dateNow,
                 userId: String(userId),
                 timestamp: new Date()
-              })
-              .then((docRef) => {
-                console.log('done')
-              })
-              .catch((error) => {
-                console.warn('Error adding document: ', error)
-              })
-
-            firebase
-              .firestore()
-              .collection('tbl_shops')
+              }
+              ).set(
+                firebase
+              .firestore().collection('tbl_shops')
               .doc(String(checkInParam.StoreId))
               .collection('visit_summary')
-              .doc(dateNow)
-              .set({
+              .doc(dateNow),
+              {
                 pjp: !!action.data.pjp,
                 productive: action.data.productive,
                 lat: latitude,
@@ -108,15 +103,9 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
                 userId: userId,
                 visitId: dateNow,
                 timestamp: new Date()
-              })
-              .then((docRef) => {
-                console.log('done')
-              })
-              .catch((error) => {
-                console.warn('Error adding document: ', error)
-              })
-
-            if (action.data.onSuccess) action.data.onSuccess()
+              }
+            )
+          if (action.data.onSuccess) action.data.onSuccess()
             return ShopActions.checkOutSuccess(
               {
                 id: checkInParam.StoreId,
@@ -162,7 +151,7 @@ export const placeOrderEpics = (action$, state$, { api }) => action$.pipe(
             storeId:value.storeId,
             userId:userId
           }))
-          alert(JSON.stringify(RESP))
+          if(RESP) {
           return api.salesIndents({RESP}).pipe(
                map(response => {
                  if(response.ok) {
@@ -172,6 +161,7 @@ export const placeOrderEpics = (action$, state$, { api }) => action$.pipe(
                     return ShopTypes.shopFailure(response)
                  }
              }))
+            }
         }
       })
     )
