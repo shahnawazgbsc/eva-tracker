@@ -190,26 +190,24 @@ class InventoryScreen extends Component {
     return (
       <Container>
         <GradientWrapper>
-          <Header style={styles.header}>
-            <Left>
-              <Button transparent light onPress={this.back}>
-                <Icon name={'arrow-back'}
-                />
-                <Text>Back</Text>
+          <View style={[styles.header, styles.headerContainer]}>
+              <Button
+                style={{ position: 'absolute' }}
+                transparent
+                light
+                onPress={this.back}
+              >
+                <Icon name={'arrow-back'}/>
               </Button>
-            </Left>
-            <Body
-              style={{ marginVertical: 10, justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+          <View style={{ marginVertical: 10, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <Icon
               style={styles.headerIcon}
               name={'graph-bar'}
               type={'Foundation'}
             />
-            <Text style={styles.titleText}>Inventory Taking</Text>
-            </Body>
-            <Right
-            />
-          </Header>
+            <Text style={styles.headerText}>Inventory Taking</Text>
+          </View>
+          </View>
         </GradientWrapper>
         <Content padder>
           <Card>
