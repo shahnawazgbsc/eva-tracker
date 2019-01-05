@@ -108,8 +108,9 @@ class MainScreen extends React.Component {
             ))
           }
         </MapView>
-
-        <Footer style={{ alignItems: 'center', justifyContent: 'space-around', backgroundColor: Colors.background }}>
+         <Footer style={{ paddingTop:3,
+        alignItems: 'center', justifyContent: 'space-around',borderTopWidth:3,borderTopColor:Colors.success, 
+        backgroundColor: Colors.background }}>
           <Button success disabled={this.props.dayStarted} onPress={() => {
             if (this.props.subSection && this.props.subSection.length > 0) {
               ActionSheet.show(
