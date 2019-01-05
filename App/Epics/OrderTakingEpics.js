@@ -160,7 +160,7 @@ export const placeOrderEpics = (action$, state$, { api }) => action$.pipe(
           }))
           console.log(sendtoapi, 'datasnd')
           if (sendtoapi) {
-          return api.salesindent({ sendtoapi }).pipe(
+          return api.salesIndents({ sendtoapi }).pipe(
               map(response => {
                 console.log(response)
             }))
