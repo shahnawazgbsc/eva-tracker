@@ -67,9 +67,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
         StoreVisitId: checkInParam.storeVisitId,
         Status: 'Achieved'
       }
-
-      const dateNowNum = new Date().getTime()
-      const dateNow = String(dateNowNum)
+      const dateNow = String(new Date().getMilliseconds())
 
       return api.checkOut(data).pipe(
         map(response => {
@@ -84,7 +82,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
                 lng: latitude,
                 lat: longitude,
                 shopId: String(checkInParam.StoreId),
-                eventId: dateNowNum,
+                eventId: dateNow,
                 userId: String(userId),
                 timestamp: new Date()
               })
@@ -108,7 +106,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
                 lng: longitude,
                 shopId: checkInParam.StoreId,
                 userId: userId,
-                visitId: dateNowNum,
+                visitId: dateNow,
                 timestamp: new Date()
               })
               .then((docRef) => {
@@ -142,20 +140,38 @@ export const placeOrderEpics = (action$, state$, { api }) => action$.pipe(
   ofType(ShopTypes.PLACE_ORDER_REQUEST),
   mergeMap(action => {
     const checkInParams = state$.value.shop.checkInParam
+    const userId = state$.value.login.payload.user.userid
     const Order = action.data.items.map(value => ({
       ...value,
       storeVisitId: checkInParams.storeVisitId,
       companyId: checkInParams.companyId,
-      StoreId: checkInParams.StoreId
+      StoreId: checkInParams.StoreId,
+      userId:userId
     }))
 
     return api.addItems({ Order }).pipe(
       map(response => {
         if (response.ok) {
-          if (action.data.onSuccess) action.data.onSuccess()
-          return ShopActions.placeOrderSuccess()
-        } else {
-          return ShopTypes.shopFailure(response)
+          alert(JSON.stringify(response.data.response[0].orderTakings))
+          const RESP = response.data.response[0].orderTakings.map(value=>({
+            orderTakingId: value.orderTakingId,
+            inventoryItemId: value.inventoryItemId,
+            quantity:value.quantity,
+            storeVisitId:value.storeVisitId,
+            companyId:value.companyId,
+            storeId:value.storeId,
+            userId:userId
+          }))
+          alert(JSON.stringify(RESP))
+          return api.salesIndents({RESP}).pipe(
+               map(response => {
+                 if(response.ok) {
+                    if (action.data.onSuccess) action.data.onSuccess()
+                    return ShopActions.placeOrderSuccess()
+                  } else {
+                    return ShopTypes.shopFailure(response)
+                 }
+             }))
         }
       })
     )
