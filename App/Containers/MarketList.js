@@ -25,7 +25,7 @@ import GradientWrapper from '../Components/GradientWrapper'
 import { Images } from '../Themes'
 import ParseImagePath from '../Lib/ParseImagePath'
 import GetVisitDay from '../Lib/GetVisitDay'
-import colors from '../Themes/Colors';
+import Colors from '../Themes/Colors';
 
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
 
@@ -178,7 +178,7 @@ class MarketList extends React.PureComponent {
               <Text style={styles.titleText}>Market</Text>
             </Body>
             <Right >
-              <Text style={{ color: 'white', fontSize: 14 }}>Counter= {dataObjects.length}</Text>
+              <Text style={{ color: 'white', fontSize: 14 }}>Counter= {dataObjects==null?0:dataObjects.length}</Text>
             </Right>
           </Header>
         </GradientWrapper>
