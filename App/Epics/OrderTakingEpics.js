@@ -73,13 +73,12 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
       return api.checkOut(data).pipe(
         map(response => {
           if (response.ok) {
-              firebase
-              .firestore().batch().set(
-                firebase.firestore()
-              .collection('tbl_shops')
-              .doc(String(checkInParam.StoreId))
-              .collection('shop_events')
-              .doc(dateNow),
+            firebase.firestore().batch().set(
+              firebase.firestore()
+                .collection('tbl_shops')
+                .doc(String(checkInParam.StoreId))
+                .collection('shop_events')
+                .doc(dateNow),
               {
                 device_name: 'ABC_Device',
                 lng: latitude,
@@ -88,13 +87,10 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
                 eventId: dateNow,
                 userId: String(userId),
                 timestamp: new Date()
-              }
-              ).set(
-                firebase
-              .firestore().collection('tbl_shops')
-              .doc(String(checkInParam.StoreId))
-              .collection('visit_summary')
-              .doc(dateNow),
+              }).set(firebase.firestore().collection('tbl_shops')
+                .doc(String(checkInParam.StoreId))
+                .collection('visit_summary')
+                .doc(dateNow),
               {
                 pjp: !!action.data.pjp,
                 productive: action.data.productive,
@@ -104,9 +100,9 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
                 userId: userId,
                 visitId: dateNow,
                 timestamp: new Date()
-              }
-            )
-          if (action.data.onSuccess) action.data.onSuccess()
+              }).commit()
+
+            if (action.data.onSuccess) action.data.onSuccess()
             return ShopActions.checkOutSuccess(
               {
                 id: checkInParam.StoreId,
