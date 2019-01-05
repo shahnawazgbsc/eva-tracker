@@ -11,6 +11,11 @@ export default StyleSheet.create({
     display: 'flex',
     flex: 1
   },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
   iconPhone: {
     marginLeft: 0,
     marginRight: 8
@@ -55,6 +60,10 @@ export default StyleSheet.create({
     textAlign: 'left',
     fontWeight: 'bold'
   },
+  headerIcon: {
+    fontSize: 54,
+    color: Colors.white
+  },
   button: {
     alignSelf: 'flex-end',
     marginVertical: 15,
@@ -62,5 +71,8 @@ export default StyleSheet.create({
   },
   cardContainer: {
     flex: 1
-  }
+  },
+  headerText: {
+    color: Colors.white
+  },
 })
