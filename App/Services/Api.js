@@ -80,6 +80,7 @@ const create = (baseURL = AppConfig.baseUrl) => {
   const dayEnd = (data) => from(api.put('etracker/api/pjp/UpdatePjp', data))
 
   const setHeaders = (token) => api.setHeader('api_key', token)
+  const salesIndents = (data) => from(api.post('inventory/api/sales/GenerateSalesIndents', data))
 
   // ------
   // STEP 3
@@ -108,7 +109,8 @@ const create = (baseURL = AppConfig.baseUrl) => {
     createStore,
     setHeaders,
     dayStart,
-    dayEnd
+    dayEnd,
+    salesIndents
   }
 }
 
