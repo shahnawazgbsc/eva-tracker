@@ -188,7 +188,7 @@ class OrderScreen extends React.Component {
 renderCheckoutButton = () => {
   if((this.props.items && this.props.items.length > 0)) {
     return(
-    <Button danger onPress={this.checkout} style={{margin:5,justifyContent:'flex-end'}}>
+    <Button danger onPress={this.checkout} style={{flexWrap:'wrap',margin:5,justifyContent:'flex-end'}}>
         <Icon
           name={'arrow-dropleft'}
         />
