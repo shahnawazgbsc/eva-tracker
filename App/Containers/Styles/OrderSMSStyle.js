@@ -38,26 +38,27 @@ export default StyleSheet.create({
   },
   listHeader: {
     flexDirection: 'row',
-    alignContent:'space-between',
-    justifyContent:'space-between'
+    marginVertical: 5
   },
   item1: {
     textAlign: 'center',
-    marginRight: 10,
-    width: 50
+    marginRight: 10
   },
   item2: {
+    flex: 3,
     textAlign: 'left',
-    width: '50%',
-    fontSize:10
+    fontSize: 10
   },
   item3: {
+    flex: 1,
+    marginHorizontal: 10,
     textAlign: 'right',
-    fontSize:10
+    fontSize: 10
   },
   item4: {
+    flex: 1,
     textAlign: 'left',
-    fontSize:10
+    fontSize: 10
   },
   item5: {
     width: 15,

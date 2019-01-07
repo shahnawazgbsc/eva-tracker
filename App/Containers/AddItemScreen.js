@@ -27,11 +27,11 @@ import ShopRedux from '../Redux/ShopRedux'
 import Immutable from 'seamless-immutable'
 
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
-    var litresMes=[]
-    var grossAmount=[]
-    var lessTO = []
-    var lessExtraDiscount = []
-    var netAmount=[]
+var litresMes = []
+var grossAmount = []
+var lessTO = []
+var lessExtraDiscount = []
+var netAmount = []
 
 class AddItemScreen extends React.PureComponent {
   constructor (props) {
@@ -40,7 +40,7 @@ class AddItemScreen extends React.PureComponent {
     this.state = {
       selected: [],
       quantity: [],
-      extraDiscount:[],
+      extraDiscount: [],
       selectedValue: '',
       data: []
     }
@@ -56,21 +56,23 @@ class AddItemScreen extends React.PureComponent {
   onCategorySelect = (index) => {
     this.setState({ selectedValue: index })
     if (index === '') {
-      litresMes=[]
-      grossAmount=[]
+      litresMes = []
+      grossAmount = []
       lessTO = []
       lessExtraDiscount = []
-      netAmount=[]
-      this.setState({ data: [], quantity: [],extraDiscount:[] })
+      netAmount = []
+      this.setState({ data: [], quantity: [], extraDiscount: [] })
       return
     }
 
     let data = this.props.items[index].items
     let quantity = []
     let extraDiscount = []
-    for (let i = 0; i < data.length; i++){ quantity[i] = '1'
-  extraDiscount[i] = '0'}
-    this.setState({ data, quantity, extraDiscount,selected: [] })
+    for (let i = 0; i < data.length; i++) {
+      quantity[i] = '1'
+      extraDiscount[i] = '0'
+    }
+    this.setState({ data, quantity, extraDiscount, selected: [] })
   }
   renderHeader = () => (
     <Item fixedLabel>
@@ -93,13 +95,13 @@ class AddItemScreen extends React.PureComponent {
       </Picker>
     </Item>
   )
-  
+
   renderRow = ({ item, index }) => {
     litresMes[index] = 0
-    grossAmount[index] = item.retailPrice*this.state.quantity[index];
-    lessTO[index] = item.tradeOfferAmount*litresMes[index];
+    grossAmount[index] = item.retailPrice * this.state.quantity[index]
+    lessTO[index] = item.tradeOfferAmount * litresMes[index]
     lessExtraDiscount[index] = this.state.extraDiscount[index] * litresMes[index]
-    netAmount[index] = grossAmount[index] - lessTO[index] - lessExtraDiscount[index];
+    netAmount[index] = grossAmount[index] - lessTO[index] - lessExtraDiscount[index]
     return (
       <Card style={styles.row}>
         <CardItem header style={{ paddingLeft: 0, paddingBottom: 0, paddingTop: 0, paddingRight: 0 }}>
@@ -181,7 +183,7 @@ class AddItemScreen extends React.PureComponent {
                       this.setState(clone)
                     }
                   }}
-                  value={this.state.extraDiscount[index]==null?0:this.state.extraDiscount[index]}
+                  value={this.state.extraDiscount[index] == null ? 0 : this.state.extraDiscount[index]}
                   keyboardType={'numeric'}
                 />
               </View>
@@ -266,7 +268,7 @@ class AddItemScreen extends React.PureComponent {
   renderFooter = () => {
     return (
 
-      <Button danger rounded style={{ alignSelf: 'flex-end', marginVertical: 20}} onPress={this.addToCart}>
+      <Button danger rounded style={{ alignSelf: 'flex-end', marginVertical: 20 }} onPress={this.addToCart}>
         <Icon
           name={'add-shopping-cart'}
           type={'MaterialIcons'}

@@ -10,4 +10,9 @@ require('core-js/fn/symbol/iterator')
 require('core-js/fn/map')
 require('core-js/fn/set')
 require('core-js/fn/array/find')
+
+// intl polyfill
+require('intl')
+require('intl/locale-data/jsonp/en')
+
 AppRegistry.registerComponent('EvaTracker', () => App)

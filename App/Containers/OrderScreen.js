@@ -8,16 +8,19 @@ import { Colors, Images } from '../Themes'
 import ShopActions from '../Redux/ShopRedux'
 
 var Total = 0
+
 class OrderScreen extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
-    this.state={
-      netTotal:0
+    this.state = {
+      netTotal: 0
     }
   }
-  componentWillMount() {
-    Total=0
+
+  componentWillMount () {
+    Total = 0
   }
+
   addOrder = () => {
     if (this.props.itemsBrands) {
       this.props.navigation.navigate('AddNewItem')
@@ -37,15 +40,16 @@ class OrderScreen extends React.Component {
         <Text style={[styles.item2, { fontSize: 14, fontWeight: 'bold' }]}>Product</Text>
         <Text style={[styles.item3, { fontSize: 14, fontWeight: 'bold' }]}>Qty</Text>
         <Text style={[styles.item4, { fontSize: 14, fontWeight: 'bold' }]}>SKU</Text>
-        <View style={styles.item5} />
+        <View style={styles.item5}/>
       </View>
     )
   }
 
   renderRow = ({ item }) => {
-    Total=item.netAmount
+    Total = item.netAmount
     this.setState({
-      netTotal:Total})
+      netTotal: Total
+    })
     return (
       <View style={styles.listHeader}>
         <Image
@@ -105,9 +109,10 @@ class OrderScreen extends React.Component {
         </View>
         <Button transparent style={styles.item5} onPress={() => {
           this.props.removeItem(item)
-          Total-=item.netAmount
+          Total -= item.netAmount
           this.setState({
-            netTotal:Total})
+            netTotal: Total
+          })
         }}>
           <Icon name={'trash'} style={{ color: Colors.fire, marginLeft: 0, marginRight: 0 }}
           />
@@ -159,7 +164,7 @@ class OrderScreen extends React.Component {
             </Fab>
           </View>
         </GradientWrapper>
-        <View style={{ width: '100%', height: 5, backgroundColor:'#fcc430' }} />
+        <View style={{ width: '100%', height: 5, backgroundColor: '#fcc430' }}/>
         <Content style={styles.containerContent}>
           {
             <Card>
@@ -175,42 +180,41 @@ class OrderScreen extends React.Component {
             </Card>
           }
         </Content>
-        <View style={{ width: '100%', height: 5, backgroundColor:'#fcc430' }} />
+        <View style={{ width: '100%', height: 5, backgroundColor: '#fcc430' }}/>
         <GradientWrapper>
-      <Footer style={[styles.header, styles.footer]}>
+          <Footer style={[styles.header, styles.footer]}>
             <Text style={styles.amountText}>TOTAL PAYMENT = {Total}</Text>
-          {this.renderCheckoutButton()}
+            {this.renderCheckoutButton()}
           </Footer>
         </GradientWrapper>
       </Container>
     )
   }
-renderCheckoutButton = () => {
-  if((this.props.items && this.props.items.length > 0)) {
-    return(
-    <Button danger onPress={this.checkout} style={{margin:5,justifyContent:'flex-end'}}>
-        <Icon
-          name={'arrow-dropleft'}
-        />
-        <Text>CheckOut</Text>
-    </Button>
-    )
-  }
-    else {
-      return(
-        <View style={{height:0}}/>
+
+  renderCheckoutButton = () => {
+    if ((this.props.items && this.props.items.length > 0)) {
+      return (
+        <Button danger onPress={this.checkout} style={{ margin: 5, justifyContent: 'flex-end' }}>
+          <Icon
+            name={'arrow-dropleft'}
+          />
+          <Text>CheckOut</Text>
+        </Button>
+      )
+    } else {
+      return (
+        <View style={{ height: 0 }}/>
       )
     }
-}
+  }
   checkout = () => {
     if ((this.props.items && this.props.items.length > 0)) {
-      let extraItem = 
       this.props.placeOrder({
         items: this.props.items.map(value => ({ quantity: value.quantity, inventoryItemId: value.inventoryItemId })),
         onSuccess: () => {
-            this.props.navigation.navigate('OrderSMS',{
-              orderItem:this.props.navigation.getParam('extraItem'),
-              inventoryDetails:this.props.items
+          this.props.navigation.navigate('OrderSMS', {
+            orderItem: this.props.navigation.getParam('extraItem'),
+            inventoryDetails: this.props.items
           })
         }
       })

@@ -142,7 +142,7 @@ export const placeOrderEpics = (action$, state$, { api }) => action$.pipe(
         if (!response.ok || hasReason) {
           return of(response)
         } else {
-          const RESP = response.data.response[0].orderTakings.map(value => ({
+          const array = response.data.response[0].orderTakings.map(value => ({
             orderTakingId: value.orderTakingId,
             inventoryItemId: value.inventoryItemId,
             quantity: value.quantity,
@@ -151,7 +151,7 @@ export const placeOrderEpics = (action$, state$, { api }) => action$.pipe(
             storeId: value.storeId,
             userId: userId
           }))
-          return api.salesIndents({ RESP })
+          return api.salesIndents(array)
         }
       }),
       mergeMap(response => {

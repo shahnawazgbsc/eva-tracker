@@ -1,3 +1,3 @@
 export default function (amount: number) {
-  return amount
+  return Intl.NumberFormat('en-PK', { style: 'currency', currency: 'PKR' }).format(amount)
 }
