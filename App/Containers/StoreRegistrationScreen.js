@@ -231,14 +231,14 @@ class StoreRegistrationScreen extends Component {
                 <Label>Subsection</Label>
                 <Picker
                   mode='dropdown'
-                  placeholder='Select SubSection'
+                  placeholder='Select Subsection'
                   iosIcon={<Icon name='ios-arrow-down-outline'
                   />}
                   itemTextStyle={{ color: '#788ad2', fontSize: 12 }}
                   selectedValue={this.state.subsectionId}
                   onValueChange={this.onSubSectionSelected}
                 >
-                  <Picker.Item label={'Select SubSection'} key={'first'} value={''}/>
+                  <Picker.Item label={'Select Subsection'} key={'first'} value={''}/>
                   {
                     this.props.subSection &&
                     this.props.subSection.map((value, index) => (

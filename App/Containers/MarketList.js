@@ -210,7 +210,7 @@ class MarketList extends React.PureComponent {
             initialNumToRender={20}
             keyExtractor={this.keyExtractor}
           /> : <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ fontSize: 22, color: Colors.black }}>{this.state.segment === 0 ? "PJP is not available" : this.state.segment === 1 ? "Visited is not availabe" : this.state.segment === 2 ? "Others is not availabe" : "Not available"}</Text>
+            <Text style={{ fontSize: 14, color: Colors.charcoal }}>{this.state.segment === 0 ? "PJP shops are not available" : this.state.segment === 1 ? "Visited shops are not available" : this.state.segment === 2 ? "Others are not available" : "Not available"}</Text>
           </View>}
       </Container>
     )
