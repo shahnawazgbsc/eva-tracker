@@ -6,6 +6,7 @@ import GradientWrapper from '../Components/GradientWrapper'
 import styles from './Styles/OrderScreenStyle'
 import { Colors, Images } from '../Themes'
 import ShopActions from '../Redux/ShopRedux'
+import * as R from 'ramda'
 
 var Total = 0
 
@@ -46,7 +47,6 @@ class OrderScreen extends React.Component {
   }
 
   renderRow = ({ item }) => {
-    Total = item.netAmount
     this.setState({
       netTotal: Total
     })
@@ -129,6 +129,7 @@ class OrderScreen extends React.Component {
   }
 
   render () {
+    Total = R.reduce(R.add, 0)(R.map(R.prop('netAmount'))(this.props.items))
     return (
       <Container>
         <GradientWrapper>
@@ -192,21 +193,22 @@ class OrderScreen extends React.Component {
   }
 
   renderCheckoutButton = () => {
-    if ((this.props.items && this.props.items.length > 0)) {
-      return (
-        <Button danger onPress={this.checkout} style={{ margin: 5, justifyContent: 'flex-end' }}>
+    if((this.props.items && this.props.items.length > 0)) {
+      return(
+      <Button danger onPress={this.checkout} style={{flexWrap:'wrap',margin:5,justifyContent:'flex-end'}}>
           <Icon
             name={'arrow-dropleft'}
           />
           <Text>CheckOut</Text>
-        </Button>
-      )
-    } else {
-      return (
-        <View style={{ height: 0 }}/>
+      </Button>
       )
     }
-  }
+      else {
+        return(
+          <View style={{height:0}}/>
+        )
+      }
+    }
   checkout = () => {
     if ((this.props.items && this.props.items.length > 0)) {
       this.props.placeOrder({
