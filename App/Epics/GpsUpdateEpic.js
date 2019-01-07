@@ -11,30 +11,29 @@ export default (action$, state$, { firebase }) => action$.pipe(
     const userId = state$.value.login.payload && state$.value.login.payload.user.userid
 
     if (userId) {
-      firebase.firestore()
+      const add = firebase.firestore()
         .collection('tbl_users')
         .doc(userId.toString())
         .collection('user_history')
-        .add({
-          lng: longitude,
-          userId,
-          lat: latitude,
-          timestamp: new Date()
-        })
-        .then(docRef => { })
-        .catch(error => { })
+        .doc()
 
-      firebase.firestore()
+      const tblUsers = firebase.firestore()
         .collection('tbl_users')
         .doc(userId.toString())
-        .set({
+
+      firebase.firestore().batch()
+        .set(add, {
           lng: longitude,
           userId,
           lat: latitude,
           timestamp: new Date()
         })
-        .then(docRef => { })
-        .catch(error => { })
+        .set(tblUsers, {
+          lng: longitude,
+          userId,
+          lat: latitude,
+          timestamp: new Date()
+        }).commit()
     }
 
     return of(StartupActions.voidAction())
