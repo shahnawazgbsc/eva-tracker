@@ -185,6 +185,8 @@ class AddItemScreen extends React.PureComponent {
                   }}
                   value={this.state.extraDiscount[index] == null ? 0 : this.state.extraDiscount[index]}
                   keyboardType={'numeric'}
+                  editable={litresMes[index]==0?false:true}
+                  disabled={litresMes[index]==0?true:false}
                 />
               </View>
             </Row>
