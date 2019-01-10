@@ -46,7 +46,9 @@ class ReasonScreen extends Component {
       selected: null
     }
   }
-
+componentDidMount() {
+  this.props.nonProductiveReasons()
+}
   close = () => {
     this.props.navigation.goBack(null)
   }
@@ -140,6 +142,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    nonProductiveReasons:()=>dispatch(ShopRedux.nonProductiveReasons()),
     checkOutRequest: (data) => dispatch(ShopRedux.checkOutRequest(data)),
     placeOrder: (data) => dispatch(ShopRedux.placeOrderRequest(data))
   }
