@@ -1,12 +1,19 @@
-import { createActions, createReducer } from 'reduxsauce'
+import {
+  createActions,
+  createReducer
+} from 'reduxsauce'
 import Immutable from 'seamless-immutable'
 
 /* ------------- Types and Action Creators ------------- */
 
-const { Types, Creators } = createActions({
+const {
+  Types,
+  Creators
+} = createActions({
   inventoryRequest: ['data'],
   inventoryFailure: ['error'],
-  inventorySuccess: ['data']
+  inventorySuccess: ['data'],
+  inventory_sku_request: null
 })
 
 export const InventoryTakingType = Types
@@ -23,16 +30,34 @@ export const INITIAL_STATE = Immutable({
 
 // request the data from an api
 
-export const request = (state, { data }) => Immutable(state).merge({ fetching: true })
+export const request = (state, {
+  data
+}) => Immutable(state).merge({
+  fetching: true
+})
 
-export const success = (state, { data }) => Immutable(state).merge({ fetching: false, error: null })
+export const success = (state, {
+  data
+}) => Immutable(state).merge({
+  fetching: false,
+  error: null
+})
 
 // Something went wrong somewhere.
-export const failure = (state, { error }) => Immutable(state).merge({ fetching: false, error })
-/* ------------- Hookup Reducers To Types ------------- */
+export const failure = (state, {
+  error
+}) => Immutable(state).merge({
+  fetching: false,
+  error
+})
 
+export const inventory_sku_request = (state) => Immutable(state).merge({
+  fetching: true
+})
+/* ------------- Hookup Reducers To Types ------------- */
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.INVENTORY_REQUEST]: request,
   [Types.INVENTORY_SUCCESS]: success,
-  [Types.INVENTORY_FAILURE]: failure
+  [Types.INVENTORY_FAILURE]: failure,
+  [Types.INVENTORY_SKU_REQUEST]: inventory_sku_request
 })
