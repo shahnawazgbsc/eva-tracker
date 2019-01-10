@@ -65,7 +65,9 @@ class InventoryScreen extends Component {
       return null
     }
   }
-
+  componentDidMount() {
+    this.props.inventorySKU()
+  }
   back = () => {
     this.props.navigation.goBack(null)
   }
@@ -265,25 +267,23 @@ class InventoryScreen extends Component {
                       <Text>Submit</Text>
                     </Button>
                   </React.Fragment>
-
                 }
               </View>
             </CardItem>
           </Card>
         </Content>
-
       </Container>
     )
   }
 }
-
 const mapStateToProps = (state) => {
   return { brands: state.brands.payload }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    sendInventory: (data) => dispatch(InventoryActions.inventoryRequest(data))
+    sendInventory: (data) => dispatch(InventoryActions.inventoryRequest(data)),
+    inventorySKU: () => dispatch(InventoryActions.inventory_sku_request())
   }
 }
 
