@@ -28,3 +28,17 @@ export const selectProductsListEpics = (action$, state$, { api }) => action$.pip
     )
   })
 )
+export const selectInventorySKUs = (action$, state$, { api }) => action$.pipe(
+  ofType(InventoryTakingType.INVENTORY_SKU_REQUEST),
+  mergeMap(action=>{
+    const companyId = state$.value.login.payload.user.companyid
+    return api.inventorySKUs(companyId).pipe(
+      map(response => {
+        if (response.ok) {
+          return InventoryActions.inventorySuccess(response.data)
+        } else {
+          return InventoryActions.inventoryFailure(response)
+        }
+      }))
+  })
+)
