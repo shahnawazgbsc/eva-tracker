@@ -62,7 +62,8 @@ export default StyleSheet.create({
   },
   amountText: {
     color: Colors.white,
-    margin: 10
+    margin: 10,
+    flexWrap:'wrap'
   },
   headerText: {
     color: Colors.white,
