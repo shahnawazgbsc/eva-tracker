@@ -121,7 +121,20 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
     }
   })
 )
-
+export const nonProductiveReasonsEpics = (action$,state$,{api}) => action$.pipe(
+  ofType(ShopTypes.NON_PRODUCTIVE_REASONS),
+  mergeMap(action=> {
+    const companyId = state$.value.login.payload.user.companyid
+    return api.nonProductiveReasons(companyId).pipe(
+      map(response => {
+        if (response.ok) {
+          return ShopActions.nonProductiveReasonsSuccess(response.data)
+        } else {
+          return ShopActions.nonProductiveReasonsSuccess(response)
+        }
+      }))
+  })
+)
 export const placeOrderEpics = (action$, state$, { api }) => action$.pipe(
   ofType(ShopTypes.PLACE_ORDER_REQUEST),
   mergeMap(action => {
