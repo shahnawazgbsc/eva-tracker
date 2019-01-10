@@ -59,8 +59,8 @@ class OrderSMS extends Component {
                   <Col size={3}>
                     <Text style={[styles.darkText, { color: Colors.fire }]}>{this.props.userFirstName}</Text>
                     <Subtitle style={[styles.lightDarkText]}>{item.address + ','}</Subtitle>
-                    <Text style={[styles.lightDarkText]}>{'P: ' + item.contactNo}</Text>
-                    <Text style={[styles.lightDarkText]}>{'M: ' + this.props.email}</Text>
+                    <Text style={[styles.lightDarkText]}>{'P: ' + item.contactNo==null?'-':item.contactNo}</Text>
+                    <Text style={[styles.lightDarkText]}>{'M: ' + this.props.email==null?'-':this.props.email}</Text>
                   </Col>
                 </Row>
                 <Text
