@@ -70,6 +70,7 @@ const create = (baseURL = AppConfig.baseUrl) => {
   const direction = (current, location) => from(googleApi.get(`json?origin=${current.latitude},${current.longitude}&destination=${location.latitude},${location.longitude}&key=${AppConfig.GOOGLE_API}`))
 
   const getBrands = (id) => from(api.get(`inventory/api/setup/GetBrandsWithInventoryItems/${id}`))
+  const inventorySKUs = (id) => from(api.get(`inventory/api/setup/GetGeneralSKUsByCompany/${id}`))
   const addItems = (data) => from(api.post('etracker/api/storevisit/addmultipleorders', data))
   const addInventories = (data) => from(api.post('etracker/api/storevisit/addmultipleinventorytakings', data))
   const checkIn = (data) => from(api.post('etracker/api/StoreVisit/AddStoreVisit', data))
@@ -82,6 +83,7 @@ const create = (baseURL = AppConfig.baseUrl) => {
   const setHeaders = (token) => api.setHeader('api_key', token)
   const salesIndents = (data) => from(api.post('inventory/api/sales/GenerateSalesIndents', data))
   const history = (storeId) => from(api.get(`etracker/api/storevisit/GetLastTwoVisits/${storeId}`))
+  const nonProductiveReasons = (id) => from(api.get(`etracker/api/storevisit/GetNonproductiveVisitReasons/${id}`))
 
   // ------
   // STEP 3
@@ -112,7 +114,9 @@ const create = (baseURL = AppConfig.baseUrl) => {
     dayStart,
     dayEnd,
     history,
-    salesIndents
+    salesIndents,
+    inventorySKUs,
+    nonProductiveReasons
   }
 }
 
