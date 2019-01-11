@@ -83,6 +83,12 @@ class ShopProfile extends React.Component {
               />
               <Text style={[styles.lightDarkText, { marginTop: 10, flexWrap: 'wrap', flex: 1 }]}>{item.contactNo}</Text>
             </Button>
+            <Button  small success onPress={()=>{this.props.navigation.navigate('ShopHistory',{  StoreID: item.storeId })}} style={{marginLeft:100,marginRight:8,marginBottom:4,paddingBottom:10}} >
+              <Icon style={[styles.HistoryButton, styles.iconPhone,]} name={'history'} type={'FontAwesome'}
+              />
+              <Text uppercase={false} style={[styles.HistoryButton, { marginTop: 8, flexWrap: 'wrap', flex: 1,color:'white' }]}>History</Text>
+            </Button>
+
           </View>
         </CardItem>
       </Card>)
@@ -141,13 +147,13 @@ class ShopProfile extends React.Component {
                 this.props.navigation.navigate('Reason', { item: this.props.navigation.getParam('item') })
               }
               break
-            case 'Shop History':
-              if (this.props.checkedIn) {
-                this.props.navigation.navigate('ShopHistory')
-              } else {
-                Alert.alert(null, 'Please check in first to view order history')
-              }
-              break
+            // case 'Shop History':
+            //   if (this.props) {
+            //     this.props.navigation.navigate('ShopHistory')
+            //   } else {
+            //     Alert.alert(null, 'Please check in first to view order history')
+            //   }
+            //   break
 
           }
         }}>

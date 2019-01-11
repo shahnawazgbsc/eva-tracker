@@ -14,7 +14,8 @@ export const reducers = combineReducers({
   gps: require('./GpsLocationRedux').reducer,
   brands: require('./GetBrandsRedux').reducer,
   createStore: require('./CreateStoreRedux').reducer,
-  inventory: require('./InventoryTakingRedux').reducer
+  inventory: require('./InventoryTakingRedux').reducer,
+  history:require('./ShopHistoryRedux').reducer
 })
 
 export default () => {

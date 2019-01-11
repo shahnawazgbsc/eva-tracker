@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Body, Button, Container, Content, Header, Icon, Left, Right, Text } from 'native-base'
-import { FlatList, View, Image } from 'react-native'
+import { FlatList, View, Image, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 // Styles
 import styles from './Styles/InventoryScreenStyle'
@@ -9,50 +9,87 @@ import Colors from '../Themes/Colors'
 import shopHistoryIcon from '../Images/Icons/shop-history.png'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
+import ShopHistoryAction from '../Redux/ShopHistoryRedux'
+import moment from 'moment';
 
 class ShopHistory extends Component {
   constructor (props) {
     super(props)
-
+    this.SampleNameArray = [ "Last Visit", "2nd Last Visit" ];
     this.state = {
       selectedBrand: '',
       quantity: '',
       unit: '',
       accordionData: [{ name: 'Last Visit', open: false }, { name: '2nd Last Visit', open: false }],
       selected: '',
-      expanded: []
+      expanded: [],
+      data: [],
+      open: false,
+      extends: [],
+      storeId:''
     }
   }
 
+  componentDidMount() {
+
+    console.log(this.props.data,'DATA cOMPONET DID mOUNT')
+    const { shopHistorySuccess, shopStoreId } = this.props;
+
+    // if (shopStoreId && shopStoreId.shop && shopStoreId.shop.storeId) {
+    //   shopHistorySuccess(shopStoreId.shop.storeId)
+
+    // }
+    const { navigation } = this.props;
+    const StoreID = navigation.getParam('StoreID', 'NO-ID');
+console.log(StoreID,'Store Id')
+  if (StoreID){
+
+      shopHistorySuccess(StoreID)
+
+
+  }
+
+
+  }
+  componentWillReceiveProps(nextprops) {
+    this.setState({ data: nextprops.data.history.data }, () => {
+
+    })
+  }
+
+
+
   keyExtractor = (item, index) => index
 
-  renderContent = () => {
+  renderContent = (data) => {
+    let totalAmount = 0;
     return (
+
       <View style={{ backgroundColor: 'white', margin: 20 }}>
         <View style={{ flex: 1 }}>
           <View style={{ flexDirection: 'row', flex: 1 }}>
             <Text style={{ fontSize: 13, flex: 1, fontWeight: 'bold', color: '#676767' }}>Visited By : </Text>
-            <Text style={{ fontSize: 13, flex: 4, color: '#616161' }}>Sumair</Text>
+            <Text style={{ fontSize: 13, flex: 4, color: '#616161' }}>{data.visitedBy}</Text>
           </View>
           <View style={{ flexDirection: 'row', alignContent: 'space-between', flex: 1 }}>
             <View style={{ flexDirection: 'row', flex: 1 }}>
               <Text style={{ fontSize: 13, fontWeight: 'bold', color: '#676767' }}>Visit Date : </Text>
-              <Text style={{ fontSize: 13, color: '#616161' }}>25-Aug-2018</Text>
+              <Text style={{ fontSize: 13, color: '#616161' }}>{moment(data.visitDateTime).format("DD-MM-YYYY")}</Text>
             </View>
             <View style={{ flexDirection: 'row', flex: 1 }}>
               <Text style={{ fontSize: 13, fontWeight: 'bold', color: '#676767' }}>Visit Time : </Text>
-              <Text style={{ fontSize: 13, color: '#616161' }}>11:35 AM</Text>
+              <Text style={{ fontSize: 13, color: '#616161' }}>{moment(data.visitDateTime).format("LT")}</Text>
             </View>
           </View>
         </View>
         <View style={{ marginTop: 10 }}>
           <View style={{ flexDirection: 'row' }}>
             <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#676767' }}>Bill To </Text>
-            <Text style={{ fontSize: 15, marginLeft: 5, color: '#005B2D' }}>Irfan Ali Khan</Text>
+            <Text style={{ fontSize: 15, marginLeft: 5, color: '#005B2D' }}>{data.billedTo}</Text>
           </View>
           <View style={{ flexDirection: 'row' }}>
             <Text style={{ fontSize: 13, fontWeight: 'bold', color: '#676767' }}>Bill Date : </Text>
-            <Text style={{ fontSize: 13, color: '#616161' }}>04/01/2019 5:38:12 PM</Text>
+            <Text style={{ fontSize: 13, color: '#616161' }}>{data.billDate}</Text>
           </View>
         </View>
         <View style={{ borderColor: 'black', borderBottomWidth: 1, marginTop: 10, flex: 1 }}>
@@ -75,19 +112,24 @@ class ShopHistory extends Component {
                 alignSelf: 'flex-end'
               }}>Price</Text></View>
           </View>
+          {data.items.map((item, ind) => {
 
-          <View style={{ flexDirection: 'row', flex: 1, marginVertical: 5, alignItems: 'center' }}>
-            <View style={{ flex: 3 }}>
-              <Text style={{ fontSize: 12, color: '#616161' }}>Evo Oil</Text>
-            </View>
-            <View style={{ flex: 2.5 }}>
-              <Text style={{ fontSize: 13, color: '#616161' }}>8 Ctn</Text>
-            </View>
-            <View style={{ flex: 1, justifyContent: 'flex-end', flexDirection: 'row' }}>
-              <Text style={{ fontSize: 13, color: '#616161', alignSelf: 'flex-end' }}>150</Text>
-              <Text style={{ fontSize: 10, fontWeight: 'bold', color: '#616161', marginTop: 3 }}>.00</Text>
-            </View>
-          </View>
+            totalAmount += item.unitPrice;
+            return (
+              <View style={{ flexDirection: 'row', flex: 1, marginVertical: 5, alignItems: 'center' }}>
+                <View style={{ flex: 3 }}>
+                  <Text style={{ fontSize: 12, color: '#616161' }}>{item.itemName}</Text>
+                </View>
+                <View style={{ flex: 2.5 }}>
+                  <Text style={{ fontSize: 13, color: '#616161' }}>{item.quantity + " " + item.packType}</Text>
+                </View>
+                <View style={{ flex: 1, justifyContent: 'flex-end', flexDirection: 'row' }}>
+                  <Text style={{ fontSize: 13, color: '#616161', alignSelf: 'flex-end' }}>{item.unitPrice}</Text>
+                  <Text style={{ fontSize: 10, fontWeight: 'bold', color: '#616161', marginTop: 3 }}>.00</Text>
+                </View>
+              </View>
+            )
+          })}
         </View>
         <View style={{
           flexDirection: 'row',
@@ -97,16 +139,17 @@ class ShopHistory extends Component {
           alignContent: 'center'
         }}>
           <Text style={{ fontSize: 13, fontWeight: 'bold', color: '#676767' }}>Total = </Text>
-          <Text style={{ fontSize: 13, color: '#616161' }}>250</Text>
+          <Text style={{ fontSize: 13, color: '#616161' }}>{totalAmount}</Text>
           <Text style={{ fontSize: 10, fontWeight: 'bold', color: '#616161', marginTop: 3 }}>.00</Text>
         </View>
       </View>
     )
+
   }
   renderRow = ({ item, index }) => {
     return (
       <View style={{ flex: 1 }}>
-        <View style={{
+        <TouchableOpacity style={{
           flexDirection: 'row',
           width: '100%',
           flex: 1,
@@ -117,7 +160,12 @@ class ShopHistory extends Component {
           justifyContent: 'center',
           borderBottomWidth: 1,
           borderColor: Colors.charcoal
-        }}>
+        }}
+          onPress={() => {
+            if (this.state.open === index) this.setState({ open: false })
+            else this.setState({ open: index })
+          }}
+        >
           <View style={{ flex: 1, justifyContent: 'center', marginLeft: 20 }}>
             <Text
               style={{
@@ -125,31 +173,23 @@ class ShopHistory extends Component {
                 color: Colors.black,
                 fontWeight: 'bold'
               }}
-            >{item.name}</Text>
+            >{this.SampleNameArray[index]</Text>
           </View>
           <View style={{ flex: 2, alignContent: 'flex-end', justifyContent: 'center' }}>
 
             <Icon
-              onPress={() => {
-                this.state.accordionData[index].open = !this.state.accordionData[index].open
-                this.setState({ accordionData: this.state.accordionData })
-              }}
               style={{ alignSelf: 'flex-end', marginRight: 16 }}
-              name={item.open ? 'md-arrow-dropup' : 'md-arrow-dropdown'}
+              name={this.state.open === index ? 'md-arrow-dropup' : 'md-arrow-dropdown'}
             />
           </View>
-        </View>
-        {item.open ? this.renderContent() : null}
+        </TouchableOpacity>
+        {this.state.open === index ? this.renderContent(item) : null}
       </View>
 
     )
   }
-  back = () => {
-    this.props.navigation.goBack(null)
-  }
 
-
-  render () {
+  render() {
     return (
       <Container style={{ backgroundColor: Colors.silver }}>
         <GradientWrapper>
@@ -163,12 +203,11 @@ class ShopHistory extends Component {
             </Left>
             <Body
               style={{ marginVertical: 10, justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-              {/* <Icons
-              style={styles.headerIcon}
-              name={'graph-bar'}
-              type={'Foundation'}
-            /> */}
-              <Image style={{ width: 25, height: 25 }} source={shopHistoryIcon} />
+              <Icon
+                style={styles.headerIcon}
+                name={'graph-bar'}
+                type={'Foundation'}
+              />
               <Text style={styles.titleText}>Shop History</Text>
             </Body>
             <Right
@@ -179,7 +218,7 @@ class ShopHistory extends Component {
           <FlatList
             style={styles.accordion}
             keyExtractor={this.keyExtractor}
-            data={this.state.accordionData}
+            data={this.state.data}
             extraData={this.state}
             renderItem={this.renderRow}
           />
@@ -191,7 +230,16 @@ class ShopHistory extends Component {
 }
 
 const mapStateToProps = (state) => {
-  return { history: state.history.payload }
+  return {
+    data: state,
+    shopStoreId: state.shop
+  }
 }
+const mapDispatchToProps = (dispatch) => {
+  return {
+    shopHistorySuccess: (params) => dispatch(ShopHistoryAction.shopHistoryRequest(params))
 
-export default connect(mapStateToProps, null)(ShopHistory)
+
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(ShopHistory)

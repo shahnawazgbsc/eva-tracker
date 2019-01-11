@@ -31,6 +31,13 @@ export default StyleSheet.create({
     paddingRight: 0,
     textAlign: 'left'
   },
+  HistoryButton:{
+    color: 'white',
+    paddingHorizontal: 0,
+    paddingLeft: 7,
+    paddingRight: 0,
+
+  },
   cardHeaderContainer: { backgroundColor: Colors.fab, alignSelf: 'stretch', flex: 1 },
   cardItem: { marginHorizontal: 3, backgroundColor: Colors.white, flexDirection: 'row' },
   cardChildContainer: { backgroundColor: Colors.success, alignSelf: 'stretch', flex: 1 },
