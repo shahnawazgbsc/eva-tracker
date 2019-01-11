@@ -39,13 +39,21 @@ class MarketList extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
+      segmantIndex: [],
+      segmantIndex1: [],
+      segmantIndex2: [],
+      segment: 0,
       dataObjects: [],
-      segment: 0
+
+
     }
   }
   componentWillMount() {
 
+    this.setState({ segmantIndex: this.getList(0, this.props) })
     this.setState({ dataObjects: this.getList(0, this.props) })
+    this.setState({ segmantIndex1: this.getList(1, this.props) })
+    this.setState({ segmantIndex2: this.getList(2, this.props) })
   }
 
   /* ***********************************************************
@@ -142,7 +150,9 @@ class MarketList extends React.PureComponent {
     this.setState({
       text: '',
       segment: 0,
-      dataObjects: this.getList(0, this.props)
+      dataObjects: this.getList(0, this.props),
+      segmantIndex:this.getList(0, this.props)
+
     })
   }
 
@@ -150,7 +160,9 @@ class MarketList extends React.PureComponent {
     this.setState({
       text: '',
       segment: 1,
-      dataObjects: this.getList(1, this.props)
+      dataObjects: this.getList(1, this.props),
+
+      segmantIndex1:this.getList(1, this.props)
     })
   }
 
@@ -158,12 +170,15 @@ class MarketList extends React.PureComponent {
     this.setState({
       text: '',
       segment: 2,
-      dataObjects: this.props.otherShops
+      dataObjects: this.props.otherShops,
+
+      segmantIndex2:this.props.otherShops
     })
   }
 
   render() {
-    const { dataObjects } = this.state;
+    const { segmantIndex,segmantIndex1,segmantIndex2 ,      dataObjects
+    } = this.state;
     return (
       <Container>
         <GradientWrapper>
@@ -177,15 +192,15 @@ class MarketList extends React.PureComponent {
             <Body style={{}}>
               <Text style={styles.titleText}>Market</Text>
             </Body>
-            <Right >
+            {/* <Right >
               <Text style={{ color: 'white', fontSize: 14 }}>Counter= {dataObjects==null?0:dataObjects.length}</Text>
-            </Right>
+            </Right> */}
           </Header>
         </GradientWrapper>
         <Segment style={{}}>
-          <Button style={{ flex: 1, marginLeft: 20, alignItems: 'center', justifyContent: 'center' }} first active={this.state.segment === 0} onPress={this.segmentNearMe}><Text>PJP</Text></Button>
-          <Button style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} active={this.state.segment === 1} onPress={this.segmentShopList}><Text>Visited</Text></Button>
-          <Button style={{ flex: 1, marginRight: 20, alignItems: 'center', justifyContent: 'center' }} last active={this.state.segment === 2} onPress={this.segmentSearch}><Text>Others</Text></Button>
+          <Button style={{ flex: 1, marginLeft: 20, alignItems: 'center', justifyContent: 'center' }} first active={this.state.segment === 0} onPress={this.segmentNearMe}><Text>PJP  ({segmantIndex == null?0:segmantIndex.length})</Text></Button>
+          <Button style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} active={this.state.segment === 1} onPress={this.segmentShopList}><Text>Visited ({segmantIndex1 == null?0:segmantIndex1.length})</Text></Button>
+          <Button style={{ flex: 1, marginRight: 20, alignItems: 'center', justifyContent: 'center' }} last active={this.state.segment === 2} onPress={this.segmentSearch}><Text>Other ({segmantIndex2 == null?0:segmantIndex2.length})</Text></Button>
         </Segment>
         {this.state.segment === 2 &&
           <View searchBar rounded style={{ width: '100%', height: 40, backgroundColor: 'white' }}>

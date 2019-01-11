@@ -41,7 +41,6 @@ class ShopHistory extends Component {
     // }
     const { navigation } = this.props;
     const StoreID = navigation.getParam('StoreID', 'NO-ID');
-console.log(StoreID,'Store Id')
   if (StoreID){
 
       shopHistorySuccess(StoreID)
@@ -166,15 +165,7 @@ console.log(StoreID,'Store Id')
             else this.setState({ open: index })
           }}
         >
-          <View style={{ flex: 1, justifyContent: 'center', marginLeft: 20 }}>
-            <Text
-              style={{
-                fontSize: 16,
-                color: Colors.black,
-                fontWeight: 'bold'
-              }}
-            >{this.SampleNameArray[index]</Text>
-          </View>
+          
           <View style={{ flex: 2, alignContent: 'flex-end', justifyContent: 'center' }}>
 
             <Icon
@@ -185,9 +176,12 @@ console.log(StoreID,'Store Id')
         </TouchableOpacity>
         {this.state.open === index ? this.renderContent(item) : null}
       </View>
+    );
+  };
 
-    )
-  }
+  back = () => {
+    this.props.navigation.goBack(null);
+  };
 
   render() {
     return (
@@ -201,14 +195,8 @@ console.log(StoreID,'Store Id')
                 <Text>Back</Text>
               </Button>
             </Left>
-            <Body
-              style={{ marginVertical: 10, justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-              <Icon
-                style={styles.headerIcon}
-                name={'graph-bar'}
-                type={'Foundation'}
-              />
-              <Text style={styles.titleText}>Shop History</Text>
+            <Body style={{ alignSelf: 'flex-start', marginTop: 18 }}>
+            <Text style={styles.titleText}>Shop History</Text>
             </Body>
             <Right
             />
@@ -238,8 +226,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     shopHistorySuccess: (params) => dispatch(ShopHistoryAction.shopHistoryRequest(params))
-
-
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ShopHistory)
