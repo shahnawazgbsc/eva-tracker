@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { Body, Button, Container, Content, Header, Icon, Left, Right, Text } from 'native-base'
-import { FlatList, View } from 'react-native'
+import { FlatList, View, Image } from 'react-native'
 import { connect } from 'react-redux'
 // Styles
 import styles from './Styles/InventoryScreenStyle'
 import GradientWrapper from '../Components/GradientWrapper'
 import Colors from '../Themes/Colors'
+import shopHistoryIcon from '../Images/Icons/shop-history.png'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 
@@ -17,7 +18,7 @@ class ShopHistory extends Component {
       selectedBrand: '',
       quantity: '',
       unit: '',
-      accordionData: [{ name: 'Last Visit', open: false }, { name: '3rd Last Visit', open: false }],
+      accordionData: [{ name: 'Last Visit', open: false }, { name: '2nd Last Visit', open: false }],
       selected: '',
       expanded: []
     }
@@ -143,6 +144,10 @@ class ShopHistory extends Component {
 
     )
   }
+  back = () => {
+    this.props.navigation.goBack(null)
+  }
+
 
   render () {
     return (
@@ -158,12 +163,13 @@ class ShopHistory extends Component {
             </Left>
             <Body
               style={{ marginVertical: 10, justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-            <Icon
+              {/* <Icons
               style={styles.headerIcon}
               name={'graph-bar'}
               type={'Foundation'}
-            />
-            <Text style={styles.titleText}>Shop History</Text>
+            /> */}
+              <Image style={{ width: 25, height: 25 }} source={shopHistoryIcon} />
+              <Text style={styles.titleText}>Shop History</Text>
             </Body>
             <Right
             />
