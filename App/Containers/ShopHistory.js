@@ -165,6 +165,15 @@ class ShopHistory extends Component {
             else this.setState({ open: index })
           }}
         >
+          <View style={{ flex: 1, justifyContent: 'center', marginLeft: 20 }}>
+            <Text
+              style={{
+                fontSize: 16,
+                color: Colors.black,
+                fontWeight: 'bold'
+              }}
+            >{this.SampleNameArray[index]}</Text>
+          </View>
           
           <View style={{ flex: 2, alignContent: 'flex-end', justifyContent: 'center' }}>
 
