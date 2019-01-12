@@ -27,17 +27,27 @@ import ShopRedux from '../Redux/ShopRedux'
 
 class ReasonScreen extends Component {
 
-  reasons = this.props.reasons.map((value)=>(
-      value.reason
-  ))
+  reasons = []
   constructor (props) {
     super(props)
     this.state = {
-      selected: null
+      selected: null,
+      nonProductiveReasons:[]
     }
   }
-componentDidMount() {
+componentWillMount() {
   this.props.nonProductiveReasons()
+}
+componentWillReceiveProps(newProps) {
+  if(newProps.reasons!= null) {
+  this.reasons = newProps.reasons.map((value)=>(
+    value.reason
+))
+  
+this.setState({
+  nonProductiveReasons:this.reasons
+})
+  }
 }
   close = () => {
     this.props.navigation.goBack(null)
@@ -86,7 +96,7 @@ componentDidMount() {
           <H3>Please provide reason for not placing an order</H3>
           <Form>
             {
-              this.reasons.map((value) => (
+              this.state.nonProductiveReasons.map((value) => (
                 <ListItem onPress={() => {
                   this.setState({ selected: value })
                 }}>
