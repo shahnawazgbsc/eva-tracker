@@ -59,8 +59,8 @@ class OrderSMS extends Component {
                   <Col size={3}>
                     <Text style={[styles.darkText, { color: Colors.fire }]}>{this.props.userFirstName}</Text>
                     <Subtitle style={[styles.lightDarkText]}>{item.address + ','}</Subtitle>
-                    <Text style={[styles.lightDarkText]}>{'P: ' + item.contactNo==null?'-':item.contactNo}</Text>
-                    <Text style={[styles.lightDarkText]}>{'M: ' + this.props.email==null?'-':this.props.email}</Text>
+                    <Text style={[styles.lightDarkText]}>{this.getPhoneNumber(item.contactNo)}</Text>
+                    <Text style={[styles.lightDarkText]}>{this.getEmail()}</Text>
                   </Col>
                 </Row>
                 <Text
@@ -96,11 +96,19 @@ class OrderSMS extends Component {
             </CardItem>
           </Card>
         </Content>
-
       </Container>
     )
   }
-
+  getPhoneNumber(number) {
+    if(number!=null)
+      return "P\t:\t" + number
+    else return "P\t:\t-"
+  }
+  getEmail() {
+    if(this.props.email != null)
+      return "M\t:\t" + this.props.email
+    else return "M\t:\t-"
+  }
   completeOrder = () => {
     this.props.navigation.navigate('ShopDetail')
   }
