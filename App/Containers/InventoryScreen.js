@@ -28,44 +28,37 @@ import Colors from '../Themes/Colors'
 // import YourActions from '../Redux/YourRedux'
 
 class InventoryScreen extends Component {
+  SKUs = this.props.skus;
   constructor (props) {
     super(props)
 
-    const quantity = props.brands.map(value => value.items.map(value => value.items.map(value => '1')))
-    const unit = props.brands.map(value => value.items.map(value => value.items.map(value => value.unit)))
-    const selected = props.brands.map(value => value.items.map(value => value.items.map(value => false)))
+    //const quantity = props.brands.map(value => value.items.map(value => value.items.map(value => '1')))
+    //const unit = props.brands.map(value => value.items.map(value => value.items.map(value => value.unit)))
+    //const selected = props.brands.map(value => value.items.map(value => value.items.map(value => false)))
 
     this.state = {
       selectedBrand: '',
-      accordionData: null,
-      quantity,
-      unit,
-      selected,
+      inventorySKU: null,
+      quantity:[],
+      unit:[],
+      selected: [],
       expanded: []
     }
   }
 
   brandSelector = ((itemValue) => this.setState({
     selectedBrand: itemValue,
-    accordionData: itemValue === '' ? null : this.getDataArray(itemValue)
+    inventorySKU: itemValue === '' ? null : this.getDataArray(itemValue)
   }))
 
   getDataArray = (category) => {
-    const brand = this.props.brands[category]
-    if (brand.items.length > 0) {
-      return brand.items.map((value, index) => ({
-        title: value.productType,
-        content: value.items,
-        selected: this.state.selected,
-        quantity: this.state.quantity,
-        unit: this.state.unit,
-        index: index
-      }))
-    } else {
+    if (this.SKUs != null && this.SKUs.length > 0) {
+      return this.SKUs
+      } else {
       return null
     }
   }
-  componentDidMount() {
+  componentWillMount() {
     this.props.inventorySKU()
   }
   back = () => {
@@ -74,16 +67,11 @@ class InventoryScreen extends Component {
 
   submit = () => {
     let array = []
-    this.state.selected.forEach((brands, indexBrand) => {
-      brands.forEach((category, indexCategory) => {
-        category.forEach((value, index) => {
-          if (value) {
-            array.push({
-              quantity: this.state.quantity[indexBrand][indexCategory][index],
-              inventoryItemId: this.props.brands[indexBrand].items[indexCategory].items[index].inventoryItemId
-            })
-          }
-        })
+    this.state.selected.forEach((sku, index) => {
+      if(this.state.selected[index])
+      array.push({
+        quantity: this.state.quantity[index],
+        inventoryItemId: index+1
       })
     })
 
@@ -93,6 +81,9 @@ class InventoryScreen extends Component {
         onSuccess: () => {
           Alert.alert(null, 'Inventory updated')
           this.props.navigation.goBack(null)
+        },
+        onFailure:()=>{
+          this.props.navigation.goBack(null)
         }
       })
     } else {
@@ -101,38 +92,31 @@ class InventoryScreen extends Component {
   }
 
   renderContent = ({ content, index }) => {
-    if (this.state.expanded[index]) {
-      return (
+    return (
         <View
           style={{ paddingVertical: 10 }}>
-          <Item>
-            <Text style={[styles.itemProduct, styles.itemsTitle]}>Product name</Text>
-            <Text style={[styles.itemQty, styles.itemsTitle]}>Quantity</Text>
-            <Text style={[styles.itemUnit, styles.itemsTitle]}>Unit</Text>
-          </Item>
           {
-            content.map((value, indx) => (
               <Item onPress={() => {
                 let clone = JSON.parse(JSON.stringify(this.state.selected))
-                clone[this.state.selectedBrand][index][indx] = !clone[this.state.selectedBrand][index][indx]
+                clone[index] = !clone[index]
                 this.setState({ selected: clone })
               }}>
                 <Button transparent>
                   <Icon
                     style={{ color: Colors.fire, marginLeft: 0, marginRight: 0 }}
-                    name={this.state.selected[this.state.selectedBrand][index][indx] ? 'check-box' : 'check-box-outline-blank'}
+                    name={this.state.selected[index] ? 'check-box' : 'check-box-outline-blank'}
                     type={'MaterialIcons'}
                   />
                 </Button>
-                <Text style={styles.itemProduct}>{value.name}</Text>
+                <Text style={styles.itemProduct}>{content.itemName}</Text>
                 <Item rounded style={styles.input}>
                   <Input
                     style={styles.inputText}
-                    value={this.state.quantity[this.state.selectedBrand][index][indx]}
+                    value={this.state.quantity[index]}
                     onChangeText={text => {
                       if (!isNaN(text)) {
                         let clone = JSON.parse(JSON.stringify(this.state.quantity))
-                        clone[this.state.selectedBrand][index][indx] = text
+                        clone[index] = text
                         this.setState({ quantity: clone })
                       }
                     }}
@@ -142,25 +126,20 @@ class InventoryScreen extends Component {
                 <Item rounded style={styles.input}>
                   <Input
                     style={styles.inputText}
-                    value={this.state.unit[this.state.selectedBrand][index][indx]}
+                    value={content.unit}
                     disabled={true}
                     editable={false}
                     onChangeText={text => {
-                      let clone = JSON.parse(JSON.stringify(this.state.unit))
-                      clone[this.state.selectedBrand][index][indx] = text
+                      let clone = JSON.parse(JSON.stringify(content.unit))
+                      clone[index] = text
                       this.setState({ unit: clone })
                     }}
                   />
                 </Item>
               </Item>
-            ))
           }
         </View>
       )
-    } else {
-      return null
-    }
-
   }
 
   keyExtractor = (item, index) => index
@@ -168,21 +147,7 @@ class InventoryScreen extends Component {
   renderRow = ({ item, index }) => {
     return (
       <View>
-        <Text
-          style={{
-            flex: 1,
-            fontSize: 16,
-            borderTopWidth: 1,
-            borderColor: Colors.charcoal,
-            color: Colors.blac,
-            backgroundColor: Colors.silver,
-            padding: 10
-          }}
-          onPress={() => {
-            this.state.expanded[index] = !this.state.expanded[index]
-            this.setState({ expanded: this.state.expanded })
-          }}>{item.title}</Text>
-        {this.renderContent({ content: item.content, index })}
+        {this.renderContent({ content: item, index })}
       </View>
     )
   }
@@ -254,12 +219,19 @@ class InventoryScreen extends Component {
                   </Item>
                 }
                 {
-                  !!this.state.accordionData &&
+                  !!this.state.inventorySKU &&
                   <React.Fragment>
+                    <View style={{ paddingVertical: 10 }}>
+                      <Item>
+                        <Text style={[styles.itemProduct, styles.itemsTitle]}>Product name</Text>
+                        <Text style={[styles.itemQty, styles.itemsTitle]}>Quantity</Text>
+                        <Text style={[styles.itemUnit, styles.itemsTitle]}>Unit</Text>
+                      </Item>
+                    </View>
                     <FlatList
                       style={styles.accordion}
                       keyExtractor={this.keyExtractor}
-                      data={this.state.accordionData}
+                      data={this.SKUs}
                       extraData={this.state}
                       renderItem={this.renderRow}
                     />
@@ -277,7 +249,8 @@ class InventoryScreen extends Component {
   }
 }
 const mapStateToProps = (state) => {
-  return { brands: state.brands.payload }
+  return { brands: state.brands.payload,
+  skus: state.inventory.inventorySKUs }
 }
 
 const mapDispatchToProps = (dispatch) => {
