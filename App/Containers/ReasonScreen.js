@@ -27,19 +27,9 @@ import ShopRedux from '../Redux/ShopRedux'
 
 class ReasonScreen extends Component {
 
-  reasons = ['Stock Available Company',
-    'Stock Available Market',
-    'Defaulter Party',
-    'Damage Issue',
-    'No-Demand',
-    'Shop was Closed',
-    'Person was not there',
-    'Pending Bills',
-    'Next Visit',
-    'Person do not have time',
-    'Other'
-  ]
-
+  reasons = this.props.reasons.map((value)=>(
+      value.reason
+  ))
   constructor (props) {
     super(props)
     this.state = {
@@ -136,7 +126,8 @@ componentDidMount() {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    pjp: ownProps.navigation.getParam('item').pjp
+    pjp: ownProps.navigation.getParam('item').pjp,
+    reasons:state.shop.reasons
   }
 }
 
