@@ -11,6 +11,8 @@ import styles from './MainScreenStyle'
 import LoginRedux from '../../Redux/LoginRedux'
 import * as R from 'ramda'
 
+var mobileScreen = [];
+
 class MainScreen extends React.Component {
   constructor (props) {
     super(props)
@@ -19,6 +21,9 @@ class MainScreen extends React.Component {
 
   componentDidMount () {
     this.props.request()
+    for(var iter in this.props.loginParams) {
+      mobileScreen.push(this.props.loginParams[iter])
+    }
   }
 
   menu = () => {
@@ -133,8 +138,8 @@ class MainScreen extends React.Component {
           }>
             <Text>Day Start</Text>
           </Button>
-          <Button success disabled={!this.props.dayStarted} onPress={() => {
-            this.props.navigation.navigate('Market')
+          <Button success disabled={!this.props.dayStarted || this.isMarketVisible()} onPress={() => {
+            this.props.navigation.navigate('Market',{  screens: mobileScreen })
           }}>
             <Text>Market</Text>
           </Button>
@@ -147,9 +152,17 @@ class MainScreen extends React.Component {
       </Container>
     )
   }
+  isMarketVisible() {
+    for (var iter in mobileScreen) {
+      if(mobileScreen[iter] === "Market")
+        return false;
+    }
+    return true;
+  }
 }
 
 const mapStateToProps = state => ({
+  loginParams:state.login.payload.moduleFeatures[0].features,
   dayStarted: state.store.dayStarted,
   stores: state.store && state.store.payload,
   subSection: state.createStore && state.createStore.subSection,
