@@ -9,6 +9,8 @@ import { Images } from '../../Themes'
 import ParseImagePath from '../../Lib/ParseImagePath'
 import ShopRedux from '../../Redux/ShopRedux'
 
+let screens = []
+
 class ShopProfile extends React.Component {
   constructor (props) {
     super(props)
@@ -28,6 +30,7 @@ class ShopProfile extends React.Component {
   }
 
   render () {
+    screens = this.props.navigation.getParam('mobileScreens')
     return (
       <Container>
         <GradientWrapper>
@@ -83,7 +86,7 @@ class ShopProfile extends React.Component {
               />
               <Text style={[styles.lightDarkText, { marginTop: 10, flexWrap: 'wrap', flex: 1 }]}>{item.contactNo}</Text>
             </Button>
-            <Button  small success onPress={()=>{this.props.navigation.navigate('ShopHistory',{  StoreID: item.storeId })}} style={{marginLeft:100,marginRight:8,marginBottom:4,paddingBottom:10}} >
+            <Button disabled={this.disableShopHistory()} small success onPress={()=>{this.props.navigation.navigate('ShopHistory',{  StoreID: item.storeId })}} style={{marginLeft:100,marginRight:8,marginBottom:4,paddingBottom:10}} >
               <Icon style={[styles.HistoryButton, styles.iconPhone,]} name={'history'} type={'FontAwesome'}
               />
               <Text uppercase={false} style={[styles.HistoryButton, { marginTop: 8, flexWrap: 'wrap', flex: 1,color:'white' }]}>History</Text>
@@ -119,17 +122,27 @@ class ShopProfile extends React.Component {
         <CardItem button={button} cardBody style={styles.cardChildItem} onPress={() => {
           switch (item.title) {
             case 'Order Taking':
+              if(this.disableOrderTaking()) {
+                Alert.alert(null, 'You are not authorized to view this screen')
+              }
+              else {
               if (this.props.checkedIn) {
                 this.props.navigation.navigate('OrderTaking', { extraItem: this.props.navigation.getParam('item') })
               } else {
                 Alert.alert(null, 'Please check in first to place order')
               }
+              }
               break
             case 'Inventory Taking':
+              if(this.disableInventoryTaking()) {
+                Alert.alert(null, 'You are not authorized to view this screen')
+              }
+              else {
               if (this.props.checkedIn) {
                 this.props.navigation.navigate('Inventory', { item: this.props.navigation.getParam('item') })
               } else {
                 Alert.alert(null, 'Please check in first to place order')
+              }
               }
               break
             case 'Check In':
@@ -166,6 +179,24 @@ class ShopProfile extends React.Component {
         </CardItem>
       </Card>
     )
+  }
+  disableInventoryTaking() {
+    for(var iter in screens) {
+      if(screens[iter] === "Inventory Taking") return false;
+    }
+    return true;
+  }
+  disableOrderTaking() {
+    for(var iter in screens) {
+      if(screens[iter] === "Order Taking") return false;
+    }
+    return true;
+  }
+  disableShopHistory() {
+    for(var iter in screens) {
+      if(screens[iter] === "Shop History") return false;
+    }
+    return true;
   }
 }
 
