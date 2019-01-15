@@ -1,6 +1,6 @@
 // Simple React Native specific changes
 
-const baseUrl = 'http://gbsc-erp.azurewebsites.net/'
+const baseUrl = 'http://evasalesforcestage.azurewebsites.net/'
 
 export default {
   // font scaling override - RN default is on

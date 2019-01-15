@@ -27,6 +27,8 @@ import ParseImagePath from '../Lib/ParseImagePath'
 import GetVisitDay from '../Lib/GetVisitDay'
 import Colors from '../Themes/Colors';
 
+let screens = [];
+
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
 
 class MarketList extends React.PureComponent {
@@ -66,13 +68,13 @@ class MarketList extends React.PureComponent {
   *************************************************************/
 
   gotoDetail = (item) => {
-    this.props.navigation.navigate('ShopDetail', { item })
+    this.props.navigation.navigate('ShopDetail', { item,mobileScreens:screens })
   }
 
   renderRow = ({ item }) => {
     return (
       <Card style={styles.row}>
-        <CardItem style={styles.card} button onPress={() => { this.gotoDetail(item) }}>
+        <CardItem style={styles.card} button disabled={this.state.segment===0 && this.isPJPDisabled()} onPress={() => { this.gotoDetail(item) }}>
           <View style={styles.profileImgContainer}>
             <Image
               style={styles.profileImg}
@@ -179,6 +181,7 @@ class MarketList extends React.PureComponent {
   render() {
     const { segmantIndex,segmantIndex1,segmantIndex2 ,      dataObjects
     } = this.state;
+    screens = this.props.navigation.getParam('screens')
     return (
       <Container>
         <GradientWrapper>
@@ -198,9 +201,9 @@ class MarketList extends React.PureComponent {
           </Header>
         </GradientWrapper>
         <Segment style={{}}>
-          <Button style={{ flex: 1, marginLeft: 20, alignItems: 'center', justifyContent: 'center' }} first active={this.state.segment === 0} onPress={this.segmentNearMe}><Text>PJP  ({segmantIndex == null?0:segmantIndex.length})</Text></Button>
-          <Button style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} active={this.state.segment === 1} onPress={this.segmentShopList}><Text>Visited ({segmantIndex1 == null?0:segmantIndex1.length})</Text></Button>
-          <Button style={{ flex: 1, marginRight: 20, alignItems: 'center', justifyContent: 'center' }} last active={this.state.segment === 2} onPress={this.segmentSearch}><Text>Other ({segmantIndex2 == null?0:segmantIndex2.length})</Text></Button>
+          <Button disabled={this.isPJPDisabled()} style={{ flex: 1, marginLeft: 20, alignItems: 'center', justifyContent: 'center' }} first active={this.state.segment === 0} onPress={this.segmentNearMe}><Text>PJP  ({segmantIndex == null?0:segmantIndex.length})</Text></Button>
+          <Button disabled={this.isVisitedDisabled()} style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} active={this.state.segment === 1} onPress={this.segmentShopList}><Text>Visited ({segmantIndex1 == null?0:segmantIndex1.length})</Text></Button>
+          <Button disabled={this.isOthersDisabled()} style={{ flex: 1, marginRight: 20, alignItems: 'center', justifyContent: 'center' }} last active={this.state.segment === 2} onPress={this.segmentSearch}><Text>Other ({segmantIndex2 == null?0:segmantIndex2.length})</Text></Button>
         </Segment>
         {this.state.segment === 2 &&
           <View searchBar rounded style={{ width: '100%', height: 40, backgroundColor: 'white' }}>
@@ -225,7 +228,7 @@ class MarketList extends React.PureComponent {
             initialNumToRender={20}
             keyExtractor={this.keyExtractor}
           /> : <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ fontSize: 14, color: Colors.charcoal }}>{this.state.segment === 0 ? "PJP shops are not available" : this.state.segment === 1 ? "Visited shops are not available" : this.state.segment === 2 ? "Others are not available" : "Not available"}</Text>
+            <Text style={{ fontSize: 14, color: Colors.charcoal }}>{this.state.segment === 0 || this.isPJPDisabled() ? "PJP shops are not available" : this.state.segment === 1 || this.isVisitedDisabled()? "Visited shops are not available" : this.state.segment === 2 || this.isOthersDisabled() ? "Others are not available" : "Not available"}</Text>
           </View>}
       </Container>
     )
@@ -237,6 +240,24 @@ class MarketList extends React.PureComponent {
     if (nextProps) {
       this.setState({ dataObjects: this.getList(this.state.segment, nextProps) })
     }
+  }
+  isPJPDisabled() {
+    for (var iter in screens) {
+      if(screens[iter] === "PJP") return false
+    }
+    return true
+  }
+  isVisitedDisabled() {
+    for (var iter in screens) {
+      if(screens[iter] === "Visited") return false
+    }
+    return true
+  }
+  isOthersDisabled() {
+    for (var iter in screens) {
+      if(screens[iter] === "Other") return false
+    }
+    return true
   }
 }
 
