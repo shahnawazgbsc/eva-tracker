@@ -13,9 +13,9 @@ const { Types, Creators } = createActions({
   placeOrderRequest: ['data'],
   placeOrderSuccess: null,
   shopFailure: ['error'],
-  nonProductiveReasons:null,
+  nonProductiveReasons: null,
   nonProductiveReasonsSuccess: ['data'],
-  nonProductiveReasonsFailure: ['data']
+  nonProductiveReasonsFailure: ['error']
 })
 
 export const ShopTypes = Types
@@ -63,7 +63,7 @@ export const placeOrderSuccess = (state) => Immutable(state).merge({
   fetching: false,
   orderPlaced: true,
   orderItems: [],
-  reasons:[]
+  reasons: []
 })
 
 export const checkOutSuccess = (state) => INITIAL_STATE
@@ -73,12 +73,14 @@ export const failure = (state, { error }) =>
   Immutable(state).merge({ fetching: false, error })
 
 export const startUp = (state) => Immutable(state).merge({ fetching: false })
-export const nonProductiveReasons = (state) => Immutable(state).merge({ fetching:true })
+export const nonProductiveReasons = (state) => Immutable(state).merge({ fetching: true })
 export const nonProductiveReasonsFailure = (state, { error }) =>
   Immutable(state).merge({ fetching: false, error })
-  export const nonProductiveReasonsSuccess = (state,{data}) =>
-    Immutable(state).merge({ fetching: false,
-    reasons:data})
+export const nonProductiveReasonsSuccess = (state, { data }) =>
+  Immutable(state).merge({
+    fetching: false,
+    reasons: data
+  })
 
 /* ------------- Hookup Reducers To Types ------------- */
 
@@ -93,7 +95,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.SHOP_FAILURE]: failure,
   [Types.REMOVE_ITEM]: removeItem,
   [Types.NON_PRODUCTIVE_REASONS]: nonProductiveReasons,
-  [Types.NON_PRODUCTIVE_REASONS_SUCCESS]:nonProductiveReasonsSuccess,
-  [Types.NON_PRODUCTIVE_REASONS_FAILURE]:nonProductiveReasonsFailure,
+  [Types.NON_PRODUCTIVE_REASONS_SUCCESS]: nonProductiveReasonsSuccess,
+  [Types.NON_PRODUCTIVE_REASONS_FAILURE]: nonProductiveReasonsFailure,
   'STARTUP': startUp
 })

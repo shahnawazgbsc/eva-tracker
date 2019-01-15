@@ -8,8 +8,7 @@ import styles from './ShopProfileStyle'
 import { Images } from '../../Themes'
 import ParseImagePath from '../../Lib/ParseImagePath'
 import ShopRedux from '../../Redux/ShopRedux'
-
-let screens = []
+import * as R from 'ramda'
 
 class ShopProfile extends React.Component {
   constructor (props) {
@@ -23,14 +22,12 @@ class ShopProfile extends React.Component {
         { title: 'Gift Order', icon: 'gift', type: 'FontAwesome' },
         { title: 'Market Survey', icon: 'analytics', type: '' },
         { title: 'Merchandising', icon: 'cube', type: '' },
-        { title: 'Shop Query', icon: 'question-circle', type: 'FontAwesome' },
-        { title: 'Shop History', icon: 'history', type: 'FontAwesome' }
+        { title: 'Shop Query', icon: 'question-circle', type: 'FontAwesome' }
       ]
     }
   }
 
   render () {
-    screens = this.props.navigation.getParam('mobileScreens')
     return (
       <Container>
         <GradientWrapper>
@@ -86,10 +83,18 @@ class ShopProfile extends React.Component {
               />
               <Text style={[styles.lightDarkText, { marginTop: 10, flexWrap: 'wrap', flex: 1 }]}>{item.contactNo}</Text>
             </Button>
-            <Button disabled={this.disableShopHistory()} small success onPress={()=>{this.props.navigation.navigate('ShopHistory',{  StoreID: item.storeId })}} style={{marginLeft:100,marginRight:8,marginBottom:4,paddingBottom:10}} >
-              <Icon style={[styles.HistoryButton, styles.iconPhone,]} name={'history'} type={'FontAwesome'}
+            <Button
+              disabled={!this.props.hasHistory} small success
+              onPress={() => { this.props.navigation.navigate('ShopHistory', { StoreID: item.storeId }) }}
+              style={{ marginLeft: 100, marginRight: 8, marginBottom: 4, paddingBottom: 10 }}>
+              <Icon style={[styles.HistoryButton, styles.iconPhone]} name={'history'} type={'FontAwesome'}
               />
-              <Text uppercase={false} style={[styles.HistoryButton, { marginTop: 8, flexWrap: 'wrap', flex: 1,color:'white' }]}>History</Text>
+              <Text uppercase={false} style={[styles.HistoryButton, {
+                marginTop: 8,
+                flexWrap: 'wrap',
+                flex: 1,
+                color: 'white'
+              }]}>History</Text>
             </Button>
 
           </View>
@@ -113,36 +118,28 @@ class ShopProfile extends React.Component {
   }
 
   renderItem = ({ item }) => {
-    let button = true
+    let button = false
     if (item.title === 'Check In') button = !this.props.checkedIn
     else if (item.title === 'Check Out') button = this.props.checkedIn
+    else if (item.title === 'Order Taking') button = this.props.hasOrderTaking
+    else if (item.title === 'Inventory Taking') button = this.props.hasInventoryTaking
 
     return (
       <Card style={button ? styles.cardChildContainer : styles.cardChildContainerDisabled}>
         <CardItem button={button} cardBody style={styles.cardChildItem} onPress={() => {
           switch (item.title) {
             case 'Order Taking':
-              if(this.disableOrderTaking()) {
-                Alert.alert(null, 'You are not authorized to view this screen')
-              }
-              else {
               if (this.props.checkedIn) {
                 this.props.navigation.navigate('OrderTaking', { extraItem: this.props.navigation.getParam('item') })
               } else {
                 Alert.alert(null, 'Please check in first to place order')
               }
-              }
               break
             case 'Inventory Taking':
-              if(this.disableInventoryTaking()) {
-                Alert.alert(null, 'You are not authorized to view this screen')
-              }
-              else {
               if (this.props.checkedIn) {
                 this.props.navigation.navigate('Inventory', { item: this.props.navigation.getParam('item') })
               } else {
                 Alert.alert(null, 'Please check in first to place order')
-              }
               }
               break
             case 'Check In':
@@ -160,14 +157,6 @@ class ShopProfile extends React.Component {
                 this.props.navigation.navigate('Reason', { item: this.props.navigation.getParam('item') })
               }
               break
-            // case 'Shop History':
-            //   if (this.props) {
-            //     this.props.navigation.navigate('ShopHistory')
-            //   } else {
-            //     Alert.alert(null, 'Please check in first to view order history')
-            //   }
-            //   break
-
           }
         }}>
           <Icon
@@ -180,30 +169,16 @@ class ShopProfile extends React.Component {
       </Card>
     )
   }
-  disableInventoryTaking() {
-    for(var iter in screens) {
-      if(screens[iter] === "Inventory Taking") return false;
-    }
-    return true;
-  }
-  disableOrderTaking() {
-    for(var iter in screens) {
-      if(screens[iter] === "Order Taking") return false;
-    }
-    return true;
-  }
-  disableShopHistory() {
-    for(var iter in screens) {
-      if(screens[iter] === "Shop History") return false;
-    }
-    return true;
-  }
 }
 
 const mapStateToProps = (state, ownProps) => {
+  let screens = R.path(['login', 'payload', 'moduleFeatures', 0, 'features'])(state)
   return {
     checkedIn: state.shop && state.shop.checkedIn,
-    orderPlaced: state.shop && state.shop.orderPlaced
+    orderPlaced: state.shop && state.shop.orderPlaced,
+    hasInventoryTaking: R.contains('Inventory Taking', screens),
+    hasOrderTaking: R.contains('Order Taking', screens),
+    hasHistory: R.contains('Shop History', screens)
   }
 }
 

@@ -5,6 +5,7 @@ import * as R from 'ramda'
 import moment from 'moment'
 import GetVisitDay from '../Lib/GetVisitDay'
 import { LoginTypes } from './LoginRedux'
+import AppConfig from '../Config/AppConfig'
 
 /* ------------- Types and Action Creators ------------- */
 
@@ -99,8 +100,8 @@ export const reset = state => Immutable(state).merge({
   pjpShops: null,
   achieved: [],
   others: null,
-  dayStartDate: null, // __DEV__ ? null : state.dayStartDate,
-  dayStarted: false // __DEV__ ? false : state.dayStarted
+  dayStartDate: AppConfig.env === 'DEV' ? null : state.dayStartDate,
+  dayStarted: AppConfig.env === 'DEV' ? false : state.dayStarted
 })
 /* ------------- Hookup Reducers To Types ------------- */
 

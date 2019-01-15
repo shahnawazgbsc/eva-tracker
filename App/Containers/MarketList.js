@@ -11,9 +11,7 @@ import {
   Header,
   Icon,
   Input,
-  Item,
   Left,
-  Right,
   Segment,
   Subtitle,
   Text,
@@ -24,10 +22,7 @@ import styles from './Styles/MarketListStyle'
 import GradientWrapper from '../Components/GradientWrapper'
 import { Images } from '../Themes'
 import ParseImagePath from '../Lib/ParseImagePath'
-import GetVisitDay from '../Lib/GetVisitDay'
-import Colors from '../Themes/Colors';
-
-let screens = [];
+import Colors from '../Themes/Colors'
 
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
 
@@ -41,21 +36,9 @@ class MarketList extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
-      segmantIndex: [],
-      segmantIndex1: [],
-      segmantIndex2: [],
       segment: 0,
-      dataObjects: [],
-
-
+      dataObjects: props.pjpShops
     }
-  }
-  componentWillMount() {
-
-    this.setState({ segmantIndex: this.getList(0, this.props) })
-    this.setState({ dataObjects: this.getList(0, this.props) })
-    this.setState({ segmantIndex1: this.getList(1, this.props) })
-    this.setState({ segmantIndex2: this.getList(2, this.props) })
   }
 
   /* ***********************************************************
@@ -68,13 +51,16 @@ class MarketList extends React.PureComponent {
   *************************************************************/
 
   gotoDetail = (item) => {
-    this.props.navigation.navigate('ShopDetail', { item,mobileScreens:screens })
+    this.props.navigation.navigate('ShopDetail', { item })
   }
 
   renderRow = ({ item }) => {
     return (
       <Card style={styles.row}>
-        <CardItem style={styles.card} button disabled={this.state.segment===0 && this.isPJPDisabled()} onPress={() => { this.gotoDetail(item) }}>
+        <CardItem
+          style={styles.card}
+          button
+          onPress={() => this.gotoDetail(item)}>
           <View style={styles.profileImgContainer}>
             <Image
               style={styles.profileImg}
@@ -89,7 +75,8 @@ class MarketList extends React.PureComponent {
             <Title style={styles.boldLabel}>{item.shopName}</Title>
             <Subtitle style={styles.label}>{item.address}</Subtitle>
           </View>
-          <Icon name={'chevron-right'} type={'MaterialIcons'}/>
+          <Icon name={'chevron-right'} type={'MaterialIcons'}
+          />
         </CardItem>
       </Card>
     )
@@ -130,31 +117,11 @@ class MarketList extends React.PureComponent {
     this.props.navigation.goBack(null)
   }
 
-  getList = (segment, props) => {
-    let list
-    switch (segment) {
-      case 0:
-        list = R.filter(
-          R.compose(
-            R.flip(R.compose(R.not, R.contains))(props.achieved),
-            R.prop('storeId')),
-          props.pjpShops)
-        break
-      case 1:
-        list = R.filter(R.compose(R.flip(R.contains)(props.achieved), R.prop('storeId')),
-          R.concat(props.pjpShops, props.otherShops))
-        break
-    }
-    return list
-  }
-
-  segmentNearMe = () => {
+  segmentPJP = () => {
     this.setState({
       text: '',
       segment: 0,
-      dataObjects: this.getList(0, this.props),
-      segmantIndex:this.getList(0, this.props)
-
+      dataObjects: this.props.pjpShops
     })
   }
 
@@ -162,9 +129,7 @@ class MarketList extends React.PureComponent {
     this.setState({
       text: '',
       segment: 1,
-      dataObjects: this.getList(1, this.props),
-
-      segmantIndex1:this.getList(1, this.props)
+      dataObjects: this.props.achieved
     })
   }
 
@@ -172,28 +137,24 @@ class MarketList extends React.PureComponent {
     this.setState({
       text: '',
       segment: 2,
-      dataObjects: this.props.otherShops,
-
-      segmantIndex2:this.props.otherShops
+      dataObjects: this.props.otherShops
     })
   }
 
-  render() {
-    const { segmantIndex,segmantIndex1,segmantIndex2 ,      dataObjects
-    } = this.state;
-    screens = this.props.navigation.getParam('screens')
+  render () {
     return (
       <Container>
         <GradientWrapper>
           <Header style={styles.header}>
             <Left>
               <Button light transparent onPress={this.back}>
-                <Icon name={'arrow-back'} />
+                <Icon name={'arrow-back'}
+                />
                 <Text>Back</Text>
               </Button>
             </Left>
             <Body style={{}}>
-              <Text style={styles.titleText}>Market</Text>
+            <Text style={styles.titleText}>Market</Text>
             </Body>
             {/* <Right >
               <Text style={{ color: 'white', fontSize: 14 }}>Counter= {dataObjects==null?0:dataObjects.length}</Text>
@@ -201,26 +162,40 @@ class MarketList extends React.PureComponent {
           </Header>
         </GradientWrapper>
         <Segment style={{}}>
-          <Button disabled={this.isPJPDisabled()} style={{ flex: 1, marginLeft: 20, alignItems: 'center', justifyContent: 'center' }} first active={this.state.segment === 0} onPress={this.segmentNearMe}><Text>PJP  ({segmantIndex == null?0:segmantIndex.length})</Text></Button>
-          <Button disabled={this.isVisitedDisabled()} style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} active={this.state.segment === 1} onPress={this.segmentShopList}><Text>Visited ({segmantIndex1 == null?0:segmantIndex1.length})</Text></Button>
-          <Button disabled={this.isOthersDisabled()} style={{ flex: 1, marginRight: 20, alignItems: 'center', justifyContent: 'center' }} last active={this.state.segment === 2} onPress={this.segmentSearch}><Text>Other ({segmantIndex2 == null?0:segmantIndex2.length})</Text></Button>
+          <Button
+            disabled={!this.props.pjpEnabled}
+            style={{ flex: 1, marginLeft: 20, alignItems: 'center', justifyContent: 'center' }} first
+            active={this.state.segment === 0} onPress={this.segmentPJP}><Text>PJP
+            ({this.props.pjpShops.length || 0})</Text></Button>
+          <Button
+            disabled={!this.props.achievedEnabled}
+            style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} active={this.state.segment === 1}
+            onPress={this.segmentShopList}><Text>Visited
+            ({this.props.achieved.length || 0})</Text></Button>
+          <Button
+            disabled={!this.props.othersEnabled}
+            style={{ flex: 1, marginRight: 20, alignItems: 'center', justifyContent: 'center' }} last
+            active={this.state.segment === 2} onPress={this.segmentSearch}><Text>Other
+            ({this.props.otherShops.length || 0})</Text></Button>
         </Segment>
         {this.state.segment === 2 &&
-          <View searchBar rounded style={{ width: '100%', height: 40, backgroundColor: 'white' }}>
-            <View style={{ flex: 1, marginLeft: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-              <Icon name='ios-search' />
-              <Input
-                style={{ width: '70%' }}
-                value={this.state.text}
-                placeholder='Search'
-                onChangeText={this.onChangeText}
-              />
-            </View>
+        <View searchBar rounded style={{ width: '100%', height: 40, backgroundColor: 'white' }}>
+          <View
+            style={{ flex: 1, marginLeft: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+            <Icon name='ios-search'
+            />
+            <Input
+              style={{ width: '70%' }}
+              value={this.state.text}
+              placeholder='Search'
+              onChangeText={this.onChangeText}
+            />
           </View>
+        </View>
         }
 
-        {dataObjects && dataObjects.length ?
-          <FlatList
+        {this.checkDataAvailable()
+          ? <FlatList
             renderItem={this.renderRow}
             style={styles.listContent}
             data={this.state.dataObjects}
@@ -228,45 +203,50 @@ class MarketList extends React.PureComponent {
             initialNumToRender={20}
             keyExtractor={this.keyExtractor}
           /> : <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ fontSize: 14, color: Colors.charcoal }}>{this.state.segment === 0 || this.isPJPDisabled() ? "PJP shops are not available" : this.state.segment === 1 || this.isVisitedDisabled()? "Visited shops are not available" : this.state.segment === 2 || this.isOthersDisabled() ? "Others are not available" : "Not available"}</Text>
+            <Text style={{
+              fontSize: 14,
+              color: Colors.charcoal
+            }}>{this.state.segment === 0 ? 'PJP shops are not available' : this.state.segment === 1
+              ? 'Visited shops are not available' : this.state.segment === 2 ? 'Other shops are not available' : 'Not available'}</Text>
           </View>}
       </Container>
     )
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps)
+  checkDataAvailable = () => {
+    switch (this.state.segment) {
+      case 0:
+        return R.path(['pjpShops', 'length'], this.props) > 0 && this.props.pjpEnabled
+      case 1:
+        return R.path(['achieved', 'length'], this.props) > 0 && this.props.achievedEnabled
+      case 2:
+        return R.path(['otherShops', 'length'], this.props) > 0 && this.props.othersEnabled
+    }
+  }
 
+  componentWillReceiveProps (nextProps) {
     if (nextProps) {
-      this.setState({ dataObjects: this.getList(this.state.segment, nextProps) })
+      this.setState({
+        dataObjects: this.state.segment === 0 ? nextProps.pjpShops : this.state.segment === 1
+          ? nextProps.achieved : nextProps.otherShops
+      })
     }
-  }
-  isPJPDisabled() {
-    for (var iter in screens) {
-      if(screens[iter] === "PJP") return false
-    }
-    return true
-  }
-  isVisitedDisabled() {
-    for (var iter in screens) {
-      if(screens[iter] === "Visited") return false
-    }
-    return true
-  }
-  isOthersDisabled() {
-    for (var iter in screens) {
-      if(screens[iter] === "Other") return false
-    }
-    return true
   }
 }
 
-
 const mapStateToProps = (state) => {
+  let achieved = state.store && R.map(R.prop('id'), state.store.achieved)
+  let pjpShops = state.store && state.store.pjpShops
+  let otherShops = state.store && state.store.others
+  let screens = R.path(['login', 'payload', 'moduleFeatures', 0, 'features'])(state)
   return {
-    pjpShops: state.store && state.store.pjpShops,
-    otherShops: state.store && state.store.others,
-    achieved: state.store && R.map(R.prop('id'), state.store.achieved)
+    pjpShops: state.store && R.filter(R.compose(R.flip(R.compose(R.not, R.contains))(achieved), R.prop('storeId')), pjpShops),
+    otherShops,
+    achieved: state.store && R.filter(R.compose(R.flip(R.contains)(achieved), R.prop('storeId')),
+      R.concat(pjpShops, otherShops)),
+    pjpEnabled: R.contains('PJP')(screens),
+    achievedEnabled: R.contains('Visited')(screens),
+    othersEnabled: R.contains('Other')(screens)
   }
 }
 

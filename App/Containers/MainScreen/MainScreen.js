@@ -11,7 +11,7 @@ import styles from './MainScreenStyle'
 import LoginRedux from '../../Redux/LoginRedux'
 import * as R from 'ramda'
 
-var mobileScreen = [];
+var mobileScreen = []
 
 class MainScreen extends React.Component {
   constructor (props) {
@@ -21,7 +21,7 @@ class MainScreen extends React.Component {
 
   componentDidMount () {
     this.props.request()
-    for(var iter in this.props.loginParams) {
+    for (var iter in this.props.loginParams) {
       mobileScreen.push(this.props.loginParams[iter])
     }
   }
@@ -45,11 +45,11 @@ class MainScreen extends React.Component {
               </Button>
             </Left>
             <Body style={{ flex: 2 }}>
-              <Text style={styles.titleText}>Eva Tracker App</Text>
+            <Text style={styles.titleText}>Eva Tracker App</Text>
             </Body>
             <Right style={{ flex: 1 }}>
               <Button style={{}} transparent light onPress={this.props.logout}>
-                <Icon name={'log-out'} />
+                <Icon name={'log-out'}/>
               </Button>
             </Right>
           </Header>
@@ -113,9 +113,14 @@ class MainScreen extends React.Component {
             ))
           }
         </MapView>
-         <Footer style={{ paddingTop:3,
-        alignItems: 'center', justifyContent: 'space-around',borderTopWidth:3,borderTopColor:Colors.success, 
-        backgroundColor: Colors.background }}>
+        <Footer style={{
+          paddingTop: 3,
+          alignItems: 'center',
+          justifyContent: 'space-around',
+          borderTopWidth: 3,
+          borderTopColor: Colors.success,
+          backgroundColor: Colors.background
+        }}>
           <Button success disabled={this.props.dayStarted} onPress={() => {
             if (this.props.subSection && this.props.subSection.length > 0) {
               ActionSheet.show(
@@ -139,7 +144,7 @@ class MainScreen extends React.Component {
             <Text>Day Start</Text>
           </Button>
           <Button success disabled={!this.props.dayStarted || this.isMarketVisible()} onPress={() => {
-            this.props.navigation.navigate('Market',{  screens: mobileScreen })
+            this.props.navigation.navigate('Market', { screens: mobileScreen })
           }}>
             <Text>Market</Text>
           </Button>
@@ -152,17 +157,17 @@ class MainScreen extends React.Component {
       </Container>
     )
   }
-  isMarketVisible() {
+
+  isMarketVisible () {
     for (var iter in mobileScreen) {
-      if(mobileScreen[iter] === "Market")
-        return false;
+      if (mobileScreen[iter] === 'Market') { return false }
     }
-    return true;
+    return true
   }
 }
 
 const mapStateToProps = state => ({
-  loginParams:state.login.payload.moduleFeatures[0].features,
+  loginParams: R.path(['login', 'payload', 'moduleFeatures', '0', 'features'])(state),
   dayStarted: state.store.dayStarted,
   stores: state.store && state.store.payload,
   subSection: state.createStore && state.createStore.subSection,
