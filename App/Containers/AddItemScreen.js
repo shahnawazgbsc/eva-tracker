@@ -31,24 +31,41 @@ import * as R from 'ramda'
 class AddItemScreen extends React.PureComponent {
   constructor (props) {
     super(props)
+    this.calculate = (obj) => {
+      const quantity = obj.quantity
+      const tradePrice = obj.unitPrice
+      const measure = obj.muInSu * quantity
+      const grossAmount = tradePrice * quantity
+      const tradeOff = measure * obj.tradeOfferAmount
+      const extraDiscountAmount = obj.extraDiscount * measure
 
-    let merging = (value) => R.merge({
-      lesMeasure: value.muInSu,
-      netTotal: value.unitPrice - value.muInSu,
-      selected: false,
-      quantity: 1,
-      extraDiscount: 0
-    })(value)
+      const netTotal = grossAmount - tradeOff - extraDiscountAmount
+      const totalOffer = netTotal / quantity
+      return R.merge(obj, {
+        measure,
+        netTotal,
+        quantity,
+        grossAmount,
+        tradeOff,
+        totalOffer,
+        extraDiscountAmount
+      })
+    }
+    this.changeItem = R.curry((index, merge) => {
+      console.log(merge)
+      this.state.data[this.state.selectedValue].items[index] = merge
+      return R.clone(this.state.data)
+    })
 
-    R.map(
+    let data = R.map(
       R.over(R.lensProp('items'),
-        R.map(merging)
+        R.map((value) => this.calculate(R.merge({ quantity: '1', selected: false, extraDiscount: '0' }, value)))
       )
     )(props.items)
 
     this.state = {
       selectedValue: '',
-      data: []
+      data
     }
   }
 
@@ -77,7 +94,6 @@ class AddItemScreen extends React.PureComponent {
         <Picker.Item label={'Select Category'} key={'first'} value={''}
         />
         {
-          this.props.items &&
           this.props.items.map((value, index) => (
             <Picker.Item label={value.productType} value={index} key={index}
             />))
@@ -114,15 +130,11 @@ class AddItemScreen extends React.PureComponent {
                 <Input
                   style={styles.input}
                   onChangeText={(text) => {
-                    R.is(Number, text)
-                    let isNumber = !isNaN(parseInt(text))
-                    if (isNumber || text.length === 0) {
-                      let clone = JSON.parse(JSON.stringify(this.state))
-                      clone.quantity[index] = text
-                      this.setState(clone)
+                    if (R.both(R.is(Number, text), text.length <= 3)) {
+                      this.setState({ data: this.changeItem(index, this.calculate(R.merge(item, { quantity: text }))) })
                     }
                   }}
-                  value={this.state.quantity[index]}
+                  value={item.quantity}
                   keyboardType={'numeric'}
                 />
               </View>
@@ -130,15 +142,15 @@ class AddItemScreen extends React.PureComponent {
             </Row>
             <Row>
               <Text style={styles.item3}>Ltrs / Mes</Text>
-              <Text style={styles.item4}>{litresMes[index]}</Text>
+              <Text style={styles.item4}>{item.measure}</Text>
             </Row>
             <Row>
               <Text style={styles.item3}>Trade Price</Text>
-              <Text style={styles.item4}>{item.retailPrice}</Text>
+              <Text style={styles.item4}>{item.unitPrice}</Text>
             </Row>
             <Row>
               <Text style={styles.item3}>Gross Amount</Text>
-              <Text style={styles.item4}>{grossAmount[index]}</Text>
+              <Text style={styles.item4}>{item.grossAmount}</Text>
             </Row>
             <Row>
               <Text style={styles.item3}>TO / Ltr / Kg</Text>
@@ -146,7 +158,7 @@ class AddItemScreen extends React.PureComponent {
             </Row>
             <Row>
               <Text style={styles.item3}>Less TO</Text>
-              <Text style={styles.item4}>{lessTO[index]}</Text>
+              <Text style={styles.item4}>{item.tradeOff}</Text>
             </Row>
             <Row>
               <Text style={styles.item3}>RD %</Text>
@@ -161,38 +173,31 @@ class AddItemScreen extends React.PureComponent {
               <View style={styles.item3}>
                 <Input
                   style={styles.discountInput}
-                  onChangeText={(text) => {
-                    let isNumber = !isNaN(parseInt(text))
-                    if (isNumber || text.length === 0) {
-                      let clone = JSON.parse(JSON.stringify(this.state))
-                      clone.extraDiscount[index] = text
-                      this.setState(clone)
-                    }
-                  }}
-                  value={this.state.extraDiscount[index] == null ? 0 : this.state.extraDiscount[index]}
+                  onChangeText={(text) => this.setState({ data: this.changeItem(index, this.calculate(R.merge(item, { extraDiscount: text }))) })
+                  }
+                  value={item.extraDiscount}
                   keyboardType={'numeric'}
-                  editable={litresMes[index] != 0}
-                  disabled={litresMes[index] == 0}
                 />
               </View>
             </Row>
             <Row>
               <Text style={styles.item3}>Less Extra Discount</Text>
-              <Text style={styles.item4}>{lessExtraDiscount[index]}</Text>
+              <Text style={styles.item4}>{item.extraDiscountAmount}</Text>
+            </Row>
+            <Row>
+              <Text style={styles.item3}>Total Offer Item</Text>
+              <Text style={styles.item4}>{item.totalOffer}</Text>
             </Row>
             <Row>
               <Text style={[styles.item3, { fontWeight: 'bold' }]}>Net Amount</Text>
-              <Text style={styles.item4}>{netAmount[index]}</Text>
+              <Text style={styles.item4}>{item.netTotal}</Text>
             </Row>
           </View>
-          <Button transparent style={styles.item5} onPress={() => {
-            let clone = JSON.parse(JSON.stringify(this.state))
-            clone.selected[index] = !clone.selected[index]
-            this.setState(clone)
-          }}>
+          <Button transparent style={styles.item5} onPress={() =>
+            this.setState({ data: this.changeItem(index, this.calculate(R.merge(item, { selected: !item.selected }))) })}>
             <Icon
               style={{ color: Colors.fire, marginLeft: 0, marginRight: 0 }}
-              name={this.state.selected && this.state.selected[index] ? 'check-box' : 'check-box-outline-blank'}
+              name={item.selected ? 'check-box' : 'check-box-outline-blank'}
               type={'MaterialIcons'}
             />
           </Button>
@@ -226,18 +231,18 @@ class AddItemScreen extends React.PureComponent {
 
   addToCart = () => {
     let cartItems = []
-    this.state.selected.forEach((value, index) => {
-      if (value) {
-        let item = Immutable.asMutable(this.props.items[this.state.selectedValue].items[index])
-        item.quantity = this.state.quantity[index]
-        item.extraDiscount = this.state.extraDiscount[index]
-        item.litresMes = litresMes[index]
-        item.netAmount = netAmount[index]
-        item.grossAmount = grossAmount[index]
-        item.lessTO = lessTO[index]
-        cartItems.push(item)
-      }
+    this.state.data.forEach(value => {
+      value.items.forEach(value => {
+        if (value.selected) {
+          cartItems.push(value)
+        }
+      })
     })
+    console.log(
+      R.over(R.lensProp('items'), R.over(R.lensProp('items'), R.map)
+        , this.state.data)
+    )
+
     if (cartItems.length > 0) {
       this.props.addToCart(cartItems)
       this.props.navigation.goBack(null)
@@ -260,6 +265,9 @@ class AddItemScreen extends React.PureComponent {
   }
 
   render () {
+    const data = R.path([this.state.selectedValue, 'items'], this.state.data)
+    console.log(data)
+
     return (
       <Container>
         <GradientWrapper>
@@ -280,17 +288,15 @@ class AddItemScreen extends React.PureComponent {
           </Header>
         </GradientWrapper>
 
-        {!!this.state.selectedValue &&
         <FlatList
           style={styles.container}
-          data={this.state.data[this.state.selectedValue]}
-          extraData={this.state.selectedValue}
+          data={data || []}
+          extraData={this.state.data}
           ListFooterComponent={this.renderFooter}
           ListHeaderComponent={this.renderHeader}
           renderItem={this.renderRow}
           keyExtractor={this.keyExtractor}
         />
-        }
       </Container>
 
     )

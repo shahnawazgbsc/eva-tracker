@@ -8,20 +8,7 @@ import { Colors, Images } from '../Themes'
 import ShopActions from '../Redux/ShopRedux'
 import * as R from 'ramda'
 
-var Total = 0
-
 class OrderScreen extends React.Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      netTotal: 0
-    }
-  }
-
-  componentWillMount () {
-    Total = 0
-  }
-
   addOrder = () => {
     if (this.props.itemsBrands) {
       this.props.navigation.navigate('AddNewItem')
@@ -41,15 +28,13 @@ class OrderScreen extends React.Component {
         <Text style={[styles.item2, { fontSize: 14, fontWeight: 'bold' }]}>Product</Text>
         <Text style={[styles.item3, { fontSize: 14, fontWeight: 'bold' }]}>Qty</Text>
         <Text style={[styles.item4, { fontSize: 14, fontWeight: 'bold' }]}>SKU</Text>
-        <View style={styles.item5}/>
+        <View style={styles.item5}
+        />
       </View>
     )
   }
 
   renderRow = ({ item }) => {
-    this.setState({
-      netTotal: Total
-    })
     return (
       <View style={styles.listHeader}>
         <Image
@@ -68,11 +53,11 @@ class OrderScreen extends React.Component {
           </Row>
           <Row>
             <Text style={styles.item3}>Ltrs / Mes</Text>
-            <Text style={styles.item4}>{item.litresMes}</Text>
+            <Text style={styles.item4}>{item.measure}</Text>
           </Row>
           <Row>
             <Text style={styles.item3}>Trade Price</Text>
-            <Text style={styles.item4}>{item.retailPrice}</Text>
+            <Text style={styles.item4}>{item.unitPrice}</Text>
           </Row>
           <Row>
             <Text style={styles.item3}>Gross Amount</Text>
@@ -84,7 +69,7 @@ class OrderScreen extends React.Component {
           </Row>
           <Row>
             <Text style={styles.item3}>Less TO</Text>
-            <Text style={styles.item4}>{item.lessTO}</Text>
+            <Text style={styles.item4}>{item.tradeOff}</Text>
           </Row>
           <Row>
             <Text style={styles.item3}>RD %</Text>
@@ -100,20 +85,18 @@ class OrderScreen extends React.Component {
           </Row>
           <Row>
             <Text style={styles.item3}>Less Extra Discount</Text>
-            <Text style={styles.item4}>{item.lessExtraDiscount}</Text>
+            <Text style={styles.item4}>{item.extraDiscountAmount}</Text>
+          </Row>
+          <Row>
+            <Text style={styles.item3}>Total Offer Item</Text>
+            <Text style={styles.item4}>{item.totalOffer}</Text>
           </Row>
           <Row>
             <Text style={[styles.item3, { fontWeight: 'bold' }]}>Net Amount</Text>
-            <Text style={styles.item4}>{item.netAmount}</Text>
+            <Text style={styles.item4}>{item.netTotal}</Text>
           </Row>
         </View>
-        <Button transparent style={styles.item5} onPress={() => {
-          this.props.removeItem(item)
-          Total -= item.netAmount
-          this.setState({
-            netTotal: Total
-          })
-        }}>
+        <Button transparent style={styles.item5} onPress={() => { this.props.removeItem(item) }}>
           <Icon name={'trash'} style={{ color: Colors.fire, marginLeft: 0, marginRight: 0 }}
           />
         </Button>
@@ -129,7 +112,7 @@ class OrderScreen extends React.Component {
   }
 
   render () {
-    Total = R.reduce(R.add, 0)(R.map(R.prop('netAmount'))(this.props.items))
+    const Total = R.reduce(R.add, 0)(R.map(R.prop('netTotal'))(this.props.items))
     return (
       <Container>
         <GradientWrapper>

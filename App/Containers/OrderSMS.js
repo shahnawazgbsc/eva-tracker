@@ -23,7 +23,7 @@ class OrderSMS extends Component {
   render () {
     let item = this.props.navigation.getParam('orderItem')
     let inventoryDetails = this.props.navigation.getParam('inventoryDetails')
-    const total = R.reduce(R.add, 0)(R.map(R.prop('netAmount'))(inventoryDetails))
+    const total = R.reduce(R.add, 0)(R.map(R.prop('netTotal'))(inventoryDetails))
     return (
       <Container>
         <GradientWrapper>
@@ -99,16 +99,19 @@ class OrderSMS extends Component {
       </Container>
     )
   }
-  getPhoneNumber(number) {
-    if(number!=null)
-      return "P\t:\t" + number
-    else return "P\t:\t-"
+
+  getPhoneNumber (number) {
+    if (number != null)
+      return 'P\t:\t' + number
+    else return 'P\t:\t-'
   }
-  getEmail() {
-    if(this.props.email != null)
-      return "M\t:\t" + this.props.email
-    else return "M\t:\t-"
+
+  getEmail () {
+    if (this.props.email != null)
+      return 'M\t:\t' + this.props.email
+    else return 'M\t:\t-'
   }
+
   completeOrder = () => {
     this.props.navigation.navigate('ShopDetail')
   }
@@ -127,7 +130,7 @@ class OrderSMS extends Component {
       <ListItem style={styles.listHeader}>
         <Text style={styles.item2}>{item.name}</Text>
         <Text style={styles.item3}>{`${item.quantity}${item.unit ? ' ' + item.unit : ''}`}</Text>
-        <Text style={styles.item4}>{item.netAmount}</Text>
+        <Text style={styles.item4}>{item.netTotal}</Text>
       </ListItem>)
   }
   back = () => {
