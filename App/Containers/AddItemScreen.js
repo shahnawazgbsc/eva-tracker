@@ -97,8 +97,8 @@ class AddItemScreen extends React.PureComponent {
   )
 
   renderRow = ({ item, index }) => {
-    litresMes[index] = 0
-    grossAmount[index] = item.retailPrice * this.state.quantity[index]
+    litresMes[index] = item.muInSu * this.state.quantity[index]
+    grossAmount[index] = item.retailPrice==null?0:item.retailPrice * this.state.quantity[index]
     lessTO[index] = item.tradeOfferAmount * litresMes[index]
     lessExtraDiscount[index] = this.state.extraDiscount[index] * litresMes[index]
     netAmount[index] = grossAmount[index] - lessTO[index] - lessExtraDiscount[index]

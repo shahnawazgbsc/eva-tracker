@@ -22,6 +22,7 @@ export const selectProductsListEpics = (action$, state$, { api }) => action$.pip
           if (action.data.onSuccess) action.data.onSuccess()
           return InventoryActions.inventorySuccess(response.data)
         } else {
+          if (action.data.onFailure) action.data.onFailure()
           return InventoryActions.inventoryFailure(response)
         }
       })
@@ -35,9 +36,9 @@ export const selectInventorySKUs = (action$, state$, { api }) => action$.pipe(
     return api.inventorySKUs(companyId).pipe(
       map(response => {
         if (response.ok) {
-          return InventoryActions.inventorySuccess(response.data)
+          return InventoryActions.inventory_sku_success(response.data)
         } else {
-          return InventoryActions.inventoryFailure(response)
+          return InventoryActions.inventory_sku_failure(response)
         }
       }))
   })

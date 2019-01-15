@@ -62,7 +62,8 @@ export const placeOrderRequest = (state) => Immutable(state).merge({ fetching: t
 export const placeOrderSuccess = (state) => Immutable(state).merge({
   fetching: false,
   orderPlaced: true,
-  orderItems: []
+  orderItems: [],
+  reasons:[]
 })
 
 export const checkOutSuccess = (state) => INITIAL_STATE
@@ -75,8 +76,9 @@ export const startUp = (state) => Immutable(state).merge({ fetching: false })
 export const nonProductiveReasons = (state) => Immutable(state).merge({ fetching:true })
 export const nonProductiveReasonsFailure = (state, { error }) =>
   Immutable(state).merge({ fetching: false, error })
-  export const nonProductiveReasonsSuccess = (state) =>
-    Immutable(state).merge({ fetching: false})
+  export const nonProductiveReasonsSuccess = (state,{data}) =>
+    Immutable(state).merge({ fetching: false,
+    reasons:data})
 
 /* ------------- Hookup Reducers To Types ------------- */
 

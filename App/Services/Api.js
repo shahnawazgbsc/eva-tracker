@@ -83,7 +83,7 @@ const create = (baseURL = AppConfig.baseUrl) => {
   const setHeaders = (token) => api.setHeader('api_key', token)
   const salesIndents = (data) => from(api.post('inventory/api/sales/GenerateSalesIndents', data))
   const history = (storeId) => from(api.get(`etracker/api/storevisit/GetLastTwoVisits/${storeId.data}`))
-  const nonProductiveReasons = (id) => from(api.get(`etracker/api/storevisit/GetNonproductiveVisitReasons/${id}`))
+  const nonProductiveReasons = (id) => from(api.get(`etracker/api/storevisit/GetNonproductiveVisitReasonsByCompany/${id}`))
 
   // ------
   // STEP 3
