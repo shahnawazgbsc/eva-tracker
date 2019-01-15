@@ -67,8 +67,8 @@ class ShopHistory extends Component {
       <View style={{ backgroundColor: 'white', margin: 20 }}>
         <View style={{ flex: 1 }}>
           <View style={{ flexDirection: 'row', flex: 1 }}>
-            <Text style={{ fontSize: 13, flex: 1, fontWeight: 'bold', color: '#676767' }}>Visited By : </Text>
-            <Text style={{ fontSize: 13, flex: 4, color: '#616161' }}>{data.visitedBy}</Text>
+            <Text style={{ fontSize: 13, flex: 1, fontWeight: 'bold', color: '#676767' }}>Visited By: </Text>
+            <Text style={{ fontSize: 13, flex: 3, color: '#616161' }}>{data.visitedBy}</Text>
           </View>
           <View style={{ flexDirection: 'row', alignContent: 'space-between', flex: 1 }}>
             <View style={{ flexDirection: 'row', flex: 1 }}>
@@ -113,7 +113,7 @@ class ShopHistory extends Component {
           </View>
           {data.items.map((item, ind) => {
 
-            totalAmount += item.unitPrice;
+            totalAmount += item.netAmount;
             return (
               <View style={{ flexDirection: 'row', flex: 1, marginVertical: 5, alignItems: 'center' }}>
                 <View style={{ flex: 3 }}>
@@ -123,7 +123,7 @@ class ShopHistory extends Component {
                   <Text style={{ fontSize: 13, color: '#616161' }}>{item.quantity + " " + item.packType}</Text>
                 </View>
                 <View style={{ flex: 1, justifyContent: 'flex-end', flexDirection: 'row' }}>
-                  <Text style={{ fontSize: 13, color: '#616161', alignSelf: 'flex-end' }}>{item.unitPrice}</Text>
+                  <Text style={{ fontSize: 13, color: '#616161', alignSelf: 'flex-end' }}>{item.netAmount}</Text>
                   <Text style={{ fontSize: 10, fontWeight: 'bold', color: '#616161', marginTop: 3 }}>.00</Text>
                 </View>
               </View>
