@@ -98,7 +98,7 @@ class AddItemScreen extends React.PureComponent {
 
   renderRow = ({ item, index }) => {
     litresMes[index] = item.muInSu * this.state.quantity[index]
-    grossAmount[index] = item.retailPrice==null?0:item.retailPrice * this.state.quantity[index]
+    grossAmount[index] = item.retailPrice == null ? 0 : item.retailPrice * this.state.quantity[index]
     lessTO[index] = item.tradeOfferAmount * litresMes[index]
     lessExtraDiscount[index] = this.state.extraDiscount[index] * litresMes[index]
     netAmount[index] = grossAmount[index] - lessTO[index] - lessExtraDiscount[index]
@@ -167,11 +167,11 @@ class AddItemScreen extends React.PureComponent {
               <Text style={styles.item4}>-</Text>
             </Row>
             <Row>
-              <Text style={styles.item3}>Regular Discount</Text>
+              <Text style={styles.item7}>Regular Discount</Text>
               <Text style={styles.item4}>-</Text>
             </Row>
             <Row>
-              <Text style={styles.item3}>Extra Discount / Ltr / Kg</Text>
+              <Text style={styles.item6}>Extra Discount / Ltr / Kg</Text>
               <View style={styles.item3}>
                 <Input
                   style={styles.discountInput}
@@ -196,7 +196,7 @@ class AddItemScreen extends React.PureComponent {
             </Row>
             <Row>
               <Text style={[styles.item3, { fontWeight: 'bold' }]}>Net Amount</Text>
-              <Text style={styles.item4}>{netAmount[index]}</Text>
+              <Text style={styles.item4}>{Math.abs(netAmount[index])}</Text>
             </Row>
           </View>
           <Button transparent style={styles.item5} onPress={() => {

@@ -23,7 +23,7 @@ export default StyleSheet.create({
     borderColor: Colors.border,
     borderWidth: 1,
     borderRadius: 18,
-    height: 10,
+    height: 36,
     fontSize: 10,
     textAlign: 'right',
     paddingLeft: 10,
@@ -55,10 +55,19 @@ export default StyleSheet.create({
     textAlign: 'left', flexWrap: 'wrap', width: 70
   },
   item3: {
-    flex: 2, textAlign: 'right', marginRight: 5, flexWrap: 'wrap', fontSize: 10
+    flex: 1, textAlign: 'right', marginRight: 5, flexWrap: 'wrap', fontSize: 10
+  },
+  item6: {
+    flex: 1.5, textAlign: 'right', marginRight: 5, flexWrap: 'wrap', fontSize: 10
   },
   item4: {
     flex: 1, textAlign: 'left', flexWrap: 'wrap', fontSize: 10
+  },
+  item7: {
+    flex: 1.5, textAlign: 'left', flexWrap: 'wrap', fontSize: 10
+  },
+  item8: {
+    flex: 3, textAlign: 'left', flexWrap: 'wrap', fontSize: 10
   },
   item5: {
     width: 30,
