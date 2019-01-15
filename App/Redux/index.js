@@ -8,14 +8,13 @@ import FixtureApi from '../Services/FixtureApi'
 export const reducers = combineReducers({
   nav: require('./NavigationRedux').reducer,
   login: require('./LoginRedux').reducer,
-  history: require('./HistoryRedux').reducer,
   store: require('./StoresRedux').reducer,
   shop: require('./ShopRedux').reducer,
   gps: require('./GpsLocationRedux').reducer,
   brands: require('./GetBrandsRedux').reducer,
   createStore: require('./CreateStoreRedux').reducer,
   inventory: require('./InventoryTakingRedux').reducer,
-  history:require('./ShopHistoryRedux').reducer
+  history: require('./ShopHistoryRedux').reducer
 })
 
 export default () => {

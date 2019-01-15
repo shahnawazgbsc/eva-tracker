@@ -193,22 +193,21 @@ class OrderScreen extends React.Component {
   }
 
   renderCheckoutButton = () => {
-    if((this.props.items && this.props.items.length > 0)) {
-      return(
-      <Button danger onPress={this.checkout} style={{flexWrap:'wrap',margin:5,justifyContent:'flex-end'}}>
+    if ((this.props.items && this.props.items.length > 0)) {
+      return (
+        <Button danger onPress={this.checkout} style={{ flexWrap: 'wrap', margin: 5, justifyContent: 'flex-end' }}>
           <Icon
             name={'arrow-dropleft'}
           />
           <Text>CheckOut</Text>
-      </Button>
+        </Button>
+      )
+    } else {
+      return (
+        <View style={{ height: 0 }}/>
       )
     }
-      else {
-        return(
-          <View style={{height:0}}/>
-        )
-      }
-    }
+  }
   checkout = () => {
     if ((this.props.items && this.props.items.length > 0)) {
       this.props.placeOrder({
@@ -239,6 +238,7 @@ const mapDispatchToProps = (dispatch) => {
     placeOrder: (data) => dispatch(ShopActions.placeOrderRequest(data)),
     removeItem: (item) => dispatch(ShopActions.removeItem(item))
   }
+  z
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrderScreen)

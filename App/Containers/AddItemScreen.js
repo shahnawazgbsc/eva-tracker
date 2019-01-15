@@ -20,27 +20,33 @@ import {
 } from 'native-base'
 // Styles
 import styles from './Styles/AddItemScreenStyle'
-import Colors from '../Themes/Colors'
-import Images from '../Themes/Images'
+import { Colors, Images } from '../Themes'
 import GradientWrapper from '../Components/GradientWrapper'
 import ShopRedux from '../Redux/ShopRedux'
 import Immutable from 'seamless-immutable'
+import * as R from 'ramda'
 
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
-var litresMes = []
-var grossAmount = []
-var lessTO = []
-var lessExtraDiscount = []
-var netAmount = []
 
 class AddItemScreen extends React.PureComponent {
   constructor (props) {
     super(props)
 
+    let merging = (value) => R.merge({
+      lesMeasure: value.muInSu,
+      netTotal: value.unitPrice - value.muInSu,
+      selected: false,
+      quantity: 1,
+      extraDiscount: 0
+    })(value)
+
+    R.map(
+      R.over(R.lensProp('items'),
+        R.map(merging)
+      )
+    )(props.items)
+
     this.state = {
-      selected: [],
-      quantity: [],
-      extraDiscount: [],
       selectedValue: '',
       data: []
     }
@@ -55,24 +61,6 @@ class AddItemScreen extends React.PureComponent {
   *************************************************************/
   onCategorySelect = (index) => {
     this.setState({ selectedValue: index })
-    if (index === '') {
-      litresMes = []
-      grossAmount = []
-      lessTO = []
-      lessExtraDiscount = []
-      netAmount = []
-      this.setState({ data: [], quantity: [], extraDiscount: [] })
-      return
-    }
-
-    let data = this.props.items[index].items
-    let quantity = []
-    let extraDiscount = []
-    for (let i = 0; i < data.length; i++) {
-      quantity[i] = '1'
-      extraDiscount[i] = '0'
-    }
-    this.setState({ data, quantity, extraDiscount, selected: [] })
   }
   renderHeader = () => (
     <Item fixedLabel>
@@ -86,22 +74,19 @@ class AddItemScreen extends React.PureComponent {
         selectedValue={this.state.selectedValue}
         onValueChange={this.onCategorySelect}
       >
-        <Picker.Item label={'Select Category'} key={'first'} value={''}/>
+        <Picker.Item label={'Select Category'} key={'first'} value={''}
+        />
         {
           this.props.items &&
           this.props.items.map((value, index) => (
-            <Picker.Item label={value.productType} value={index} key={index}/>))
+            <Picker.Item label={value.productType} value={index} key={index}
+            />))
         }
       </Picker>
     </Item>
   )
 
   renderRow = ({ item, index }) => {
-    litresMes[index] = item.muInSu * this.state.quantity[index]
-    grossAmount[index] = item.retailPrice==null?0:item.retailPrice * this.state.quantity[index]
-    lessTO[index] = item.tradeOfferAmount * litresMes[index]
-    lessExtraDiscount[index] = this.state.extraDiscount[index] * litresMes[index]
-    netAmount[index] = grossAmount[index] - lessTO[index] - lessExtraDiscount[index]
     return (
       <Card style={styles.row}>
         <CardItem header style={{ paddingLeft: 0, paddingBottom: 0, paddingTop: 0, paddingRight: 0 }}>
@@ -109,7 +94,7 @@ class AddItemScreen extends React.PureComponent {
           />
           <Text style={[styles.item2, { fontSize: 14, fontWeight: 'bold' }]}>Product</Text>
           <Text style={[styles.item3, { fontSize: 14, fontWeight: 'bold' }]}>Qty</Text>
-          <Text style={[styles.item4, { fontSize: 14, fontWeight: 'bold' }]}>SKU</Text>
+          <Text style={[styles.item4, { fontSize: 14, fontWeight: 'bold' }]}>SU</Text>
           <View style={styles.item5}
           />
         </CardItem>
@@ -129,6 +114,7 @@ class AddItemScreen extends React.PureComponent {
                 <Input
                   style={styles.input}
                   onChangeText={(text) => {
+                    R.is(Number, text)
                     let isNumber = !isNaN(parseInt(text))
                     if (isNumber || text.length === 0) {
                       let clone = JSON.parse(JSON.stringify(this.state))
@@ -185,8 +171,8 @@ class AddItemScreen extends React.PureComponent {
                   }}
                   value={this.state.extraDiscount[index] == null ? 0 : this.state.extraDiscount[index]}
                   keyboardType={'numeric'}
-                  editable={litresMes[index]==0?false:true}
-                  disabled={litresMes[index]==0?true:false}
+                  editable={litresMes[index] != 0}
+                  disabled={litresMes[index] == 0}
                 />
               </View>
             </Row>
@@ -214,13 +200,6 @@ class AddItemScreen extends React.PureComponent {
       </Card>
     )
   }
-
-  /* ***********************************************************
-  * Consider the configurations we've set below.  Customize them
-  * to your liking!  Each with some friendly advice.
-  *************************************************************/
-  renderSeparator = () =>
-    <Text style={styles.label}> - ~~~~~ - </Text>
 
   // The default function if no Key is provided is index
   // an identifiable key is important if you plan on
@@ -300,15 +279,18 @@ class AddItemScreen extends React.PureComponent {
             <Right/>
           </Header>
         </GradientWrapper>
+
+        {!!this.state.selectedValue &&
         <FlatList
           style={styles.container}
-          data={this.state.data}
+          data={this.state.data[this.state.selectedValue]}
           extraData={this.state.selectedValue}
           ListFooterComponent={this.renderFooter}
           ListHeaderComponent={this.renderHeader}
           renderItem={this.renderRow}
           keyExtractor={this.keyExtractor}
         />
+        }
       </Container>
 
     )
