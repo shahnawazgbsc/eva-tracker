@@ -26,12 +26,14 @@ import GradientWrapper from '../Components/GradientWrapper'
 import ShopRedux from '../Redux/ShopRedux'
 import Immutable from 'seamless-immutable'
 
+
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
 var litresMes = []
 var grossAmount = []
 var lessTO = []
 var lessExtraDiscount = []
 var netAmount = []
+var regularDiscount = []
 
 class AddItemScreen extends React.PureComponent {
   constructor (props) {
@@ -98,10 +100,11 @@ class AddItemScreen extends React.PureComponent {
 
   renderRow = ({ item, index }) => {
     litresMes[index] = item.muInSu * this.state.quantity[index]
-    grossAmount[index] = item.retailPrice == null ? 0 : item.retailPrice * this.state.quantity[index]
+    grossAmount[index] = item.unitPrice == null ? 0 : item.unitPrice * litresMes[index]
+    regularDiscount[index] = litresMes[index] * item.regularDiscount
     lessTO[index] = item.tradeOfferAmount * litresMes[index]
     lessExtraDiscount[index] = this.state.extraDiscount[index] * litresMes[index]
-    netAmount[index] = grossAmount[index] - lessTO[index] - lessExtraDiscount[index]
+    netAmount[index] = grossAmount[index] - lessTO[index] - lessExtraDiscount[index] - regularDiscount[index]
     return (
       <Card style={styles.row}>
         <CardItem header style={{ paddingLeft: 0, paddingBottom: 0, paddingTop: 0, paddingRight: 0 }}>
@@ -148,7 +151,7 @@ class AddItemScreen extends React.PureComponent {
             </Row>
             <Row>
               <Text style={styles.item3}>Trade Price</Text>
-              <Text style={styles.item4}>{item.retailPrice}</Text>
+              <Text style={styles.item4}>{item.unitPrice}</Text>
             </Row>
             <Row>
               <Text style={styles.item3}>Gross Amount</Text>
@@ -159,16 +162,16 @@ class AddItemScreen extends React.PureComponent {
               <Text style={styles.item4}>{item.tradeOfferAmount}</Text>
             </Row>
             <Row>
-              <Text style={styles.item3}>Less TO</Text>
+              <Text style={styles.item3}>Less To</Text>
               <Text style={styles.item4}>{lessTO[index]}</Text>
             </Row>
             <Row>
-              <Text style={styles.item3}>RD %</Text>
-              <Text style={styles.item4}>-</Text>
+              <Text style={styles.item7}>Regular Discount</Text>
+              <Text style={styles.item4}>{item.regularDiscount}</Text>
             </Row>
             <Row>
-              <Text style={styles.item7}>Regular Discount</Text>
-              <Text style={styles.item4}>-</Text>
+            <Text style={styles.item3}>Less Regular Discount</Text>
+            <Text style={styles.item4}>{regularDiscount[index]}</Text>
             </Row>
             <Row>
               <Text style={styles.item6}>Extra Discount / Ltr / Kg</Text>
@@ -251,7 +254,9 @@ class AddItemScreen extends React.PureComponent {
       if (value) {
         let item = Immutable.asMutable(this.props.items[this.state.selectedValue].items[index])
         item.quantity = this.state.quantity[index]
-        item.extraDiscount = this.state.extraDiscount[index]
+        item.extraDiscount = Number.parseInt(this.state.extraDiscount[index])
+        item.lessExtraDiscount = lessExtraDiscount[index]
+        item.lessRegularDiscount = regularDiscount[index]
         item.litresMes = litresMes[index]
         item.netAmount = netAmount[index]
         item.grossAmount = grossAmount[index]

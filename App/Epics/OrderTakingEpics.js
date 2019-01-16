@@ -98,9 +98,20 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
                 lng: longitude,
                 shopId: checkInParam.StoreId,
                 userId: userId,
-                visitId: dateNow,
+                visitId: Number.parseInt(dateNow),
                 timestamp: new Date()
               }).commit()
+
+              firebase.firestore().collection('tbl_shops')
+                .doc(String(checkInParam.StoreId))
+                .set(
+              {
+                userId: userId,
+                lng: longitude,
+                lat: latitude,
+                shopId: checkInParam.StoreId,
+                timestamp: new Date()
+              })
 
             if (action.data.onSuccess) action.data.onSuccess()
             return ShopActions.checkOutSuccess(
@@ -149,6 +160,7 @@ export const placeOrderEpics = (action$, state$, { api }) => action$.pipe(
     }))
 
     const hasReason = R.has('noorderreason')(action.data.items[0])
+    var extra = action.data.items[0].extraDiscount
 
     return api.addItems({ Order }).pipe(
       mergeMap(response => {
@@ -162,6 +174,7 @@ export const placeOrderEpics = (action$, state$, { api }) => action$.pipe(
             storeVisitId: value.storeVisitId,
             companyId: value.companyId,
             storeId: value.storeId,
+            extraDiscount: extra,
             userId: userId
           }))
           return api.salesIndents(array)

@@ -72,7 +72,7 @@ class OrderScreen extends React.Component {
           </Row>
           <Row>
             <Text style={styles.item3}>Trade Price</Text>
-            <Text style={styles.item4}>{item.retailPrice}</Text>
+            <Text style={styles.item4}>{item.unitPrice}</Text>
           </Row>
           <Row>
             <Text style={styles.item3}>Gross Amount</Text>
@@ -83,16 +83,16 @@ class OrderScreen extends React.Component {
             <Text style={styles.item4}>{item.tradeOfferAmount}</Text>
           </Row>
           <Row>
-            <Text style={styles.item3}>Less TO</Text>
+            <Text style={styles.item3}>Less To</Text>
             <Text style={styles.item4}>{item.lessTO}</Text>
           </Row>
           <Row>
-            <Text style={styles.item3}>RD %</Text>
-            <Text style={styles.item4}>-</Text>
+            <Text style={styles.item3}>Regular Discount</Text>
+            <Text style={styles.item4}>{item.regularDiscount}</Text>
           </Row>
           <Row>
-            <Text style={styles.item3}>Regular Discount</Text>
-            <Text style={styles.item4}>-</Text>
+            <Text style={styles.item3}>Less Regular Discount</Text>
+            <Text style={styles.item4}>{item.lessRegularDiscount}</Text>
           </Row>
           <Row>
             <Text style={styles.item3}>Extra Discount / Ltr / Kg</Text>
@@ -184,7 +184,7 @@ class OrderScreen extends React.Component {
         <View style={{ width: '100%', height: 5, backgroundColor: '#fcc430' }}/>
         <GradientWrapper>
           <Footer style={[styles.header, styles.footer]}>
-            <Text style={styles.amountText}>TOTAL PAYMENT = {Total}</Text>
+            <Text style={styles.amountText}>TOTAL PAYMENT = {Math.abs(Total)}</Text>
             {this.renderCheckoutButton()}
           </Footer>
         </GradientWrapper>
@@ -212,7 +212,7 @@ class OrderScreen extends React.Component {
   checkout = () => {
     if ((this.props.items && this.props.items.length > 0)) {
       this.props.placeOrder({
-        items: this.props.items.map(value => ({ quantity: value.quantity, inventoryItemId: value.inventoryItemId ,extraDiscount:value.extraDiscount})),
+        items: this.props.items.map(value => ({ quantity: value.quantity, inventoryItemId: value.inventoryItemId ,extraDiscount: value.extraDiscount})),
         onSuccess: () => {
           this.props.navigation.navigate('OrderSMS', {
             orderItem: this.props.navigation.getParam('extraItem'),
