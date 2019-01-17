@@ -8,7 +8,8 @@ export const selectProductsListEpics = (action$, state$, { api }) => action$.pip
     const checkInParam = state$.value.shop.checkInParam
     const data = {
       InventoryTaking: action.data.items.map(value => ({
-        inventoryItemId: value.inventoryItemId,
+        brandName : value.brandName,
+        generalSKUId : value.generalSKUId,
         quantity: value.quantity,
         storeVisitId: checkInParam.storeVisitId,
         companyId: checkInParam.companyId,

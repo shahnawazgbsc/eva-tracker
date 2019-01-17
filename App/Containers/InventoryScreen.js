@@ -35,6 +35,7 @@ class InventoryScreen extends Component {
 
     this.state = {
       selectedBrand: '',
+      selectedBrandName : '',
       inventorySKU: null,
       quantity: [],
       unit: [],
@@ -45,6 +46,7 @@ class InventoryScreen extends Component {
 
   brandSelector = ((itemValue) => this.setState({
     selectedBrand: itemValue,
+    selectedBrandName : itemValue === '' ? null : this.props.brands[itemValue].brandName,
     inventorySKU: itemValue === '' ? null : this.getDataArray(itemValue)
   }))
 
@@ -70,7 +72,8 @@ class InventoryScreen extends Component {
       if (this.state.selected[index]) {
         array.push({
           quantity: this.state.quantity[index],
-          inventoryItemId: index + 1
+          generalSKUId : this.state.inventorySKU[index].generalSKUId,
+          brandName : this.state.selectedBrandName
         })
       }
     })
