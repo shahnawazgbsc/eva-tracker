@@ -22,32 +22,40 @@ import GradientWrapper from '../Components/GradientWrapper'
 import Colors from '../Themes/Colors'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
-
+  
+var quantity=[];
+var unit=[];
+var selected=[];
+var brandNames = [];
+var selectedBrandNames = [];
 class InventoryScreen extends Component {
   SKUs = this.props.skus
 
   constructor (props) {
     super(props)
 
-    // const quantity = props.brands.map(value => value.items.map(value => value.items.map(value => '1')))
-    // const unit = props.brands.map(value => value.items.map(value => value.items.map(value => value.unit)))
-    // const selected = props.brands.map(value => value.items.map(value => value.items.map(value => false)))
-
+    this.props.inventorySKU()
     this.state = {
       selectedBrand: '',
-      selectedBrandName : '',
+      selectedBrandName : [],
       inventorySKU: null,
-      quantity: [],
-      unit: [],
-      selected: [],
-      expanded: []
+      quantity,
+      unit,
+      selected,
+      expanded: [],
+      selectedBrandIndex:0
     }
+    this.props.brands.map((value, index) => {
+      brandNames[index] = value.brandName 
+    })
   }
-
-  brandSelector = ((itemValue) => this.setState({
+componentWillMount() {
+}
+  brandSelector = ((itemValue,itemIndex) => this.setState({
     selectedBrand: itemValue,
     selectedBrandName : itemValue === '' ? null : this.props.brands[itemValue].brandName,
-    inventorySKU: itemValue === '' ? null : this.getDataArray(itemValue)
+    inventorySKU: itemValue === '' ? null : this.getDataArray(itemValue),
+    selectedBrandIndex:itemIndex-1
   }))
 
   getDataArray = (category) => {
@@ -59,7 +67,12 @@ class InventoryScreen extends Component {
   }
 
   componentDidMount () {
-    this.props.inventorySKU()
+    quantity = this.props.brands.map(value => this.props.skus.map(value=>0))
+    unit = this.props.brands.map(value => this.props.skus.map(value=>"Ltr"))
+    selected = this.props.brands.map(value => this.props.skus.map(value=>false))
+    this.setState({selected:selected})
+    this.setState({quantity:quantity})
+    this.setState({unit:unit})
   }
 
   back = () => {
@@ -68,16 +81,21 @@ class InventoryScreen extends Component {
 
   submit = () => {
     let array = []
-    this.state.selected.forEach((sku, index) => {
-      if (this.state.selected[index]) {
+    let inventoryMap = {
+      brandName:"",
+      quantity:[],
+      generalSKUId:[]
+    }
+    this.state.selected.forEach((brands, index) => {
+      inventoryMap.brandName=brandNames[index]
+      brands.forEach((sku,brandIndex)=>{
         array.push({
-          quantity: this.state.quantity[index],
-          generalSKUId : this.state.inventorySKU[index].generalSKUId,
-          brandName : this.state.selectedBrandName
+          ...inventoryMap,
+          quantity: this.state.quantity[index][brandIndex],
+          generalSKUId : this.state.inventorySKU[brandIndex].generalSKUId,
         })
-      }
+      })
     })
-
     if (array.length > 0) {
       this.props.sendInventory({
         items: array,
@@ -101,13 +119,14 @@ class InventoryScreen extends Component {
         {
           <Item onPress={() => {
             let clone = JSON.parse(JSON.stringify(this.state.selected))
-            clone[index] = !clone[index]
-            this.setState({ selected: clone })
-          }}>
+            clone[this.state.selectedBrandIndex][index] = !clone[this.state.selectedBrandIndex][index]
+            this.setState({selected: clone})
+          }
+          }>
             <Button transparent>
               <Icon
                 style={{ color: Colors.fire, marginLeft: 0, marginRight: 0 }}
-                name={this.state.selected[index] ? 'check-box' : 'check-box-outline-blank'}
+                name={this.state.selected[this.state.selectedBrandIndex][index] ? 'check-box' : 'check-box-outline-blank'}
                 type={'MaterialIcons'}
               />
             </Button>
@@ -115,11 +134,11 @@ class InventoryScreen extends Component {
             <Item rounded style={styles.input}>
               <Input
                 style={styles.inputText}
-                value={this.state.quantity[index]}
+                value={this.state.quantity[this.state.selectedBrand][index]}
                 onChangeText={text => {
                   if (!isNaN(text)) {
                     let clone = JSON.parse(JSON.stringify(this.state.quantity))
-                    clone[index] = text
+                    clone[this.state.selectedBrandIndex][index] = text
                     this.setState({ quantity: clone })
                   }
                 }}
@@ -234,7 +253,7 @@ class InventoryScreen extends Component {
                     <FlatList
                       style={styles.accordion}
                       keyExtractor={this.keyExtractor}
-                      data={this.SKUs}
+                      data={this.state.inventorySKU}
                       extraData={this.state}
                       renderItem={this.renderRow}
                     />
