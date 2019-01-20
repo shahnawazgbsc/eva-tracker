@@ -165,11 +165,11 @@ class AddItemScreen extends React.PureComponent {
               <Text style={styles.item4}>-</Text>
             </Row>
             <Row>
-              <Text style={styles.item3}>Regular Discount</Text>
+              <Text style={styles.item7}>Regular Discount</Text>
               <Text style={styles.item4}>-</Text>
             </Row>
             <Row>
-              <Text style={styles.item3}>Extra Discount / Ltr / Kg</Text>
+              <Text style={styles.item6}>Extra Discount / Ltr / Kg</Text>
               <View style={styles.item3}>
                 <Input
                   style={styles.discountInput}
