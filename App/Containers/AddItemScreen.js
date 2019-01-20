@@ -26,6 +26,7 @@ import ShopRedux from '../Redux/ShopRedux'
 import Immutable from 'seamless-immutable'
 import * as R from 'ramda'
 
+
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
 
 class AddItemScreen extends React.PureComponent {
@@ -161,12 +162,12 @@ class AddItemScreen extends React.PureComponent {
               <Text style={styles.item4}>{item.tradeOff}</Text>
             </Row>
             <Row>
-              <Text style={styles.item3}>RD %</Text>
-              <Text style={styles.item4}>-</Text>
+              <Text style={styles.item7}>Regular Discount</Text>
+              <Text style={styles.item4}>{item.regularDiscount}</Text>
             </Row>
             <Row>
-              <Text style={styles.item7}>Regular Discount</Text>
-              <Text style={styles.item4}>-</Text>
+            <Text style={styles.item3}>Less Regular Discount</Text>
+            <Text style={styles.item4}>{regularDiscount[index]}</Text>
             </Row>
             <Row>
               <Text style={styles.item6}>Extra Discount / Ltr / Kg</Text>

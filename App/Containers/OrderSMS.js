@@ -57,17 +57,16 @@ class OrderSMS extends Component {
                     <Text style={{ fontWeight: 'bold' }}>Bill To</Text>
                   </Col>
                   <Col size={3}>
-                    <Text style={[styles.darkText, { color: Colors.fire }]}>{this.props.userFirstName}</Text>
+                    <Text style={[styles.darkText, { color: Colors.fire }]}>{item.shopKeeper}</Text>
                     <Subtitle style={[styles.lightDarkText]}>{item.address + ','}</Subtitle>
-                    <Text style={[styles.lightDarkText]}>{this.getPhoneNumber(item.contactNo)}</Text>
-                    <Text style={[styles.lightDarkText]}>{this.getEmail()}</Text>
+                    <Text style={[styles.lightDarkText]}>{item.contactNo}</Text>
                   </Col>
                 </Row>
                 <Text
                   style={{
                     textAlign: 'center',
                     marginTop: 20,
-                  }}>{'Dear ' + this.props.userFirstName + ', Thanks for Booking'}</Text>
+                  }}>{'Dear ' + item.shopKeeper + ', Thanks for Booking'}</Text>
                 <Text style={{ textAlign: 'center', marginBottom: 15 }}>{'Your order is booked as'}</Text>
 
                 <FlatList
@@ -77,10 +76,10 @@ class OrderSMS extends Component {
                 />
 
                 <Text style={{ textAlign: 'right', fontWeight: 'bold', marginTop: 10 }}>
-                  {'Total: ' + total}
+                  {'Total: ' + Math.abs(total)}
                 </Text>
                 <Text style={{ textAlign: 'right', fontWeight: 'bold' }}>
-                  {'In Words: ' + numberToWords(total).toUpperCase()}
+                  {'In Words: ' + numberToWords(Math.abs(total)).toUpperCase()}
                 </Text>
                 <Text style={{ textAlign: 'center', marginVertical: 20 }}>
                   THANK YOU FOR YOUR PAYMENT
