@@ -73,11 +73,11 @@ class ShopHistory extends Component {
           <View style={{ flexDirection: 'row', alignContent: 'space-between', flex: 1 }}>
             <View style={{ flexDirection: 'row', flex: 1 }}>
               <Text style={{ fontSize: 13, fontWeight: 'bold', color: '#676767' }}>Visit Date : </Text>
-              <Text style={{ fontSize: 13, color: '#616161' }}>{moment(data.visitDateTime).format("DD-MM-YYYY")}</Text>
+              <Text style={{ fontSize: 13, color: '#616161' }}>{(new Date(data.visitDateTime).getDate() + '-' + (new Date(data.visitDateTime).getMonth() + 1) + '-' + new Date(data.visitDateTime).getFullYear())}</Text>
             </View>
             <View style={{ flexDirection: 'row', flex: 1 }}>
               <Text style={{ fontSize: 13, fontWeight: 'bold', color: '#676767' }}>Visit Time : </Text>
-              <Text style={{ fontSize: 13, color: '#616161' }}>{moment(data.visitDateTime).format("LT")}</Text>
+              <Text style={{ fontSize: 13, color: '#616161' }}>{(new Date(data.visitDateTime).getHours() + ':' + new Date(data.visitDateTime).getMinutes() + ':' + new Date(data.visitDateTime).getSeconds())}</Text>
             </View>
           </View>
         </View>
@@ -86,10 +86,10 @@ class ShopHistory extends Component {
             <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#676767' }}>Bill To </Text>
             <Text style={{ fontSize: 15, marginLeft: 5, color: '#005B2D' }}>{data.billedTo}</Text>
           </View>
-          <View style={{ flexDirection: 'row' }}>
+          {/* <View style={{ flexDirection: 'row' }}>
             <Text style={{ fontSize: 13, fontWeight: 'bold', color: '#676767' }}>Bill Date : </Text>
-            <Text style={{ fontSize: 13, color: '#616161' }}>{data.billDate}</Text>
-          </View>
+            <Text style={{ fontSize: 13, color: '#616161' }}>{(data.billDate == null ?  "" : (new Date(data.billDate).getDate() + '-' + (new Date(data.billDate).getMonth() + 1) + '-' + new Date(data.billDate).getFullYear()))}</Text>
+          </View> */}
         </View>
         <View style={{ borderColor: 'black', borderBottomWidth: 1, marginTop: 10, flex: 1 }}>
           <View style={{

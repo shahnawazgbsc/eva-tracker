@@ -6,17 +6,25 @@ export const selectProductsListEpics = (action$, state$, { api }) => action$.pip
   ofType(InventoryTakingType.INVENTORY_REQUEST),
   mergeMap(action => {
     const checkInParam = state$.value.shop.checkInParam
+    var requestData = []
+    action.data.items.forEach(element => {
+      if(Number.parseInt(element.quantity) > 0) {
+        a.push({
+          brandName : element.brandName,
+          generalSKUId : element.generalSKUId,
+          quantity: element.quantity,
+          storeVisitId: checkInParam.storeVisitId,
+          companyId: checkInParam.companyId,
+          StoreId: checkInParam.StoreId
+        })
+      }
+    });
+
     const data = {
-      InventoryTaking: action.data.items.map(value => ({
-        inventoryItemId: value.inventoryItemId,
-        quantity: value.quantity,
-        storeVisitId: checkInParam.storeVisitId,
-        companyId: checkInParam.companyId,
-        StoreId: checkInParam.StoreId
-      }))
+      InventoryTaking : requestData
     }
 
-    return api.addInventories(data).pipe(
+     return api.addInventories(data).pipe(
       map(response => {
         if (response.ok) {
           if (action.data.onSuccess) action.data.onSuccess()
