@@ -22,12 +22,13 @@ import GradientWrapper from '../Components/GradientWrapper'
 import Colors from '../Themes/Colors'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
-  
-var quantity=[];
-var unit=[];
-var selected=[];
-var brandNames = [];
-var selectedBrandNames = [];
+
+var quantity = []
+var unit = []
+var selected = []
+var brandNames = []
+var selectedBrandNames = []
+
 class InventoryScreen extends Component {
   SKUs = this.props.skus
 
@@ -37,25 +38,27 @@ class InventoryScreen extends Component {
     this.props.inventorySKU()
     this.state = {
       selectedBrand: '',
-      selectedBrandName : [],
+      selectedBrandName: [],
       inventorySKU: null,
       quantity,
       unit,
       selected,
       expanded: [],
-      selectedBrandIndex:0
+      selectedBrandIndex: 0
     }
     this.props.brands.map((value, index) => {
-      brandNames[index] = value.brandName 
+      brandNames[index] = value.brandName
     })
   }
-componentWillMount() {
-}
-  brandSelector = ((itemValue,itemIndex) => this.setState({
+
+  componentWillMount () {
+  }
+
+  brandSelector = ((itemValue, itemIndex) => this.setState({
     selectedBrand: itemValue,
-    selectedBrandName : itemValue === '' ? null : this.props.brands[itemValue].brandName,
+    selectedBrandName: itemValue === '' ? null : this.props.brands[itemValue].brandName,
     inventorySKU: itemValue === '' ? null : this.getDataArray(itemValue),
-    selectedBrandIndex:itemIndex-1
+    selectedBrandIndex: itemIndex - 1
   }))
 
   getDataArray = (category) => {
@@ -67,12 +70,12 @@ componentWillMount() {
   }
 
   componentDidMount () {
-    quantity = this.props.brands.map(value => this.props.skus.map(value=>0))
-    unit = this.props.brands.map(value => this.props.skus.map(value=>"Ltr"))
-    selected = this.props.brands.map(value => this.props.skus.map(value=>false))
-    this.setState({selected:selected})
-    this.setState({quantity:quantity})
-    this.setState({unit:unit})
+    quantity = this.props.brands.map(value => this.props.skus.map(value => 0))
+    unit = this.props.brands.map(value => this.props.skus.map(value => 'Ltr'))
+    selected = this.props.brands.map(value => this.props.skus.map(value => false))
+    this.setState({ selected: selected })
+    this.setState({ quantity: quantity })
+    this.setState({ unit: unit })
   }
 
   back = () => {
@@ -82,17 +85,17 @@ componentWillMount() {
   submit = () => {
     let array = []
     let inventoryMap = {
-      brandName:"",
-      quantity:[],
-      generalSKUId:[]
+      brandName: '',
+      quantity: [],
+      generalSKUId: []
     }
     this.state.selected.forEach((brands, index) => {
-      inventoryMap.brandName=brandNames[index]
-      brands.forEach((sku,brandIndex)=>{
+      inventoryMap.brandName = brandNames[index]
+      brands.forEach((sku, brandIndex) => {
         array.push({
           ...inventoryMap,
           quantity: this.state.quantity[index][brandIndex],
-          generalSKUId : this.state.inventorySKU[brandIndex].generalSKUId,
+          generalSKUId: this.state.inventorySKU[brandIndex].generalSKUId,
         })
       })
     })
@@ -120,7 +123,7 @@ componentWillMount() {
           <Item onPress={() => {
             let clone = JSON.parse(JSON.stringify(this.state.selected))
             clone[this.state.selectedBrandIndex][index] = !clone[this.state.selectedBrandIndex][index]
-            this.setState({selected: clone})
+            this.setState({ selected: clone })
           }
           }>
             <Button transparent>
