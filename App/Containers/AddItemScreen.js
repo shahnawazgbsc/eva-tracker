@@ -23,9 +23,7 @@ import styles from './Styles/AddItemScreenStyle'
 import { Colors, Images } from '../Themes'
 import GradientWrapper from '../Components/GradientWrapper'
 import ShopRedux from '../Redux/ShopRedux'
-import Immutable from 'seamless-immutable'
 import * as R from 'ramda'
-
 
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
 
@@ -48,6 +46,7 @@ class AddItemScreen extends React.PureComponent {
         quantity,
         grossAmount,
         tradeOff,
+        regularDiscountTotal: measure * obj.regularDiscount,
         totalOffer,
         extraDiscountAmount
       })
@@ -166,8 +165,8 @@ class AddItemScreen extends React.PureComponent {
               <Text style={styles.item4}>{item.regularDiscount}</Text>
             </Row>
             <Row>
-            <Text style={styles.item3}>Less Regular Discount</Text>
-            <Text style={styles.item4}>{regularDiscount[index]}</Text>
+              <Text style={styles.item3}>Less Regular Discount</Text>
+              <Text style={styles.item4}>{item.regularDiscountTotal}</Text>
             </Row>
             <Row>
               <Text style={styles.item6}>Extra Discount / Ltr / Kg</Text>
@@ -281,11 +280,10 @@ class AddItemScreen extends React.PureComponent {
               </Button>
             </Left>
             <Body>
-            <Text style={styles.titleText}>
-              Add Items
-            </Text>
+            <Text style={styles.titleText}>Add Items</Text>
             </Body>
-            <Right/>
+            <Right
+            />
           </Header>
         </GradientWrapper>
 
