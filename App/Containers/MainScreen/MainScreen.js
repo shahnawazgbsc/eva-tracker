@@ -22,7 +22,13 @@ class MainScreen extends React.Component {
   componentDidMount () {
     this.props.request()
     for (var iter in this.props.loginParams) {
-      mobileScreen.push(this.props.loginParams[iter])
+      if(this.props.loginParams[iter].moduleName === "eTrackerMobile") {
+        alert(JSON.stringify(this.props.loginParams[iter].features))
+        for (var counter in this.props.loginParams[iter].features) {
+        mobileScreen.push(this.props.loginParams[iter].features[counter])
+        }
+        break;
+      }
     }
   }
 
@@ -167,7 +173,7 @@ class MainScreen extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  loginParams: R.path(['login', 'payload', 'moduleFeatures', '0', 'features'])(state),
+  loginParams: state.login.payload.moduleFeatures,
   dayStarted: state.store.dayStarted,
   stores: state.store && state.store.payload,
   subSection: state.createStore && state.createStore.subSection,
