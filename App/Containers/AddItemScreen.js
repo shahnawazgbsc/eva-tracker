@@ -37,7 +37,7 @@ class AddItemScreen extends React.PureComponent {
       const grossAmount = tradePrice * quantity
       const tradeOff = measure * obj.tradeOfferAmount
       const extraDiscountAmount = obj.extraDiscount * measure
-
+      const salesUnit =  obj.salesUnit
       const netTotal = grossAmount - tradeOff - extraDiscountAmount
       const totalOffer = netTotal / quantity
       return R.merge(obj, {
@@ -48,7 +48,8 @@ class AddItemScreen extends React.PureComponent {
         tradeOff,
         regularDiscountTotal: measure * obj.regularDiscount,
         totalOffer,
-        extraDiscountAmount
+        extraDiscountAmount,
+        salesUnit
       })
     }
     this.changeItem = R.curry((index, merge) => {
@@ -138,7 +139,7 @@ class AddItemScreen extends React.PureComponent {
                   keyboardType={'numeric'}
                 />
               </View>
-              <Text style={styles.item4}>{item.unit}</Text>
+              <Text style={styles.item4}>{item.salesUnit}</Text>
             </Row>
             <Row>
               <Text style={styles.item3}>Ltrs / Mes</Text>
