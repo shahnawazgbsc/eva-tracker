@@ -26,13 +26,13 @@ export default (action$, state$, { firebase }) => action$.pipe(
           lng: longitude,
           userId,
           lat: latitude,
-          timestamp: new Date()
+          timestamp: new Date((new Date()).toLocaleString())
         })
         .set(tblUsers, {
           lng: longitude,
           userId,
           lat: latitude,
-          timestamp: new Date()
+          timestamp: new Date((new Date()).toLocaleString())
         }).commit()
     }
 

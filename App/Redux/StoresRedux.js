@@ -47,7 +47,7 @@ const dayStartSuccess = (state, { id }) => Immutable(state).merge({
   fetching: false,
   pjpId: id,
   dayStarted: true,
-  dayStartDate: new Date()
+  dayStartDate: new Date((new Date()).toLocaleString())
 })
 
 const dayEndRequest = (state) => Immutable(state).merge({ fetching: true })

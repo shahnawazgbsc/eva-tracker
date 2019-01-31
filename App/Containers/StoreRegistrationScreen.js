@@ -12,6 +12,7 @@ import GradientWrapper from '../Components/GradientWrapper'
 import { Days } from './DaySelection'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
+import moment from 'moment';
 
 class StoreRegistrationScreen extends Component {
   Categories = ['LMT', 'V/S', 'Retail']
@@ -19,10 +20,10 @@ class StoreRegistrationScreen extends Component {
 
   constructor (props) {
     super(props)
-
+    var currentdatetime = new Date((new Date()).toLocaleString())
     this.state = {
       image: undefined,
-      StartTime: new Date(),
+      StartTime: currentdatetime,
       shopName: '',
       shopKeeper: '',
       contactNo: '',
@@ -72,8 +73,6 @@ class StoreRegistrationScreen extends Component {
       return 'City is required'
     } else if (this.state.landMark.length === 0) {
       return 'Landmark is required'
-    } else if (this.state.cnic.length !== 13) {
-      return 'CNIC is required'
     } else if (!this.props.days || this.props.days.length === 0) {
       return 'Select visit days'
     } else if (this.state.category === undefined) {

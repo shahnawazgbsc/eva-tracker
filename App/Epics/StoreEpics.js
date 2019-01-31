@@ -23,7 +23,7 @@ export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
                 image: null,
                 latitude: location.latitude,
                 longitude: location.longitude,
-                EndTime: new Date(),
+                EndTime: new Date((new Date()).toLocaleString()),
                 userId: userId,
                 companyId: companyId,
                 imageUrl: response.data.filepath

@@ -43,7 +43,7 @@ class OrderScreen extends React.Component {
           resizeMode={'contain'}
         />
         <View style={styles.item2}>
-          <Text style={{ fontSize: 10 }}>{item.name}</Text>
+          <Text style={{ fontSize: 12,fontWeight: 'bold' }}>{item.name}</Text>
           <Text style={{ fontSize: 10 }}>Product ID: {item.itemCode}</Text>
         </View>
         <View style={styles.itemRow}>

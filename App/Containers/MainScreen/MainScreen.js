@@ -23,7 +23,6 @@ class MainScreen extends React.Component {
     this.props.request()
     for (var iter in this.props.loginParams) {
       if(this.props.loginParams[iter].moduleName === "eTrackerMobile") {
-        alert(JSON.stringify(this.props.loginParams[iter].features))
         for (var counter in this.props.loginParams[iter].features) {
         mobileScreen.push(this.props.loginParams[iter].features[counter])
         }
