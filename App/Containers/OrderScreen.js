@@ -209,10 +209,14 @@ class OrderScreen extends React.Component {
 }
 
 const mapStateToProps = (state) => {
+  //const itemsBrands = state.nonBrands.payload
+  //Alert.alert('Error', 'Please add items to checkout'+itemsBrands)
+  //console.log('styleName', itemsBrands)
   return {
     items: state.shop && state.shop.orderItems,
-    itemsBrands: state.brands && state.brands.payload.find(value => value.brandName.toLowerCase() === 'EVA'.toLowerCase()) &&
-      state.brands.payload.find(value => value.brandName.toLowerCase() === 'EVA'.toLowerCase()).items
+    itemsBrands: state.nonBrands.payload
+    //&& state.brands.payload.find(value => value.brandName.toLowerCase() === 'EVA'.toLowerCase()) &&
+    //  state.brands.payload.find(value => value.brandName.toLowerCase() === 'EVA'.toLowerCase()).items
   }
 }
 

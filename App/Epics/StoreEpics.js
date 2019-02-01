@@ -5,6 +5,7 @@ import { ofType } from 'redux-observable'
 import StoresRedux, { StoresTypes } from '../Redux/StoresRedux'
 import CreateStoreActions, { CreateStoreTypes } from '../Redux/CreateStoreRedux'
 import GetBrandsActions from '../Redux/GetBrandsRedux'
+import GetNonBrandsActions from '../Redux/GetNonBrandsRedux'
 
 export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
   ofType(CreateStoreTypes.CREATE_STORE_REQUEST),
@@ -56,7 +57,7 @@ export const storeById = (action$, state$, { api }) => action$.pipe(
     const userId = state$.value.login.payload.user.userid
     const companyId = state$.value.login.payload.user.companyid
 
-    return zip(api.storesByUserId(userId), api.getBrands(companyId)).pipe(
+    return zip(api.storesByUserId(userId), api.getBrands(companyId), api.getNonBrands(companyId)).pipe(
       mergeMap(response => {
         const actions = []
         response.forEach((value, index) => {
@@ -68,6 +69,9 @@ export const storeById = (action$, state$, { api }) => action$.pipe(
               case 1:
                 actions.push(GetBrandsActions.getBrandsSuccess(value.data))
                 break
+              case 2:
+                actions.push(GetNonBrandsActions.getNonBrandsSuccess(value.data))
+                break
             }
           } else {
             switch (index) {
@@ -75,7 +79,10 @@ export const storeById = (action$, state$, { api }) => action$.pipe(
                 actions.push(StoresRedux.storesFailure(value))
                 break
               case 1:
-                actions.push(GetBrandsActions.getBrandsFailure(value))
+                actions.push(GetBrandsActions.getBrandsFailure(value))  
+                break
+              case 2:
+                actions.push(GetNonBrandsActions.getNonBrandsFailure(value))
                 break
             }
           }

@@ -12,6 +12,7 @@ export const reducers = combineReducers({
   shop: require('./ShopRedux').reducer,
   gps: require('./GpsLocationRedux').reducer,
   brands: require('./GetBrandsRedux').reducer,
+  nonBrands: require('./GetNonBrandsRedux').reducer,
   createStore: require('./CreateStoreRedux').reducer,
   inventory: require('./InventoryTakingRedux').reducer,
   history: require('./ShopHistoryRedux').reducer

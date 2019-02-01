@@ -31,6 +31,10 @@ export default {
     ok: true,
     data: require('../Fixtures/subscription.json')
   })),
+  nonBrands: (id) => from(Promise.resolve({
+    ok: true,
+    data: require('../Fixtures/subscription.json')
+  })),
   addItems: (data) => from(Promise.resolve({
     ok: true,
     data: { response: 'All Orders Successfully Added' }

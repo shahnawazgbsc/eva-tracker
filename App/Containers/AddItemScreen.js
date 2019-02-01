@@ -85,7 +85,7 @@ class AddItemScreen extends React.PureComponent {
       <Label>Category</Label>
       <Picker
         mode='dropdown'
-        placeholder='Select Category'
+        placeholder='Select Product Category'
         iosIcon={<Icon name='ios-arrow-down-outline'
         />}
         itemTextStyle={{ color: '#788ad2', fontSize: 12 }}
@@ -305,7 +305,8 @@ class AddItemScreen extends React.PureComponent {
 
 const mapStateToProps = (state) => {
   return {
-    items: state.brands && state.brands.payload.find(value => value.brandName.toLowerCase() === 'EVA'.toLowerCase()).items
+    //items: state.brands && state.brands.payload.find(value => value.brandName.toLowerCase() === 'EVA'.toLowerCase()).items
+    items: state.nonBrands.payload
   }
 }
 
