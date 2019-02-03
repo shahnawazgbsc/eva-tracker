@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 import StartupActions from '../Redux/StartupRedux'
 import getTheme from '../../native-base-theme/components'
 import platform from '../../native-base-theme/variables/platform'
+import LocationModule from '../NativeModules/LocationModule'
 
 // Styles
 import styles from './Styles/RootContainerStyles'
@@ -23,21 +24,27 @@ class RootContainer extends Component {
 
   async requestLocationPermission () {
     try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          'title': 'Eva Tracker Location Permission',
-          'message': 'Eva Tracker needs access to your location '
-        }
+      PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION)
+      .then(is_granted => is_granted === PermissionsAndroid.RESULTS.GRANTED
+        ? is_granted
+        : PermissionsAndroid.requestMultiple([
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+        ])
       )
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        this.startWatch()
-      } else {
-        this.setState({
-          error: { message: 'Location permission denied' }
+      .then(_ => PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION))
+      .then(is_granted => is_granted === PermissionsAndroid.RESULTS.GRANTED ? true : new Error())
+      .then(_ => setTimeout(() => LocationModule.startService().then(()=>{
+        LocationModule.getLocation().then((location)=>{
+          this.props.updateGps({ "latitude":location.latitude,"longitude": location.longitude })
+          this.setState({ error: null })
+        }).catch(()=>{
+          error => {
+            console.log(error)
+          }
         })
-        console.log('Location permission denied')
-      }
+      }), 300))
+      .catch(e => console.log(e))
     } catch (err) {
       console.warn(err)
     }
@@ -68,7 +75,7 @@ class RootContainer extends Component {
   }
 
   componentWillUnmount () {
-    navigator.geolocation.clearWatch(this.watchID)
+    LocationModule.stopService();
   }
 
   render () {
