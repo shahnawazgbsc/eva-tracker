@@ -10,9 +10,12 @@ import CreateStoreActions from '../Redux/CreateStoreRedux'
 import styles from './Styles/StoreRegistrationScreenStyle'
 import GradientWrapper from '../Components/GradientWrapper'
 import { Days } from './DaySelection'
+import Geocoder from 'react-native-geocoder';
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 
+var baseState = {}
+var cityName="";
 class StoreRegistrationScreen extends Component {
   Categories = ['LMT', 'V/S', 'Retail']
   Classification = ['500 & Above', '250 to 499', '100 to 249', 'Less then 100']
@@ -35,8 +38,10 @@ class StoreRegistrationScreen extends Component {
       activeStatus: true,
       category: undefined,
       subsectionId: undefined,
-      classification: undefined
+      classification: undefined,
+      days:[]
     }
+    baseState = this.state
   }
 
   createStore = () => {
@@ -48,7 +53,11 @@ class StoreRegistrationScreen extends Component {
         category: this.Categories[this.state.category],
         classification: this.Classification[this.state.classification],
         VisitDays: this.props.days.map(value => ({ day: value })),
-        onSuccess: () => this.props.navigation.goBack(null)
+        onSuccess: () => {
+          this.setState(baseState)
+          this.props.resetDays()
+          this.props.navigation.goBack(null)
+        }
       })
     } else {
       Alert.alert('Info', msg)
@@ -72,8 +81,6 @@ class StoreRegistrationScreen extends Component {
       return 'City is required'
     } else if (this.state.landMark.length === 0) {
       return 'Landmark is required'
-    } else if (this.state.cnic.length !== 13) {
-      return 'CNIC is required'
     } else if (!this.props.days || this.props.days.length === 0) {
       return 'Select visit days'
     } else if (this.state.category === undefined) {
@@ -89,8 +96,19 @@ class StoreRegistrationScreen extends Component {
 
   componentDidMount (): void {
     this.props.resetDays()
-  }
+    Geocoder.fallbackToGoogle("AIzaSyAkzbji8MfNjpWXG42WS5L0dItXEkKjSRE")
+    Geocoder.geocodePosition({lat:this.props.latitude,lng:this.props.longitude}).then(res => {
+      this.setState({city:res[0].locality})
+      alert(res[0].locality)
+  })
+  .catch(err => alert(err))
 
+  }
+  componentWillReceiveProps(newProps) {
+    this.setState({
+      days:newProps.days
+    })
+  }
   onShopName = (txt) => {
     this.setState({ shopName: txt })
   }
@@ -134,7 +152,6 @@ class StoreRegistrationScreen extends Component {
   onSubSectionSelected = (value) => {
     this.setState({ subsectionId: value })
   }
-
   onClassificationSelected = (value) => {
     this.setState({ classification: value })
   }
@@ -204,7 +221,7 @@ class StoreRegistrationScreen extends Component {
                 <Label>Shopkeeper Name</Label>
                 <Input
                   onChangeText={this.onShopKeeperName}
-                  value={this.state.shopKeeperName}
+                  value={this.state.shopKeeper}
                 />
               </Item>
               <Item floatingLabel>
@@ -374,7 +391,9 @@ class StoreRegistrationScreen extends Component {
 const mapStateToProps = (state) => {
   return {
     subSection: state.createStore && state.createStore.subSection,
-    days: state.createStore && state.createStore.days
+    days: state.createStore && state.createStore.days,
+    latitude: state.gps && state.gps.data && state.gps.data.latitude,
+    longitude: state.gps && state.gps.data && state.gps.data.longitude
   }
 }
 
