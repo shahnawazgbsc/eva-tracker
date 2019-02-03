@@ -29,6 +29,14 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBrb2XMt6F8A37iCwSDUbsTj3P1GNYJmD4"/>
+        <service android:name="com.evatracker.location.LocationTrackerService" android:enabled="true" android:label="LocationTrackerService" />
+
+        <!-- Declaring broadcast receiver for BOOT_COMPLETED event. -->
+        <receiver android:name="com.evatracker.location.StartupReceiver" android:enabled="true" android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
