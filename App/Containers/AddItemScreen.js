@@ -89,15 +89,17 @@ class AddItemScreen extends React.PureComponent {
         iosIcon={<Icon name='ios-arrow-down-outline'
         />}
         itemTextStyle={{ color: '#788ad2', fontSize: 12 }}
-        selectedValue={this.state.selectedValue}
+        selectedValue={'first'}
         onValueChange={this.onCategorySelect}
       >
-        <Picker.Item label={'Select Category'} key={'first'} value={''}
+        <Picker.Item label={'Select Category'} key={'first'} value={'first'}
         />
-        {
-          this.props.items.map((value, index) => (
-            <Picker.Item label={value.productType} value={index} key={index}
-            />))
+          {
+            this.props.items.map((value, index) => (
+        value.items.map((value2,index2)=>(
+             <Picker.Item label={value2.productType} value={index2} key={index2}/>
+        ))
+      ))
         }
       </Picker>
     </Item>
@@ -266,8 +268,8 @@ class AddItemScreen extends React.PureComponent {
   }
 
   render () {
-    const data = R.path([this.state.selectedValue, 'items'], this.state.data)
-    console.log(data)
+      const data = R.path([this.state.selectedValue, 'items'], this.state.data)
+      console.log(data)
 
     return (
       <Container>
