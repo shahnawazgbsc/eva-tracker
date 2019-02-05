@@ -185,7 +185,8 @@ export const placeOrderEpics = (action$, state$, { api }) => action$.pipe(
           if (action.data.onSuccess) action.data.onSuccess()
           return of(ShopActions.placeOrderSuccess())
         } else {
-          return of(ShopActions.shopFailure(response))
+          if (action.data.onFailure) action.data.onFailure()
+          return of(ShopActions.placeOrderFailure(response))
         }
       })
     )
