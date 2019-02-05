@@ -200,6 +200,12 @@ class OrderScreen extends React.Component {
             orderItem: this.props.navigation.getParam('extraItem'),
             inventoryDetails: this.props.items
           })
+        },
+        onFailure: (error) => {
+          this.props.navigation.navigate('OrderSMS', {
+            orderItem: this.props.navigation.getParam('extraItem'),
+            inventoryDetails: this.props.items
+          })
         }
       })
     } else {
