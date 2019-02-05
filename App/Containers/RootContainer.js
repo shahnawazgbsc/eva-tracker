@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StatusBar, Platform, PermissionsAndroid } from 'react-native'
+import { View, StatusBar, Platform, PermissionsAndroid, AppState } from 'react-native'
 import { Root, StyleProvider, Text } from 'native-base'
 import ReduxNavigation from '../Navigation/ReduxNavigation'
 import { connect } from 'react-redux'
@@ -18,10 +18,10 @@ class RootContainer extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      error: null
+      error: null,
+      appState: AppState.currentState
     }
   }
-
   async requestLocationPermission () {
     try {
       PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION)
@@ -38,18 +38,15 @@ class RootContainer extends Component {
         LocationModule.getLocation().then((location)=>{
           this.props.updateGps({ "latitude":location.latitude,"longitude": location.longitude })
           this.setState({ error: null })
-        }).catch(()=>{
-          error => {
-            console.log(error)
-          }
+        }).catch((error)=>{
+            console.error(error)
         })
       }), 300))
-      .catch(e => console.log(e))
+      .catch(e => console.error(e))
     } catch (err) {
-      console.warn(err)
+      console.error(err)
     }
   }
-
   startWatch () {
     this.watchID = navigator.geolocation.watchPosition(
       position => {
@@ -58,7 +55,7 @@ class RootContainer extends Component {
         this.setState({ error: null })
       },
       error => {
-        console.log(error)
+        console.error(error)
       },
       { enableHighAccuracy: true, timeout: 5000, maximumAge: 1000 }
     )
@@ -69,11 +66,20 @@ class RootContainer extends Component {
 
     if (Platform.OS === 'android') {
       await this.requestLocationPermission()
+      AppState.addEventListener('change', this._handleAppStateChange);
     } else {
       this.startWatch()
     }
   }
-
+   _handleAppStateChange = (nextAppState) => {
+    if (
+      this.state.appState.match(/inactive|background/) &&
+      nextAppState === 'active'
+    ) {
+      this.requestLocationPermission()
+    }
+    this.setState({appState: nextAppState});
+  };
   componentWillUnmount () {
     LocationModule.stopService();
   }
