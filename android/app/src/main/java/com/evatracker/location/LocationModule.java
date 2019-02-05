@@ -5,11 +5,11 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
@@ -17,6 +17,11 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+
+import java.util.concurrent.Executor;
 
 /**
  * Anus Kaleem
@@ -24,9 +29,13 @@ import com.facebook.react.bridge.WritableMap;
 
 public class LocationModule extends ReactContextBaseJavaModule
 {
-    public static final String CHANNEL_ID = "EvaService_Channel";
-    public LocationModule(ReactApplicationContext reactContext) {
+    private static final String CHANNEL_ID = "EvaService_Channel";
+    private FusedLocationProviderClient mFusedLocationClient;
+    private Context context;
+    LocationModule(ReactApplicationContext reactContext) {
       super(reactContext);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(reactContext);
+      context = reactContext;
       if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         NotificationChannel channel = new NotificationChannel(CHANNEL_ID,"evatracker", NotificationManager.IMPORTANCE_DEFAULT);
         NotificationManager manager = reactContext.getSystemService(NotificationManager.class);
@@ -65,26 +74,27 @@ public String getName() {
     promise.resolve(result);
   }
   @ReactMethod
-  public void getLocation( Promise promise) {
-    WritableMap res = Arguments.createMap();
+  public void getLocation(final Promise promise) {
+    final WritableMap res = Arguments.createMap();
     try {
-      LocationManager locationManager = null;
-      locationManager = (LocationManager) this.getReactApplicationContext().getSystemService(Context.LOCATION_SERVICE);
       int permissionCheck = ContextCompat.checkSelfPermission(this.getReactApplicationContext(),
         android.Manifest.permission.ACCESS_FINE_LOCATION);
       if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-        Criteria criteria = new Criteria();
-        String bestProvider = locationManager.getBestProvider(criteria, false);
-        Location location = locationManager.getLastKnownLocation(bestProvider);
-        if(location != null) {
-          res.putDouble("latitude", location.getLatitude());
-          res.putDouble("longitude", location.getLongitude());
-          promise.resolve(res);
-        }
+          mFusedLocationClient.getLastLocation()
+                  .addOnSuccessListener(new OnSuccessListener<Location>() {
+                      @Override
+                      public void onSuccess(Location location) {
+                          if (location != null) {
+                              res.putDouble("latitude", location.getLatitude());
+                              res.putDouble("longitude", location.getLongitude());
+                              promise.resolve(res);
+                          }
+                      }
+                  });
       }
     } catch (Exception e) {
+        e.printStackTrace();
       promise.reject(e);
-      return;
     }
   }
 }
