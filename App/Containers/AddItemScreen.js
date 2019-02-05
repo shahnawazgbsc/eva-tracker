@@ -31,25 +31,35 @@ class AddItemScreen extends React.PureComponent {
   constructor (props) {
     super(props)
     this.calculate = (obj) => {
+      alert(JSON.stringify(obj.items[0]))
       const quantity = obj.quantity
-      const tradePrice = obj.unitPrice
-      const measure = obj.muInSu * quantity
+      const tradePrice = obj.items[0].unitPrice
+      const measure = obj.items[0].muInSu * quantity
       const grossAmount = tradePrice * quantity
-      const tradeOff = measure * obj.tradeOfferAmount
+      const tradeOfferAmount = obj.items[0].tradeOfferAmount
+      const tradeOff = measure * tradeOfferAmount
       const extraDiscountAmount = obj.extraDiscount * measure
-      const salesUnit =  obj.salesUnit
+      const salesUnit =  obj.items[0].salesUnit
       const netTotal = grossAmount - tradeOff - extraDiscountAmount
       const totalOffer = netTotal / quantity
+      const itemCode = obj.items[0].itemCode
+      const regularDiscount = obj.items[0].regularDiscount == null? 0:obj.items[0].regularDiscount
+      const name = obj.items[0].name
       return R.merge(obj, {
         measure,
         netTotal,
         quantity,
         grossAmount,
         tradeOff,
-        regularDiscountTotal: measure * obj.regularDiscount,
+        regularDiscountTotal: measure * regularDiscount,
         totalOffer,
         extraDiscountAmount,
-        salesUnit
+        salesUnit,
+        itemCode,
+        regularDiscount,
+        name,
+        tradePrice,
+        tradeOfferAmount
       })
     }
     this.changeItem = R.curry((index, merge) => {
@@ -89,7 +99,7 @@ class AddItemScreen extends React.PureComponent {
         iosIcon={<Icon name='ios-arrow-down-outline'
         />}
         itemTextStyle={{ color: '#788ad2', fontSize: 12 }}
-        selectedValue={'first'}
+        selectedValue={this.state.selectedValue}
         onValueChange={this.onCategorySelect}
       >
         <Picker.Item label={'Select Category'} key={'first'} value={'first'}
@@ -149,7 +159,7 @@ class AddItemScreen extends React.PureComponent {
             </Row>
             <Row>
               <Text style={styles.item3}>Trade Price</Text>
-              <Text style={styles.item4}>{item.unitPrice}</Text>
+              <Text style={styles.item4}>{item.tradePrice}</Text>
             </Row>
             <Row>
               <Text style={styles.item3}>Gross Amount</Text>
