@@ -11,7 +11,7 @@ export const dayStartEpic = (action$, state$, { api }) => action$.pipe(
   mergeMap(action => {
     const companyid = state$.value.login.payload.user.companyid
     const userid = state$.value.login.payload.user.userid
-    const dayStartDate = state$.value.store.dayStartDate
+    const dayStartDate = state$.value.store.dayStartDate[userid]
 
     if (!dayStartDate || moment(dayStartDate).isBefore(new Date(), 'D')) {
       const data = {
@@ -24,7 +24,7 @@ export const dayStartEpic = (action$, state$, { api }) => action$.pipe(
       return api.dayStart(data).pipe(
         map(response => {
           if (response.ok) {
-            return StoresActions.dayStartSuccess(response.data.pjpId)
+            return StoresActions.dayStartSuccess(response.data.pjpId, userid)
           } else {
             return StoresActions.storesFailure(response)
           }
@@ -69,7 +69,7 @@ export const dayEndEpic = (action$, state$, { api }) => action$.pipe(
     return api.dayEnd(data).pipe(
       map(response => {
         if (response.ok) {
-          return StoresActions.dayEndSuccess()
+          return StoresActions.dayEndSuccess(data.userid)
         } else {
           return StoresActions.storesFailure(response)
         }

@@ -235,7 +235,7 @@ class MarketList extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => {
-  let achieved = state.store && R.map(R.prop('id'), state.store.achieved)
+  let achieved = R.map(R.prop('id'), state.store.achieved[state.login.payload.user.userid] || [])
   let pjpShops = state.store && state.store.pjpShops
   let otherShops = state.store && state.store.others
   let screens = R.path(['login', 'payload', 'moduleFeatures', 0, 'features'])(state)

@@ -102,16 +102,16 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
                 timestamp: new Date()
               }).commit()
 
-              firebase.firestore().collection('tbl_shops')
-                .doc(String(checkInParam.StoreId))
-                .set(
-              {
-                userId: userId,
-                lng: longitude,
-                lat: latitude,
-                shopId: checkInParam.StoreId,
-                timestamp: new Date()
-              })
+            firebase.firestore().collection('tbl_shops')
+              .doc(String(checkInParam.StoreId))
+              .set(
+                {
+                  userId: userId,
+                  lng: longitude,
+                  lat: latitude,
+                  shopId: checkInParam.StoreId,
+                  timestamp: new Date()
+                })
 
             if (action.data.onSuccess) action.data.onSuccess()
             return ShopActions.checkOutSuccess(
@@ -119,7 +119,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
                 id: checkInParam.StoreId,
                 pjp: !!action.data.pjp,
                 productive: action.data.productive
-              }
+              }, userId
             )
           } else {
             return ShopActions.shopFailure(response)

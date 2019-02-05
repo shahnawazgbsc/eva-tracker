@@ -168,7 +168,7 @@ class MainScreen extends React.Component {
 
 const mapStateToProps = state => ({
   loginParams: R.path(['login', 'payload', 'moduleFeatures', '0', 'features'])(state),
-  dayStarted: state.store.dayStarted,
+  dayStarted: state.store.dayStarted[state.login.payload.user.userid],
   stores: state.store && state.store.payload,
   subSection: state.createStore && state.createStore.subSection,
   waypoint: state.gps && state.gps.waypoint,
