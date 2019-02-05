@@ -12,6 +12,7 @@ const { Types, Creators } = createActions({
   removeItem: ['item'],
   placeOrderRequest: ['data'],
   placeOrderSuccess: null,
+  placeOrderFailure:['error'],
   shopFailure: ['error'],
   nonProductiveReasons: null,
   nonProductiveReasonsSuccess: ['data'],
@@ -65,6 +66,8 @@ export const placeOrderSuccess = (state) => Immutable(state).merge({
   orderItems: [],
   reasons: []
 })
+export const placeOrderFailure = (state, { error }) =>
+  Immutable(state).merge({ fetching: false, error })
 
 export const checkOutSuccess = (state) => INITIAL_STATE
 
@@ -91,6 +94,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.CHECK_OUT_SUCCESS]: checkOutSuccess,
   [Types.PLACE_ORDER_SUCCESS]: placeOrderSuccess,
   [Types.PLACE_ORDER_REQUEST]: placeOrderRequest,
+  [Types.PLACE_ORDER_FAILURE]: placeOrderFailure,
   [Types.ADD_TO_CART]: addToCart,
   [Types.SHOP_FAILURE]: failure,
   [Types.REMOVE_ITEM]: removeItem,
