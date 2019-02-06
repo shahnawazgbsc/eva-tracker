@@ -119,7 +119,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
                 id: checkInParam.StoreId,
                 pjp: !!action.data.pjp,
                 productive: action.data.productive
-              }
+              }, userId
             )
           } else {
             return ShopActions.shopFailure(response)

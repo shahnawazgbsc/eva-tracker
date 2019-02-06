@@ -14,9 +14,9 @@ const { Types, Creators } = createActions({
   storesRequest: null,
   storesFailure: ['error'],
   dayStartRequest: ['data'],
-  dayStartSuccess: ['id'],
+  dayStartSuccess: ['id', 'userid'],
   dayEndRequest: ['note'],
-  dayEndSuccess: null
+  dayEndSuccess: ['userid']
 })
 
 export const StoresTypes = Types
@@ -28,10 +28,10 @@ export const INITIAL_STATE = Immutable({
   payload: null,
   pjpShops: null,
   others: null,
-  achieved: [],
+  achieved: {},
   fetching: false,
-  dayStarted: false,
-  dayStartDate: null,
+  dayStarted: {},
+  dayStartDate: {},
   pjpId: null,
   subsection: null
 })
@@ -43,20 +43,20 @@ const request = (state = INITIAL_STATE) => Immutable(state).merge({ fetching: tr
 
 const dayStartRequest = (state, { data }) => Immutable(state).merge({ fetching: true, subsection: data })
 
-const dayStartSuccess = (state, { id }) => Immutable(state).merge({
+const dayStartSuccess = (state, { id, userid }) => Immutable(state).merge({
   fetching: false,
   pjpId: id,
-  dayStarted: true,
-  dayStartDate: new Date((new Date()).toLocaleString())
+  dayStarted: R.assoc(userid, true, state.dayStarted),
+  dayStartDate: R.assoc(userid, new Date().toLocaleTimeString(), state.dayStartDate)
 })
 
 const dayEndRequest = (state) => Immutable(state).merge({ fetching: true })
 
-const dayEndSuccess = (state) => Immutable(state).merge({
+const dayEndSuccess = (state, { userid }) => Immutable(state).merge({
   fetching: false,
   subsection: null,
-  dayStarted: false,
-  achieved: []
+  dayStarted: R.assoc(userid, false, state.dayStarted),
+  achieved: R.assoc(userid, [], state.achieved)
 })
 
 export const success = (state, { payload }) => {
@@ -89,19 +89,19 @@ export const startUp = (state) => {
   return Immutable(state).merge({ fetching: false })
 }
 
-export const checkOutCheck = (state, { data }) =>
+export const checkOutCheck = (state, { data, userid }) =>
   R.contains(
     data.id,
-    R.map(R.prop('id'))(state.achieved)
-  ) ? state : Immutable(state).merge({ achieved: Immutable(state.achieved).concat(data) })
+    R.map(R.prop('id'))(state.achieved[userid] || [])
+  ) ? state : Immutable(state).merge({ achieved: R.assoc(userid, R.concat(state.achieved[userid] || [], [data]), state.achieved) })
 
 export const reset = state => Immutable(state).merge({
   shops: null,
   pjpShops: null,
-  achieved: [],
+  achieved: {},
   others: null,
-  dayStartDate: AppConfig.env === 'DEV' ? null : state.dayStartDate,
-  dayStarted: AppConfig.env === 'DEV' ? false : state.dayStarted
+  dayStartDate: AppConfig.env === 'DEV' ? {} : state.dayStartDate,
+  dayStarted: AppConfig.env === 'DEV' ? {} : state.dayStarted
 })
 /* ------------- Hookup Reducers To Types ------------- */
 

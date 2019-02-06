@@ -126,7 +126,7 @@ class ShopProfile extends React.Component {
 
     return (
       <Card style={button ? styles.cardChildContainer : styles.cardChildContainerDisabled}>
-        <CardItem button={__DEV__ ? true : button} cardBody style={styles.cardChildItem} onPress={() => {
+        <CardItem button={__DEV__ || button} cardBody style={styles.cardChildItem} onPress={() => {
           switch (item.title) {
             case 'Order Taking':
               if (this.props.checkedIn) {
