@@ -40,22 +40,23 @@ export const dayStartEpic = (action$, state$, { api }) => action$.pipe(
 export const dayEndEpic = (action$, state$, { api }) => action$.pipe(
   ofType(StoresTypes.DAY_END_REQUEST),
   mergeMap(action => {
+    const userid = state$.value.login.payload.user.userid
     const PjpShops = R.length(state$.value.store.pjpShops)
-    const PjpVisited = R.length(R.filter(R.propEq('pjp', true)(state$.value.store.achieved)))
-    const Productive = R.length(R.filter(R.propEq('productive', true)(state$.value.store.achieved)))
-    const VisitedShop = R.length(state$.value.store.achieved)
+    const PjpVisited = R.length(R.filter(R.propEq('pjp', true)(state$.value.store.achieved[userid])))
+    const Productive = R.length(R.filter(R.propEq('productive', true)(state$.value.store.achieved[userid])))
+    const VisitedShop = R.length(state$.value.store.achieved[userid])
     const OutOfPjpVisited = VisitedShop - PjpVisited
     const NotProductive = VisitedShop - Productive
     const NotVisited = PjpShops - PjpVisited
 
     const data =
       {
-        pjpId: state$.value.store.pjpId,
-        starttime: state$.value.store.dayStartDate,
+        pjpId: state$.value.store.pjpId[userid],
+        starttime: state$.value.store.dayStartDate[userid],
         endtime: new Date((new Date()).toLocaleString()),
-        userid: state$.value.login.payload.user.userid,
+        userid,
         companyid: state$.value.login.payload.user.companyid,
-        subsectionid: state$.value.store.subsection,
+        subsectionid: state$.value.store.subsection[userid],
         PjpShops,
         PjpVisited,
         OutOfPjpVisited,

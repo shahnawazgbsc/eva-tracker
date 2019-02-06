@@ -137,7 +137,7 @@ class MainScreen extends React.Component {
                 buttonIndex => {
                   console.log(buttonIndex)
                   if (buttonIndex < this.props.subSection.length) {
-                    this.props.dayStart(this.props.subSection[buttonIndex].subsectionId)
+                    this.props.dayStart(this.props.subSection[buttonIndex].subsectionId, this.props.userid)
                   }
                 }
               )
@@ -172,6 +172,7 @@ class MainScreen extends React.Component {
 }
 
 const mapStateToProps = state => ({
+  userid: R.path(['login', 'payload', 'user', 'userid'], state),
   loginParams: R.path(['login', 'payload', 'moduleFeatures'])(state),
   dayStarted: state.store.dayStarted[state.login.payload.user.userid],
   stores: state.store && state.store.payload,
@@ -183,7 +184,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   directions: (location) => dispatch(GpsLocationRedux.gpsDirection(location)),
-  dayStart: (subsection) => dispatch(StoresRedux.dayStartRequest(subsection)),
+  dayStart: (subsection, userid) => dispatch(StoresRedux.dayStartRequest(subsection, userid)),
   dayEnd: (note) => dispatch(StoresRedux.dayEndRequest(note)),
   request: () => dispatch(StoresRedux.storesRequest()),
   logout: () => dispatch(LoginRedux.logout())

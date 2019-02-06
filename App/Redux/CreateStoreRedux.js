@@ -57,7 +57,6 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.CREATE_STORE_FAILURE]: failure,
   [Types.SUB_SECTION_SUCCESS]: subSectionSuccess,
   [Types.RESET_DAYS]: resetDays,
-  [LoginTypes.LOGOUT]: reset,
   [Types.SELECT_DAYS]: selectDays,
   'STARTUP': startUp
 })
