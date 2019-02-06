@@ -22,7 +22,7 @@ export const checkInEpic = (action$, state$, { api }) => action$.pipe(
         longitude,
         ContactPersonName: '',
         ContactNo: '',
-        StartTime: new Date(),
+        StartTime: new Date((new Date()).toLocaleString()),
         Status: 'Pending',
         NextScheduledVisit: ''
       }
@@ -64,7 +64,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
         NextScheduledVisit: '',
         Location: '',
         Notes: '',
-        EndTime: new Date(),
+        EndTime: new Date((new Date()).toLocaleString()),
         StoreVisitId: checkInParam.storeVisitId,
         Status: 'Achieved'
       }
@@ -86,7 +86,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
                 shopId: String(checkInParam.StoreId),
                 eventId: dateNow,
                 userId: String(userId),
-                timestamp: new Date()
+                timestamp: new Date((new Date()).toLocaleString())
               }).set(firebase.firestore().collection('tbl_shops')
                 .doc(String(checkInParam.StoreId))
                 .collection('visit_summary')
@@ -99,7 +99,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
                 shopId: checkInParam.StoreId,
                 userId: userId,
                 visitId: Number.parseInt(dateNow),
-                timestamp: new Date()
+                timestamp: new Date((new Date()).toLocaleString())
               }).commit()
 
               firebase.firestore().collection('tbl_shops')
@@ -110,7 +110,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
                 lng: longitude,
                 lat: latitude,
                 shopId: checkInParam.StoreId,
-                timestamp: new Date()
+                timestamp: new Date((new Date()).toLocaleString())
               })
 
             if (action.data.onSuccess) action.data.onSuccess()
@@ -185,7 +185,8 @@ export const placeOrderEpics = (action$, state$, { api }) => action$.pipe(
           if (action.data.onSuccess) action.data.onSuccess()
           return of(ShopActions.placeOrderSuccess())
         } else {
-          return of(ShopActions.shopFailure(response))
+          if (action.data.onFailure) action.data.onFailure()
+          return of(ShopActions.placeOrderFailure(response))
         }
       })
     )

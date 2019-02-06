@@ -2,7 +2,7 @@ import * as firebase from 'firebase'
 import 'firebase/firestore'
 import AppConfig from '../Config/AppConfig'
 
-const settings = {  }
+const settings = {}
 
 if (!firebase.apps.length) {
   firebase.initializeApp(AppConfig.firebaseConfig)

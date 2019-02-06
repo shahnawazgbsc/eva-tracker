@@ -69,7 +69,8 @@ const create = (baseURL = AppConfig.baseUrl) => {
 
   const direction = (current, location) => from(googleApi.get(`json?origin=${current.latitude},${current.longitude}&destination=${location.latitude},${location.longitude}&key=${AppConfig.GOOGLE_API}`))
 
-  const getBrands = (id) => from(api.get(`inventory/api/setup/GetBrandsWithInventoryItems/${id}`))
+  const getBrands = (id) => from(api.get(`inventory/api/setup/GetGeneralBrandsWithInventoryItems/${id}`))
+  const getNonBrands = (id) => from(api.get(`inventory/api/setup/GetNonGeneralBrandsWithInventoryItems/${id}`))
   const inventorySKUs = (id) => from(api.get(`inventory/api/setup/GetGeneralSKUsByCompany/${id}`))
   const addItems = (data) => from(api.post('etracker/api/storevisit/addmultipleorders', data))
   const addInventories = (data) => from(api.post('etracker/api/storevisit/addmultipleinventorytakings', data))
@@ -104,6 +105,7 @@ const create = (baseURL = AppConfig.baseUrl) => {
     checkIn,
     checkOut,
     getBrands,
+    getNonBrands,
     addItems,
     addInventories,
     storesByUserId,

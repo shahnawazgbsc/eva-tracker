@@ -12,10 +12,11 @@ export const dayStartEpic = (action$, state$, { api }) => action$.pipe(
     const companyid = state$.value.login.payload.user.companyid
     const userid = state$.value.login.payload.user.userid
     const dayStartDate = state$.value.store.dayStartDate
+    const tempid = action.userid
 
-    if (!dayStartDate || moment(dayStartDate).isBefore(new Date(), 'D')) {
+    if (!dayStartDate || moment(dayStartDate).isBefore(new Date((new Date()).toLocaleString()), 'D')) {
       const data = {
-        starttime: new Date(),
+        starttime: new Date((new Date()).toLocaleString()),
         companyid,
         userid,
         subsectionid: action.data
@@ -52,7 +53,7 @@ export const dayEndEpic = (action$, state$, { api }) => action$.pipe(
       {
         pjpId: state$.value.store.pjpId,
         starttime: state$.value.store.dayStartDate,
-        endtime: new Date(),
+        endtime: new Date((new Date()).toLocaleString()),
         userid: state$.value.login.payload.user.userid,
         companyid: state$.value.login.payload.user.companyid,
         subsectionid: state$.value.store.subsection,

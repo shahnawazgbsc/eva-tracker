@@ -13,6 +13,7 @@ import { Days } from './DaySelection'
 import Geocoder from 'react-native-geocoder';
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
+import moment from 'moment';
 
 var baseState = {}
 var cityName="";
@@ -22,10 +23,10 @@ class StoreRegistrationScreen extends Component {
 
   constructor (props) {
     super(props)
-
+    var currentdatetime = new Date((new Date()).toLocaleString())
     this.state = {
       image: undefined,
-      StartTime: new Date(),
+      StartTime: currentdatetime,
       shopName: '',
       shopKeeper: '',
       contactNo: '',

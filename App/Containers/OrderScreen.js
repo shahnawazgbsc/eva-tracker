@@ -43,7 +43,7 @@ class OrderScreen extends React.Component {
           resizeMode={'contain'}
         />
         <View style={styles.item2}>
-          <Text style={{ fontSize: 10 }}>{item.name}</Text>
+          <Text style={{ fontSize: 12,fontWeight: 'bold' }}>{item.name}</Text>
           <Text style={{ fontSize: 10 }}>Product ID: {item.itemCode}</Text>
         </View>
         <View style={styles.itemRow}>
@@ -200,6 +200,12 @@ class OrderScreen extends React.Component {
             orderItem: this.props.navigation.getParam('extraItem'),
             inventoryDetails: this.props.items
           })
+        },
+        onFailure: (error) => {
+          this.props.navigation.navigate('OrderSMS', {
+            orderItem: this.props.navigation.getParam('extraItem'),
+            inventoryDetails: this.props.items
+          })
         }
       })
     } else {
@@ -209,10 +215,14 @@ class OrderScreen extends React.Component {
 }
 
 const mapStateToProps = (state) => {
+  //const itemsBrands = state.nonBrands.payload
+  //Alert.alert('Error', 'Please add items to checkout'+itemsBrands)
+  //console.log('styleName', itemsBrands)
   return {
     items: state.shop && state.shop.orderItems,
-    itemsBrands: state.brands && state.brands.payload.find(value => value.brandName.toLowerCase() === 'EVA'.toLowerCase()) &&
-      state.brands.payload.find(value => value.brandName.toLowerCase() === 'EVA'.toLowerCase()).items
+    itemsBrands: state.nonBrands.payload
+    //&& state.brands.payload.find(value => value.brandName.toLowerCase() === 'EVA'.toLowerCase()) &&
+    //  state.brands.payload.find(value => value.brandName.toLowerCase() === 'EVA'.toLowerCase()).items
   }
 }
 

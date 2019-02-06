@@ -9,7 +9,7 @@ export const selectProductsListEpics = (action$, state$, { api }) => action$.pip
     var requestData = []
     action.data.items.forEach(element => {
       if(Number.parseInt(element.quantity) > 0) {
-        a.push({
+        requestData.push({
           brandName : element.brandName,
           generalSKUId : element.generalSKUId,
           quantity: element.quantity,

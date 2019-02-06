@@ -31,24 +31,35 @@ class AddItemScreen extends React.PureComponent {
   constructor (props) {
     super(props)
     this.calculate = (obj) => {
+      alert(JSON.stringify(obj.items[0]))
       const quantity = obj.quantity
-      const tradePrice = obj.unitPrice
-      const measure = obj.muInSu * quantity
+      const tradePrice = obj.items[0].unitPrice
+      const measure = obj.items[0].muInSu * quantity
       const grossAmount = tradePrice * quantity
-      const tradeOff = measure * obj.tradeOfferAmount
+      const tradeOfferAmount = obj.items[0].tradeOfferAmount
+      const tradeOff = measure * tradeOfferAmount
       const extraDiscountAmount = obj.extraDiscount * measure
-
+      const salesUnit =  obj.items[0].salesUnit
       const netTotal = grossAmount - tradeOff - extraDiscountAmount
       const totalOffer = netTotal / quantity
+      const itemCode = obj.items[0].itemCode
+      const regularDiscount = obj.items[0].regularDiscount == null? 0:obj.items[0].regularDiscount
+      const name = obj.items[0].name
       return R.merge(obj, {
         measure,
         netTotal,
         quantity,
         grossAmount,
         tradeOff,
-        regularDiscountTotal: measure * obj.regularDiscount,
+        regularDiscountTotal: measure * regularDiscount,
         totalOffer,
-        extraDiscountAmount
+        extraDiscountAmount,
+        salesUnit,
+        itemCode,
+        regularDiscount,
+        name,
+        tradePrice,
+        tradeOfferAmount
       })
     }
     this.changeItem = R.curry((index, merge) => {
@@ -84,19 +95,21 @@ class AddItemScreen extends React.PureComponent {
       <Label>Category</Label>
       <Picker
         mode='dropdown'
-        placeholder='Select Category'
+        placeholder='Select Product Category'
         iosIcon={<Icon name='ios-arrow-down-outline'
         />}
         itemTextStyle={{ color: '#788ad2', fontSize: 12 }}
         selectedValue={this.state.selectedValue}
         onValueChange={this.onCategorySelect}
       >
-        <Picker.Item label={'Select Category'} key={'first'} value={''}
+        <Picker.Item label={'Select Category'} key={'first'} value={'first'}
         />
-        {
-          this.props.items.map((value, index) => (
-            <Picker.Item label={value.productType} value={index} key={index}
-            />))
+          {
+            this.props.items.map((value, index) => (
+        value.items.map((value2,index2)=>(
+             <Picker.Item label={value2.productType} value={index2} key={index2}/>
+        ))
+      ))
         }
       </Picker>
     </Item>
@@ -138,7 +151,7 @@ class AddItemScreen extends React.PureComponent {
                   keyboardType={'numeric'}
                 />
               </View>
-              <Text style={styles.item4}>{item.unit}</Text>
+              <Text style={styles.item4}>{item.salesUnit}</Text>
             </Row>
             <Row>
               <Text style={styles.item3}>Ltrs / Mes</Text>
@@ -146,7 +159,7 @@ class AddItemScreen extends React.PureComponent {
             </Row>
             <Row>
               <Text style={styles.item3}>Trade Price</Text>
-              <Text style={styles.item4}>{item.unitPrice}</Text>
+              <Text style={styles.item4}>{item.tradePrice}</Text>
             </Row>
             <Row>
               <Text style={styles.item3}>Gross Amount</Text>
@@ -265,8 +278,8 @@ class AddItemScreen extends React.PureComponent {
   }
 
   render () {
-    const data = R.path([this.state.selectedValue, 'items'], this.state.data)
-    console.log(data)
+      const data = R.path([this.state.selectedValue, 'items'], this.state.data)
+      console.log(data)
 
     return (
       <Container>
@@ -304,7 +317,8 @@ class AddItemScreen extends React.PureComponent {
 
 const mapStateToProps = (state) => {
   return {
-    items: state.brands && state.brands.payload.find(value => value.brandName.toLowerCase() === 'EVA'.toLowerCase()).items
+    //items: state.brands && state.brands.payload.find(value => value.brandName.toLowerCase() === 'EVA'.toLowerCase()).items
+    items: state.nonBrands.payload
   }
 }
 
