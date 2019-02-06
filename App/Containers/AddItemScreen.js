@@ -31,7 +31,6 @@ class AddItemScreen extends React.PureComponent {
   constructor (props) {
     super(props)
     this.calculate = (obj) => {
-      alert(JSON.stringify(obj.items[0]))
       const quantity = obj.quantity
       const tradePrice = obj.items[0].unitPrice
       const measure = obj.items[0].muInSu * quantity
@@ -134,7 +133,7 @@ class AddItemScreen extends React.PureComponent {
             resizeMode={'contain'}
           />
           <View style={styles.item2}>
-            <Text style={{ fontSize: 10 }}>{item.name}</Text>
+            <Text style={{ fontSize: 12,fontWeight: 'bold' }}>{item.name}</Text>
             <Text style={{ fontSize: 10 }}>Product ID: {item.itemCode}</Text>
           </View>
           <View style={styles.itemRow}>
@@ -272,7 +271,7 @@ class AddItemScreen extends React.PureComponent {
           name={'add-shopping-cart'}
           type={'MaterialIcons'}
         />
-        <Text>Add To Cart</Text>
+        <Text>Process To order</Text>
       </Button>
     )
   }

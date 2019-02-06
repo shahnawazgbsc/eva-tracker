@@ -100,7 +100,6 @@ class StoreRegistrationScreen extends Component {
     Geocoder.fallbackToGoogle("AIzaSyAkzbji8MfNjpWXG42WS5L0dItXEkKjSRE")
     Geocoder.geocodePosition({lat:this.props.latitude,lng:this.props.longitude}).then(res => {
       this.setState({city:res[0].locality})
-      alert(res[0].locality)
   })
   .catch(err => alert(err))
 
