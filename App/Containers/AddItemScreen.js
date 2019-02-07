@@ -31,8 +31,6 @@ class AddItemScreen extends React.PureComponent {
   constructor (props) {
     super(props)
     this.calculate = (obj) => {
-      console.log(obj)
-
       const quantity = obj.quantity
       const tradePrice = obj.unitPrice
       const measure = obj.muInSu * quantity
@@ -105,11 +103,7 @@ class AddItemScreen extends React.PureComponent {
         <Picker.Item label={'Select Category'} key={'first'} value={'first'}
         />
         {
-          this.props.items.map((value, index) => (
-            value.items.map((value2, index2) => (
-              <Picker.Item label={value2.productType} value={index2} key={index2}/>
-            ))
-          ))
+          this.props.items.map((value, index) => (<Picker.Item label={value.productType} value={index} key={index}/>))
         }
       </Picker>
     </Item>
@@ -311,9 +305,9 @@ class AddItemScreen extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => {
+  console.log(R.flatten(R.map(R.pick(['items']), state.nonBrands.payload)))
   return {
-    //items: state.brands && state.brands.payload.find(value => value.brandName.toLowerCase() === 'EVA'.toLowerCase()).items
-    items:    state.nonBrands.payload
+    items: R.flatten(R.map(R.prop('items'), state.nonBrands.payload))
   }
 }
 
