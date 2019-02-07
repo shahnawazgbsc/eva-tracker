@@ -5,6 +5,7 @@ import { Body, Button, ActionSheet, Container, Footer, Header, Icon, Left, Right
 import MapView from 'react-native-maps'
 import { Colors, Images } from '../../Themes'
 import StoresRedux from '../../Redux/StoresRedux'
+import InventoryRedux from '../../Redux/InventoryTakingRedux'
 import GpsLocationRedux from '../../Redux/GpsLocationRedux'
 import GradientWrapper from '../../Components/GradientWrapper'
 import styles from './MainScreenStyle'
@@ -21,6 +22,7 @@ class MainScreen extends React.Component {
 
   componentDidMount () {
     this.props.request()
+    this.props.inventorySKUs()
   }
 
   menu = () => {
@@ -185,7 +187,8 @@ const mapDispatchToProps = dispatch => ({
   dayEnd: (note) => dispatch(StoresRedux.dayEndRequest(note)),
   request: () => dispatch(StoresRedux.storesRequest()),
   logout: () => dispatch(LoginRedux.logout()),
-  reset: () => dispatch(StoresRedux.reset())
+  reset: () => dispatch(StoresRedux.reset()),
+  inventorySKUs: () => dispatch(InventoryRedux.inventory_sku_request())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainScreen)
