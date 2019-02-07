@@ -22,31 +22,33 @@ class RootContainer extends Component {
       appState: AppState.currentState
     }
   }
+
   async requestLocationPermission () {
     try {
       PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION)
-      .then(is_granted => is_granted === PermissionsAndroid.RESULTS.GRANTED
-        ? is_granted
-        : PermissionsAndroid.requestMultiple([
-          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-          PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
-        ])
-      )
-      .then(_ => PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION))
-      .then(is_granted => is_granted === PermissionsAndroid.RESULTS.GRANTED ? true : new Error())
-      .then(_ => setTimeout(() => LocationModule.startService().then(()=>{
-        LocationModule.getLocation().then((location)=>{
-          this.props.updateGps({ "latitude":location.latitude,"longitude": location.longitude })
-          this.setState({ error: null })
-        }).catch((error)=>{
+        .then(is_granted => is_granted === PermissionsAndroid.RESULTS.GRANTED
+          ? is_granted
+          : PermissionsAndroid.requestMultiple([
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+          ])
+        )
+        .then(_ => PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION))
+        .then(is_granted => is_granted === PermissionsAndroid.RESULTS.GRANTED ? true : new Error())
+        .then(_ => setTimeout(() => LocationModule.startService().then(() => {
+          LocationModule.getLocation().then((location) => {
+            this.props.updateGps({ 'latitude': location.latitude, 'longitude': location.longitude })
+            this.setState({ error: null })
+          }).catch((error) => {
             console.error(error)
-        })
-      }), 300))
-      .catch(e => console.error(e))
+          })
+        }), 300))
+        .catch(e => console.error(e))
     } catch (err) {
       console.error(err)
     }
   }
+
   startWatch () {
     this.watchID = navigator.geolocation.watchPosition(
       position => {
@@ -66,22 +68,24 @@ class RootContainer extends Component {
 
     if (Platform.OS === 'android') {
       await this.requestLocationPermission()
-      AppState.addEventListener('change', this._handleAppStateChange);
+      AppState.addEventListener('change', this._handleAppStateChange)
     } else {
       this.startWatch()
     }
   }
-   _handleAppStateChange = (nextAppState) => {
+
+  _handleAppStateChange = (nextAppState) => {
     if (
       this.state.appState.match(/inactive|background/) &&
       nextAppState === 'active'
     ) {
       this.requestLocationPermission()
     }
-    this.setState({appState: nextAppState});
-  };
+    this.setState({ appState: nextAppState })
+  }
+
   componentWillUnmount () {
-    LocationModule.stopService();
+    LocationModule.stopService()
   }
 
   render () {

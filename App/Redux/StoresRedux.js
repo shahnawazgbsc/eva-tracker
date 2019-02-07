@@ -15,7 +15,8 @@ const { Types, Creators } = createActions({
   dayStartRequest: ['data', 'userid'],
   dayStartSuccess: ['id', 'userid'],
   dayEndRequest: ['note'],
-  dayEndSuccess: ['userid']
+  dayEndSuccess: ['userid'],
+  reset: null
 })
 
 export const StoresTypes = Types
@@ -116,6 +117,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.DAY_START_SUCCESS]: dayStartSuccess,
   [Types.DAY_END_REQUEST]: dayEndRequest,
   [Types.DAY_END_SUCCESS]: dayEndSuccess,
+  [Types.RESET]: reset,
   [ShopTypes.CHECK_OUT_SUCCESS]: checkOutCheck,
   'STARTUP': startUp
 })

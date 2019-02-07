@@ -3,6 +3,7 @@ import { BackHandler, Platform } from 'react-native'
 import { connect } from 'react-redux'
 import AppNavigation from './AppNavigation'
 import LoginNavigation from './LoginNavigation'
+import * as R from 'ramda'
 
 class ReduxNavigation extends React.Component {
   componentWillMount () {
@@ -10,7 +11,7 @@ class ReduxNavigation extends React.Component {
     BackHandler.addEventListener('hardwareBackPress', () => {
       const { dispatch, nav } = this.props
       // change to whatever is your first screen, otherwise unpredictable results may occur
-      if (nav.routes.length === 1 && (nav.routes[0].routeName === 'LoginScreen')) {
+      if (R.path(['routes', '0', 'key'], nav) === 'Home') {
         return false
       }
       // if (shouldCloseApp(nav)) return false
@@ -26,9 +27,9 @@ class ReduxNavigation extends React.Component {
 
   render () {
     if (this.props.login && this.props.login.payload) {
-      return <AppNavigation />
+      return <AppNavigation/>
     } else {
-      return <LoginNavigation />
+      return <LoginNavigation/>
     }
   }
 }

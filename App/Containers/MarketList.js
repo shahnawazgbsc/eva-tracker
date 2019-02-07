@@ -23,6 +23,7 @@ import GradientWrapper from '../Components/GradientWrapper'
 import { Images } from '../Themes'
 import ParseImagePath from '../Lib/ParseImagePath'
 import Colors from '../Themes/Colors'
+import extractModuleFeatures from '../Lib/extractModuleFeatures'
 
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
 
@@ -238,7 +239,7 @@ const mapStateToProps = (state) => {
   let achieved = R.map(R.prop('id'), state.store.achieved[state.login.payload.user.userid] || [])
   let pjpShops = state.store && state.store.pjpShops
   let otherShops = state.store && state.store.others
-  let screens = R.path(['login', 'payload', 'moduleFeatures', 0, 'features'])(state)
+  let screens = extractModuleFeatures(state)
   return {
     pjpShops: state.store && R.filter(R.compose(R.flip(R.compose(R.not, R.contains))(achieved), R.prop('storeId')), pjpShops),
     otherShops,
@@ -246,7 +247,7 @@ const mapStateToProps = (state) => {
       R.concat(pjpShops, otherShops)),
     pjpEnabled: R.contains('PJP')(screens),
     achievedEnabled: R.contains('Visited')(screens),
-    othersEnabled: R.contains('Other')(screens)
+    othersEnabled: R.contains('Others')(screens)
   }
 }
 

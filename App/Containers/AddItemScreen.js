@@ -31,19 +31,21 @@ class AddItemScreen extends React.PureComponent {
   constructor (props) {
     super(props)
     this.calculate = (obj) => {
+      console.log(obj)
+
       const quantity = obj.quantity
-      const tradePrice = obj.items[0].unitPrice
-      const measure = obj.items[0].muInSu * quantity
+      const tradePrice = obj.unitPrice
+      const measure = obj.muInSu * quantity
       const grossAmount = tradePrice * quantity
-      const tradeOfferAmount = obj.items[0].tradeOfferAmount
+      const tradeOfferAmount = obj.tradeOfferAmount
       const tradeOff = measure * tradeOfferAmount
       const extraDiscountAmount = obj.extraDiscount * measure
-      const salesUnit =  obj.items[0].salesUnit
+      const salesUnit = obj.salesUnit
       const netTotal = grossAmount - tradeOff - extraDiscountAmount
       const totalOffer = netTotal / quantity
-      const itemCode = obj.items[0].itemCode
-      const regularDiscount = obj.items[0].regularDiscount == null? 0:obj.items[0].regularDiscount
-      const name = obj.items[0].name
+      const itemCode = obj.itemCode
+      const regularDiscount = obj.regularDiscount == null ? 0 : obj.regularDiscount
+      const name = obj.name
       return R.merge(obj, {
         measure,
         netTotal,
@@ -62,7 +64,6 @@ class AddItemScreen extends React.PureComponent {
       })
     }
     this.changeItem = R.curry((index, merge) => {
-      console.log(merge)
       this.state.data[this.state.selectedValue].items[index] = merge
       return R.clone(this.state.data)
     })
@@ -103,12 +104,12 @@ class AddItemScreen extends React.PureComponent {
       >
         <Picker.Item label={'Select Category'} key={'first'} value={'first'}
         />
-          {
-            this.props.items.map((value, index) => (
-        value.items.map((value2,index2)=>(
-             <Picker.Item label={value2.productType} value={index2} key={index2}/>
-        ))
-      ))
+        {
+          this.props.items.map((value, index) => (
+            value.items.map((value2, index2) => (
+              <Picker.Item label={value2.productType} value={index2} key={index2}/>
+            ))
+          ))
         }
       </Picker>
     </Item>
@@ -133,7 +134,7 @@ class AddItemScreen extends React.PureComponent {
             resizeMode={'contain'}
           />
           <View style={styles.item2}>
-            <Text style={{ fontSize: 12,fontWeight: 'bold' }}>{item.name}</Text>
+            <Text style={{ fontSize: 12, fontWeight: 'bold' }}>{item.name}</Text>
             <Text style={{ fontSize: 10 }}>Product ID: {item.itemCode}</Text>
           </View>
           <View style={styles.itemRow}>
@@ -250,10 +251,6 @@ class AddItemScreen extends React.PureComponent {
         }
       })
     })
-    console.log(
-      R.over(R.lensProp('items'), R.over(R.lensProp('items'), R.map)
-        , this.state.data)
-    )
 
     if (cartItems.length > 0) {
       this.props.addToCart(cartItems)
@@ -277,8 +274,7 @@ class AddItemScreen extends React.PureComponent {
   }
 
   render () {
-      const data = R.path([this.state.selectedValue, 'items'], this.state.data)
-      console.log(data)
+    const data = R.path([this.state.selectedValue, 'items'], this.state.data)
 
     return (
       <Container>
@@ -317,7 +313,7 @@ class AddItemScreen extends React.PureComponent {
 const mapStateToProps = (state) => {
   return {
     //items: state.brands && state.brands.payload.find(value => value.brandName.toLowerCase() === 'EVA'.toLowerCase()).items
-    items: state.nonBrands.payload
+    items:    state.nonBrands.payload
   }
 }
 

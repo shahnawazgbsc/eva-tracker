@@ -231,7 +231,6 @@ const mapDispatchToProps = (dispatch) => {
     placeOrder: (data) => dispatch(ShopActions.placeOrderRequest(data)),
     removeItem: (item) => dispatch(ShopActions.removeItem(item))
   }
-  z
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrderScreen)

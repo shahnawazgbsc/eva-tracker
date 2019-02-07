@@ -9,6 +9,7 @@ import { Images } from '../../Themes'
 import ParseImagePath from '../../Lib/ParseImagePath'
 import ShopRedux from '../../Redux/ShopRedux'
 import * as R from 'ramda'
+import extractModuleFeatures from '../../Lib/extractModuleFeatures'
 
 class ShopProfile extends React.Component {
   constructor (props) {
@@ -172,7 +173,7 @@ class ShopProfile extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  let screens = R.path(['login', 'payload', 'moduleFeatures', 0, 'features'])(state)
+  let screens = extractModuleFeatures(state)
   return {
     checkedIn: state.shop && state.shop.checkedIn,
     orderPlaced: state.shop && state.shop.orderPlaced,

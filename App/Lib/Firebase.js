@@ -2,7 +2,9 @@ import * as firebase from 'firebase'
 import 'firebase/firestore'
 import AppConfig from '../Config/AppConfig'
 
-const settings = {}
+const settings = {
+  // timestampsInSnapshots: true
+}
 
 if (!firebase.apps.length) {
   firebase.initializeApp(AppConfig.firebaseConfig)

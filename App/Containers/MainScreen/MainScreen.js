@@ -10,8 +10,8 @@ import GradientWrapper from '../../Components/GradientWrapper'
 import styles from './MainScreenStyle'
 import LoginRedux from '../../Redux/LoginRedux'
 import * as R from 'ramda'
-
-var mobileScreen = []
+import extractModuleFeatures from '../../Lib/extractModuleFeatures'
+import AppConfig from '../../Config/AppConfig'
 
 class MainScreen extends React.Component {
   constructor (props) {
@@ -21,14 +21,6 @@ class MainScreen extends React.Component {
 
   componentDidMount () {
     this.props.request()
-    for (var iter in this.props.loginParams) {
-      if(this.props.loginParams[iter].moduleName === "eTrackerMobile") {
-        for (var counter in this.props.loginParams[iter].features) {
-        mobileScreen.push(this.props.loginParams[iter].features[counter])
-        }
-        break;
-      }
-    }
   }
 
   menu = () => {
@@ -53,8 +45,19 @@ class MainScreen extends React.Component {
             <Text style={styles.titleText}>Eva Tracker App</Text>
             </Body>
             <Right style={{ flex: 1 }}>
-              <Button style={{}} transparent light onPress={this.props.logout}>
-                <Icon name={'log-out'}/>
+              {
+                AppConfig.env === 'DEV' &&
+                <Button transparent light onPress={() => {
+                  this.props.reset()
+                  this.props.logout()
+                }}>
+                  <Icon name={'close'}
+                  />
+                </Button>
+              }
+              <Button transparent light onPress={this.props.logout}>
+                <Icon name={'log-out'}
+                />
               </Button>
             </Right>
           </Header>
@@ -143,13 +146,14 @@ class MainScreen extends React.Component {
               )
             } else {
               // No subsection Logic
+              Alert.alert(null, 'No subsection assigned to this user.')
             }
           }
           }>
             <Text>Day Start</Text>
           </Button>
-          <Button success disabled={!this.props.dayStarted || this.isMarketVisible()} onPress={() => {
-            this.props.navigation.navigate('Market', { screens: mobileScreen })
+          <Button success disabled={!(this.props.dayStarted && this.props.isMarketAvailable)} onPress={() => {
+            this.props.navigation.navigate('Market')
           }}>
             <Text>Market</Text>
           </Button>
@@ -162,18 +166,11 @@ class MainScreen extends React.Component {
       </Container>
     )
   }
-
-  isMarketVisible () {
-    for (var iter in mobileScreen) {
-      if (mobileScreen[iter] === 'Market') { return false }
-    }
-    return true
-  }
 }
 
 const mapStateToProps = state => ({
   userid: R.path(['login', 'payload', 'user', 'userid'], state),
-  loginParams: R.path(['login', 'payload', 'moduleFeatures'])(state),
+  isMarketAvailable: R.contains('Market', extractModuleFeatures(state)),
   dayStarted: state.store.dayStarted[state.login.payload.user.userid],
   stores: state.store && state.store.payload,
   subSection: state.createStore && state.createStore.subSection,
@@ -187,7 +184,8 @@ const mapDispatchToProps = dispatch => ({
   dayStart: (subsection, userid) => dispatch(StoresRedux.dayStartRequest(subsection, userid)),
   dayEnd: (note) => dispatch(StoresRedux.dayEndRequest(note)),
   request: () => dispatch(StoresRedux.storesRequest()),
-  logout: () => dispatch(LoginRedux.logout())
+  logout: () => dispatch(LoginRedux.logout()),
+  reset: () => dispatch(StoresRedux.reset())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainScreen)
