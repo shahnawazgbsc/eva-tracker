@@ -35,7 +35,6 @@ class InventoryScreen extends Component {
   constructor (props) {
     super(props)
 
-    this.props.inventorySKU()
     this.state = {
       selectedBrand: '',
       selectedBrandName: [],
@@ -283,8 +282,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    sendInventory: (data) => dispatch(InventoryActions.inventoryRequest(data)),
-    inventorySKU: () => dispatch(InventoryActions.inventory_sku_request())
+    sendInventory: (data) => dispatch(InventoryActions.inventoryRequest(data))
   }
 }
 
