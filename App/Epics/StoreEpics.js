@@ -6,7 +6,6 @@ import StoresRedux, { StoresTypes } from '../Redux/StoresRedux'
 import CreateStoreActions, { CreateStoreTypes } from '../Redux/CreateStoreRedux'
 import GetBrandsActions from '../Redux/GetBrandsRedux'
 import GetNonBrandsActions from '../Redux/GetNonBrandsRedux'
-import Geocoder from 'react-native-geocoder';
 
 export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
   ofType(CreateStoreTypes.CREATE_STORE_REQUEST),
@@ -16,8 +15,6 @@ export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
     const location = state$.value.gps.data
 
     if (location) {
-      Geocoder.fallbackToGoogle("AIzaSyAkzbji8MfNjpWXG42WS5L0dItXEkKjSRE")
-      Geocoder.geocodePosition({lat:this.props.latitude,lng:this.props.longitude}).then(res => {
       return api.uploadImage(action.data.image.uri, action.data.image.fileName, userId)
         .pipe(
           mergeMap(response => {
@@ -41,14 +38,12 @@ export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
             if (response.ok) {
               Alert.alert('Success', 'Store created successfully')
               if (action.data.onSuccess) action.data.onSuccess()
-              return of(CreateStoreActions.createStoreSuccess({...response.data,city:res[0].locality}), StoresRedux.storesRequest())
+              return of(CreateStoreActions.createStoreSuccess({...response.data,city:action.data.city}), StoresRedux.storesRequest())
             } else {
               return of(CreateStoreActions.createStoreFailure(response))
             }
           })
         )
-      })
-        
     } 
     else {
       Alert.alert('Failed to grab your location, Please try again')
