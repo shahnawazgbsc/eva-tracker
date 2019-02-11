@@ -97,12 +97,14 @@ class StoreRegistrationScreen extends Component {
 
   componentDidMount (): void {
     this.props.resetDays()
+    if(this.props.city == null) {
     Geocoder.fallbackToGoogle("AIzaSyAkzbji8MfNjpWXG42WS5L0dItXEkKjSRE")
     Geocoder.geocodePosition({lat:this.props.latitude,lng:this.props.longitude}).then(res => {
       this.setState({city:res[0].locality})
   })
   .catch(err => alert(err))
-
+    }
+    else this.setState({city:this.props.city})
   }
   componentWillReceiveProps(newProps) {
     this.setState({
@@ -393,7 +395,8 @@ const mapStateToProps = (state) => {
     subSection: state.createStore && state.createStore.subSection,
     days: state.createStore && state.createStore.days,
     latitude: state.gps && state.gps.data && state.gps.data.latitude,
-    longitude: state.gps && state.gps.data && state.gps.data.longitude
+    longitude: state.gps && state.gps.data && state.gps.data.longitude,
+    city: state.store.payload.city
   }
 }
 
