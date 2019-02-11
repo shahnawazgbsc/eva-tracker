@@ -31,11 +31,13 @@ class AddItemScreen extends React.PureComponent {
   constructor (props) {
     super(props)
     this.calculate = (obj) => {
-      const quantity = obj.quantity
+      console.log("PICKER: "+JSON.stringify(obj))
+      const quantity = obj.quantity == null? 0 : obj.quantity
       const tradePrice = obj.unitPrice == null ? 0 : obj.unitPrice
+      const packSize = obj.packSize == null ? 0 : obj.packSize
       const measure = obj.muInSu * quantity
       const grossAmount = tradePrice * quantity
-      const tradeOfferAmount = obj.tradeOfferAmount
+      const tradeOfferAmount = obj.tradeOfferAmount == null ? 0 : obj.tradeOfferAmount
       const tradeOff = measure * tradeOfferAmount
       const extraDiscountAmount = obj.extraDiscount * measure
       const salesUnit = obj.salesUnit
@@ -58,7 +60,8 @@ class AddItemScreen extends React.PureComponent {
         regularDiscount,
         name,
         tradePrice,
-        tradeOfferAmount
+        tradeOfferAmount,
+        packSize
       })
     }
     this.changeItem = R.curry((index, merge) => {
@@ -66,12 +69,9 @@ class AddItemScreen extends React.PureComponent {
       return R.clone(this.state.data)
     })
 
-    let data = R.map(
-      R.over(R.lensProp('items'),
-        R.map((value) => this.calculate(R.merge({ quantity: '', selected: false, extraDiscount: '0' }, value)))
-      )
-    )(props.items)
-
+    let data = R.map((value) => this.calculate(R.merge({ quantity: 0, selected: false, extraDiscount: '0' }, value)))
+    (props.items)
+    console.log("PICKER "+JSON.stringify(data))
     this.state = {
       selectedValue: '',
       data
@@ -148,7 +148,7 @@ class AddItemScreen extends React.PureComponent {
               <Text style={styles.item4}>{item.salesUnit}</Text>
             </Row>
             <Row>
-              <Text style={styles.item3}>{(item.packSize * item.quantity)}</Text>
+              <Text style={styles.item3}>{(item.packSize * item.quantity)==null?0:(item.packSize * item.quantity)}</Text>
               <Text style={styles.item4}>{item.unit}</Text>
             </Row>
             <Row>
@@ -189,15 +189,15 @@ class AddItemScreen extends React.PureComponent {
             </Row>
             <Row>
               <Text style={styles.item3}>Less Extra Discount</Text>
-              <Text style={styles.item4}>{item.extraDiscountAmount}</Text>
+              <Text style={styles.item4}>{item.extraDiscountAmount==null?0:item.extraDiscountAmount}</Text>
             </Row>
             <Row>
               <Text style={styles.item3}>Total Offer Item</Text>
-              <Text style={styles.item4}>{item.totalOffer}</Text>
+              <Text style={styles.item4}>{item.totalOffer==null?0:item.totalOffer}</Text>
             </Row>
             <Row>
               <Text style={[styles.item3, { fontWeight: 'bold' }]}>Net Amount</Text>
-              <Text style={styles.item4}>{item.netTotal}</Text>
+              <Text style={styles.item4}>{item.netTotal == null? 0:item.netTotal}</Text>
             </Row>
           </View>
           
@@ -233,7 +233,8 @@ class AddItemScreen extends React.PureComponent {
     let cartItems = []
     this.state.data.forEach(value => {
       value.items.forEach(value => {
-        if (Number.parseInt(value.quantity) != 0 &&  value.quantity != "")  {
+        if (Number.parseInt(value.quantity) != 0 &&  value.quantity != "" && value.quantity != null)  {
+          console.log("PICKER "+value.quantity)
           cartItems.push(value)
         }
       })
@@ -242,7 +243,9 @@ class AddItemScreen extends React.PureComponent {
     if (cartItems.length > 0) {
       this.props.addToCart(cartItems)
       this.props.navigation.goBack(null)
+      console.log("PICKER "+cartItems.length)
     } else {
+      console.log("PICKER "+cartItems.length)
       Alert.alert(null, 'Please select items to add')
     }
   }
@@ -298,9 +301,8 @@ class AddItemScreen extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => {
-  console.log(R.flatten(R.map(R.pick(['items']), state.nonBrands.payload)))
   return {
-    items: R.flatten(R.map(R.prop('items'), state.nonBrands.payload))
+    items: state.nonBrands.payload
   }
 }
 
