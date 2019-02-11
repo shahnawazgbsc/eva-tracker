@@ -194,7 +194,8 @@ class OrderScreen extends React.Component {
   checkout = () => {
     if ((this.props.items && this.props.items.length > 0)) {
       this.props.placeOrder({
-        items: this.props.items.map(value => ({ quantity: value.quantity, inventoryItemId: value.inventoryItemId ,extraDiscount: value.extraDiscount})),
+        items: this.props.items.map(value => ({ quantity: value.quantity, 
+          inventoryItemId: value.inventoryItemId ,extraDiscount: value.extraDiscount})),
         onSuccess: () => {
           this.props.navigation.navigate('OrderSMS', {
             orderItem: this.props.navigation.getParam('extraItem'),
