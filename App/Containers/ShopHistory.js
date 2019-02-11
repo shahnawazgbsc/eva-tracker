@@ -74,10 +74,10 @@ class ShopHistory extends Component {
             <Text style={{ fontSize: 13, flex: 1, fontWeight: 'bold', color: '#676767' }}>Visited By: </Text>
             <Text style={{ fontSize: 13, flex: 3, color: '#616161' }}>{data.visitedBy}</Text>
           </View>
-          <View style={{ flexDirection: 'row', alignContent: 'space-between', flex: 1 }}>
+          <View style={{ flexDirection: 'row', alignContent: 'space-between', flex: 2 }}>
             <View style={{ flexDirection: 'row', flex: 1 }}>
               <Text style={{ fontSize: 13, fontWeight: 'bold', color: '#676767' }}>Visit Date : </Text>
-              <Text style={{ fontSize: 13, color: '#616161' }}>{((moment(new Date(data.visitDateTime)).format("DD/MM/YYYY")))}</Text>
+              <Text style={{ fontSize: 13, color: '#616161' }}>{((moment(new Date(data.visitDateTime)).format("MM/DD/YYYY HH:mm")))}</Text>
             </View>
             <View style={{ flexDirection: 'row', flex: 1 }}>
               <Text style={{ fontSize: 13, fontWeight: 'bold', color: '#676767' }}>Visit Time : </Text>
