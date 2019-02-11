@@ -128,7 +128,7 @@ class OrderSMS extends Component {
     return (
       <ListItem style={styles.listHeader}>
         <Text style={styles.item2}>{item.name}</Text>
-        <Text style={styles.item3}>{`${item.quantity}${item.unit ? ' ' + item.unit : ''}`}</Text>
+        <Text style={styles.item3}>{`${item.quantity*item.packSize}${item.unit ? ' ' + item.unit : ''}`}</Text>
         <Text style={styles.item4}>{item.netTotal}</Text>
       </ListItem>)
   }

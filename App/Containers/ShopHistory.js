@@ -62,6 +62,10 @@ class ShopHistory extends Component {
 
   renderContent = (data) => {
     let totalAmount = 0;
+
+    var gmtDateTime = moment.utc(data.visitDateTime, "YYYY-MM-DD HH:mm")
+    var local = gmtDateTime.local().format('hh:mma');
+
     return (
 
       <View style={{ backgroundColor: 'white', margin: 20 }}>
@@ -77,7 +81,7 @@ class ShopHistory extends Component {
             </View>
             <View style={{ flexDirection: 'row', flex: 1 }}>
               <Text style={{ fontSize: 13, fontWeight: 'bold', color: '#676767' }}>Visit Time : </Text>
-              <Text style={{ fontSize: 13, color: '#616161' }}>{(moment(new Date(data.visitDateTime)).format("hh:mma"))}</Text>
+              <Text style={{ fontSize: 13, color: '#616161' }}>{(local)}</Text>
             </View>
           </View>
         </View>

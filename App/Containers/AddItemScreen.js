@@ -32,7 +32,7 @@ class AddItemScreen extends React.PureComponent {
     super(props)
     this.calculate = (obj) => {
       const quantity = obj.quantity
-      const tradePrice = obj.unitPrice
+      const tradePrice = obj.unitPrice == null ? 0 : obj.unitPrice
       const measure = obj.muInSu * quantity
       const grossAmount = tradePrice * quantity
       const tradeOfferAmount = obj.tradeOfferAmount
@@ -68,7 +68,7 @@ class AddItemScreen extends React.PureComponent {
 
     let data = R.map(
       R.over(R.lensProp('items'),
-        R.map((value) => this.calculate(R.merge({ quantity: '1', selected: false, extraDiscount: '0' }, value)))
+        R.map((value) => this.calculate(R.merge({ quantity: '', selected: false, extraDiscount: '0' }, value)))
       )
     )(props.items)
 
@@ -90,7 +90,7 @@ class AddItemScreen extends React.PureComponent {
   }
   renderHeader = () => (
     <Item fixedLabel>
-      <Label>Category</Label>
+      <Label>Product Category</Label>
       <Picker
         mode='dropdown'
         placeholder='Select Product Category'
@@ -148,8 +148,8 @@ class AddItemScreen extends React.PureComponent {
               <Text style={styles.item4}>{item.salesUnit}</Text>
             </Row>
             <Row>
-              <Text style={styles.item3}>Ltrs / Mes</Text>
-              <Text style={styles.item4}>{item.measure}</Text>
+              <Text style={styles.item3}>{(item.packSize * item.quantity)}</Text>
+              <Text style={styles.item4}>{item.unit}</Text>
             </Row>
             <Row>
               <Text style={styles.item3}>Trade Price</Text>
@@ -200,14 +200,7 @@ class AddItemScreen extends React.PureComponent {
               <Text style={styles.item4}>{item.netTotal}</Text>
             </Row>
           </View>
-          <Button transparent style={styles.item5} onPress={() =>
-            this.setState({ data: this.changeItem(index, this.calculate(R.merge(item, { selected: !item.selected }))) })}>
-            <Icon
-              style={{ color: Colors.fire, marginLeft: 0, marginRight: 0 }}
-              name={item.selected ? 'check-box' : 'check-box-outline-blank'}
-              type={'MaterialIcons'}
-            />
-          </Button>
+          
         </CardItem>
       </Card>
     )
@@ -240,7 +233,7 @@ class AddItemScreen extends React.PureComponent {
     let cartItems = []
     this.state.data.forEach(value => {
       value.items.forEach(value => {
-        if (value.selected) {
+        if (Number.parseInt(value.quantity) != 0 &&  value.quantity != "")  {
           cartItems.push(value)
         }
       })

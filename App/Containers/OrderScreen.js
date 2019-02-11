@@ -13,7 +13,7 @@ class OrderScreen extends React.Component {
     if (this.props.itemsBrands) {
       this.props.navigation.navigate('AddNewItem')
     } else {
-      Alert.alert('No Company Added', 'Please add company from portal')
+      Alert.alert('Non General Brands not found', 'Please add No General Brands from portal')
     }
   }
   back = () => {
@@ -49,11 +49,11 @@ class OrderScreen extends React.Component {
         <View style={styles.itemRow}>
           <Row>
             <Text style={styles.item3}>{item.quantity}</Text>
-            <Text style={styles.item4}>{item.unit}</Text>
+            <Text style={styles.item4}>{item.salesUnit}</Text>
           </Row>
           <Row>
-            <Text style={styles.item3}>Ltrs / Mes</Text>
-            <Text style={styles.item4}>{item.measure}</Text>
+            <Text style={styles.item3}>{(item.packSize * item.quantity)}</Text>
+            <Text style={styles.item4}> {item.unit}</Text>
           </Row>
           <Row>
             <Text style={styles.item3}>Trade Price</Text>
@@ -217,7 +217,7 @@ class OrderScreen extends React.Component {
 const mapStateToProps = (state) => {
   //const itemsBrands = state.nonBrands.payload
   //Alert.alert('Error', 'Please add items to checkout'+itemsBrands)
-  //console.log('styleName', itemsBrands)
+ // Alert.alert('styleName', "state.nonBrands.payload"+state.nonBrands)
   return {
     items: state.shop && state.shop.orderItems,
     itemsBrands: state.nonBrands.payload
