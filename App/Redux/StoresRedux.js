@@ -50,7 +50,7 @@ const dayStartSuccess = (state, { id, userid }) => Immutable(state).merge({
   fetching: false,
   pjpId: R.assoc(userid, id, state.pjpId),
   dayStarted: R.assoc(userid, true, state.dayStarted),
-  dayStartDate: R.assoc(userid, new Date().toLocaleTimeString(), state.dayStartDate)
+  dayStartDate: R.assoc(userid, moment().format("MM/DD/YYYY HH:mm"), state.dayStartDate)
 })
 
 const dayEndRequest = (state) => Immutable(state).merge({ fetching: true })

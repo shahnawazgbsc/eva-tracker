@@ -24,7 +24,7 @@ export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
                 image: null,
                 latitude: location.latitude,
                 longitude: location.longitude,
-                EndTime: new Date((new Date()).toLocaleString()),
+                EndTime: moment().format("MM/DD/YYYY HH:mm"),
                 userId: userId,
                 companyId: companyId,
                 imageUrl: response.data.filepath
@@ -38,13 +38,14 @@ export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
             if (response.ok) {
               Alert.alert('Success', 'Store created successfully')
               if (action.data.onSuccess) action.data.onSuccess()
-              return of(CreateStoreActions.createStoreSuccess(response.data), StoresRedux.storesRequest())
+              return of(CreateStoreActions.createStoreSuccess({...response.data,city:action.data.city}), StoresRedux.storesRequest())
             } else {
               return of(CreateStoreActions.createStoreFailure(response))
             }
           })
         )
-    } else {
+    } 
+    else {
       Alert.alert('Failed to grab your location, Please try again')
       return of(CreateStoreActions.createStoreFailure(null))
     }

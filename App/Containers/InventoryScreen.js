@@ -71,7 +71,7 @@ class InventoryScreen extends Component {
   componentDidMount () {
     quantity = this.props.brands.map(value => this.props.skus.map(value => 0))
     unit = this.props.brands.map(value => this.props.skus.map(value => 'Ltr'))
-    selected = this.props.brands.map(value => this.props.skus.map(value => false))
+    selected = this.props.brands.map(value => this.props.skus.map(value => true))
     this.setState({ selected: selected })
     this.setState({ quantity: quantity })
     this.setState({ unit: unit })
@@ -91,11 +91,14 @@ class InventoryScreen extends Component {
     this.state.selected.forEach((brands, index) => {
       inventoryMap.brandName = brandNames[index]
       brands.forEach((sku, brandIndex) => {
-        array.push({
-          ...inventoryMap,
-          quantity: this.state.quantity[index][brandIndex],
-          generalSKUId: this.state.inventorySKU[brandIndex].generalSKUId,
-        })
+
+        if(this.state.quantity[index][brandIndex] != "" && this.state.quantity[index][brandIndex] != 0){
+          array.push({
+            ...inventoryMap,
+            quantity: this.state.quantity[index][brandIndex],
+            generalSKUId: this.state.inventorySKU[brandIndex].generalSKUId,
+          })
+        }
       })
     })
     if (array.length > 0) {
@@ -125,13 +128,7 @@ class InventoryScreen extends Component {
             this.setState({ selected: clone })
           }
           }>
-            <Button transparent>
-              <Icon
-                style={{ color: Colors.fire, marginLeft: 0, marginRight: 0 }}
-                name={this.state.selected[this.state.selectedBrandIndex][index] ? 'check-box' : 'check-box-outline-blank'}
-                type={'MaterialIcons'}
-              />
-            </Button>
+            
             <Text style={styles.itemProduct}>{content.itemName}</Text>
             <Item rounded style={styles.input}>
               <Input
