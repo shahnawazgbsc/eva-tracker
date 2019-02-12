@@ -3,7 +3,7 @@ import 'firebase/firestore'
 import AppConfig from '../Config/AppConfig'
 
 const settings = {
-  // timestampsInSnapshots: true
+  timestampsInSnapshots: __DEV__
 }
 
 if (!firebase.apps.length) {
