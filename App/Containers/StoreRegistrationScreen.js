@@ -11,6 +11,7 @@ import styles from './Styles/StoreRegistrationScreenStyle'
 import GradientWrapper from '../Components/GradientWrapper'
 import { Days } from './DaySelection'
 import Geocoder from 'react-native-geocoder';
+import moment from 'moment';
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 
@@ -22,7 +23,7 @@ class StoreRegistrationScreen extends Component {
 
   constructor (props) {
     super(props)
-    var currentdatetime = new Date((new Date()).toLocaleString())
+    var currentdatetime = moment().format("MM/DD/YYYY HH:mm");
     this.state = {
       image: undefined,
       StartTime: currentdatetime,
