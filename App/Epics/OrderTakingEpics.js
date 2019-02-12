@@ -3,6 +3,7 @@ import { Alert } from 'react-native'
 import { map, mergeMap } from 'rxjs/operators'
 import { of } from 'rxjs'
 import * as R from 'ramda'
+import moment from 'moment'
 import ShopActions, { ShopTypes } from '../Redux/ShopRedux'
 import 'firebase/firestore'
 
@@ -22,7 +23,7 @@ export const checkInEpic = (action$, state$, { api }) => action$.pipe(
         longitude,
         ContactPersonName: '',
         ContactNo: '',
-        StartTime: new Date((new Date()).toLocaleString()),
+        StartTime: moment().format("MM/DD/YYYY HH:mm"),
         Status: 'Pending',
         NextScheduledVisit: ''
       }
@@ -64,7 +65,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
         NextScheduledVisit: '',
         Location: '',
         Notes: '',
-        EndTime: new Date((new Date()).toLocaleString()),
+        EndTime: moment().format("MM/DD/YYYY HH:mm"),
         StoreVisitId: checkInParam.storeVisitId,
         Status: 'Achieved'
       }
@@ -86,7 +87,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
                 shopId: String(checkInParam.StoreId),
                 eventId: dateNow,
                 userId: String(userId),
-                timestamp: new Date((new Date()).toLocaleString())
+                timestamp: moment().format("MM/DD/YYYY HH:mm")
               }).set(firebase.firestore().collection('tbl_shops')
                 .doc(String(checkInParam.StoreId))
                 .collection('visit_summary')
@@ -99,7 +100,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
                 shopId: checkInParam.StoreId,
                 userId: userId,
                 visitId: Number.parseInt(dateNow),
-                timestamp: new Date((new Date()).toLocaleString())
+                timestamp: moment().format("MM/DD/YYYY HH:mm")
               }).commit()
 
             firebase.firestore().collection('tbl_shops')
@@ -110,7 +111,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
                   lng: longitude,
                   lat: latitude,
                   shopId: checkInParam.StoreId,
-                  timestamp: new Date((new Date()).toLocaleString())
+                  timestamp: moment().format("MM/DD/YYYY HH:mm")
                 })
 
             if (action.data.onSuccess) action.data.onSuccess()

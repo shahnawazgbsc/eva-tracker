@@ -31,37 +31,21 @@ class AddItemScreen extends React.PureComponent {
   constructor (props) {
     super(props)
     this.calculate = (obj) => {
-      console.log("PICKER: "+JSON.stringify(obj))
-      const quantity = obj.quantity == null? 0 : obj.quantity
-      const tradePrice = obj.unitPrice == null ? 0 : obj.unitPrice
-      const packSize = obj.packSize == null ? 0 : obj.packSize
-      const measure = obj.muInSu * quantity
-      const grossAmount = tradePrice * quantity
-      const tradeOfferAmount = obj.tradeOfferAmount == null ? 0 : obj.tradeOfferAmount
-      const tradeOff = measure * tradeOfferAmount
+      const measure = obj.muInSu * obj.quantity
+      const grossAmount = obj.unitPrice * obj.quantity
+      const tradeOff = measure * obj.tradeOfferAmount
       const extraDiscountAmount = obj.extraDiscount * measure
-      const salesUnit = obj.salesUnit
       const netTotal = grossAmount - tradeOff - extraDiscountAmount
-      const totalOffer = netTotal / quantity
-      const itemCode = obj.itemCode
-      const regularDiscount = obj.regularDiscount == null ? 0 : obj.regularDiscount
-      const name = obj.name
+      const totalOffer = netTotal / obj.quantity
+
       return R.merge(obj, {
         measure,
         netTotal,
-        quantity,
         grossAmount,
         tradeOff,
-        regularDiscountTotal: measure * regularDiscount,
+        regularDiscountTotal: measure * obj.regularDiscount,
         totalOffer,
-        extraDiscountAmount,
-        salesUnit,
-        itemCode,
-        regularDiscount,
-        name,
-        tradePrice,
-        tradeOfferAmount,
-        packSize
+        extraDiscountAmount
       })
     }
     this.changeItem = R.curry((index, merge) => {
@@ -69,13 +53,18 @@ class AddItemScreen extends React.PureComponent {
       return R.clone(this.state.data)
     })
 
-    let data = R.map((value) => this.calculate(R.merge({ quantity: 0, selected: false, extraDiscount: '0' }, value)))
-    (props.items)
-    console.log("PICKER "+JSON.stringify(data))
+    let data = R.clone(props.items)
+    data.forEach((item) => {
+      item.items.forEach((value) => {
+        value.quantity = '0'
+        value.extraDiscount = '0'
+      })
+    })
     this.state = {
       selectedValue: '',
       data
     }
+    console.log(data)
   }
 
   /* ***********************************************************
@@ -137,8 +126,9 @@ class AddItemScreen extends React.PureComponent {
                 <Input
                   style={styles.input}
                   onChangeText={(text) => {
-                    if (R.both(R.is(Number, text), text.length <= 3)) {
+                    if (R.is(Number, (parseInt(text)))) {
                       this.setState({ data: this.changeItem(index, this.calculate(R.merge(item, { quantity: text }))) })
+                      console.log(this.state.data)
                     }
                   }}
                   value={item.quantity}
@@ -148,12 +138,13 @@ class AddItemScreen extends React.PureComponent {
               <Text style={styles.item4}>{item.salesUnit}</Text>
             </Row>
             <Row>
-              <Text style={styles.item3}>{(item.packSize * item.quantity)==null?0:(item.packSize * item.quantity)}</Text>
+              <Text
+                style={styles.item3}>{item.packSize * item.quantity}</Text>
               <Text style={styles.item4}>{item.unit}</Text>
             </Row>
             <Row>
               <Text style={styles.item3}>Trade Price</Text>
-              <Text style={styles.item4}>{item.tradePrice}</Text>
+              <Text style={styles.item4}>{item.unitPrice}</Text>
             </Row>
             <Row>
               <Text style={styles.item3}>Gross Amount</Text>
@@ -189,18 +180,18 @@ class AddItemScreen extends React.PureComponent {
             </Row>
             <Row>
               <Text style={styles.item3}>Less Extra Discount</Text>
-              <Text style={styles.item4}>{item.extraDiscountAmount==null?0:item.extraDiscountAmount}</Text>
+              <Text style={styles.item4}>{item.extraDiscountAmount == null ? 0 : item.extraDiscountAmount}</Text>
             </Row>
             <Row>
               <Text style={styles.item3}>Total Offer Item</Text>
-              <Text style={styles.item4}>{item.totalOffer==null?0:item.totalOffer}</Text>
+              <Text style={styles.item4}>{item.totalOffer == null ? 0 : item.totalOffer}</Text>
             </Row>
             <Row>
               <Text style={[styles.item3, { fontWeight: 'bold' }]}>Net Amount</Text>
-              <Text style={styles.item4}>{item.netTotal == null? 0:item.netTotal}</Text>
+              <Text style={styles.item4}>{item.netTotal == null ? 0 : item.netTotal}</Text>
             </Row>
           </View>
-          
+
         </CardItem>
       </Card>
     )
@@ -233,8 +224,7 @@ class AddItemScreen extends React.PureComponent {
     let cartItems = []
     this.state.data.forEach(value => {
       value.items.forEach(value => {
-        if (Number.parseInt(value.quantity) != 0 &&  value.quantity != "" && value.quantity != null)  {
-          console.log("PICKER "+value.quantity)
+        if (!isNaN(value.quantity) && value.quantity !== 0) {
           cartItems.push(value)
         }
       })
@@ -243,9 +233,7 @@ class AddItemScreen extends React.PureComponent {
     if (cartItems.length > 0) {
       this.props.addToCart(cartItems)
       this.props.navigation.goBack(null)
-      console.log("PICKER "+cartItems.length)
     } else {
-      console.log("PICKER "+cartItems.length)
       Alert.alert(null, 'Please select items to add')
     }
   }
