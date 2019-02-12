@@ -38,13 +38,14 @@ export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
             if (response.ok) {
               Alert.alert('Success', 'Store created successfully')
               if (action.data.onSuccess) action.data.onSuccess()
-              return of(CreateStoreActions.createStoreSuccess(response.data), StoresRedux.storesRequest())
+              return of(CreateStoreActions.createStoreSuccess({...response.data,city:action.data.city}), StoresRedux.storesRequest())
             } else {
               return of(CreateStoreActions.createStoreFailure(response))
             }
           })
         )
-    } else {
+    } 
+    else {
       Alert.alert('Failed to grab your location, Please try again')
       return of(CreateStoreActions.createStoreFailure(null))
     }

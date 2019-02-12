@@ -13,7 +13,6 @@ import { Days } from './DaySelection'
 import Geocoder from 'react-native-geocoder';
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
-import moment from 'moment';
 
 var baseState = {}
 var cityName="";
@@ -56,6 +55,7 @@ class StoreRegistrationScreen extends Component {
         VisitDays: this.props.days.map(value => ({ day: value })),
         onSuccess: () => {
           this.setState(baseState)
+          this.setState({city:this.props.city == null?cityName:this.props.city})
           this.props.resetDays()
           this.props.navigation.goBack(null)
         }
@@ -78,7 +78,7 @@ class StoreRegistrationScreen extends Component {
       return 'Address is required'
     } else if (this.state.street.length === 0) {
       return 'Street name is required'
-    } else if (this.state.city.length === 0) {
+    } else if (this.state.city.length === 0 && (this.props.city && this.props.city.length === 0)) {
       return 'City is required'
     } else if (this.state.landMark.length === 0) {
       return 'Landmark is required'
@@ -97,12 +97,15 @@ class StoreRegistrationScreen extends Component {
 
   componentDidMount (): void {
     this.props.resetDays()
+    if(this.props.city == null) {
     Geocoder.fallbackToGoogle("AIzaSyAkzbji8MfNjpWXG42WS5L0dItXEkKjSRE")
     Geocoder.geocodePosition({lat:this.props.latitude,lng:this.props.longitude}).then(res => {
+      cityName = res[0].locality;
       this.setState({city:res[0].locality})
   })
   .catch(err => alert(err))
-
+    }
+    else this.setState({city:this.props.city})
   }
   componentWillReceiveProps(newProps) {
     this.setState({
@@ -134,7 +137,7 @@ class StoreRegistrationScreen extends Component {
   }
 
   onCity = (txt) => {
-    this.setState({ city: txt })
+    this.setState({ city: this.props.city == null? txt:this.props.city })
   }
 
   onLandmark = (txt) => {
@@ -283,7 +286,7 @@ class StoreRegistrationScreen extends Component {
                 <Label>City</Label>
                 <Input
                   onChangeText={this.onCity}
-                  value={this.state.city}
+                  value={this.props.city == null? this.state.city:this.props.city}
                 />
               </Item>
 
@@ -393,7 +396,8 @@ const mapStateToProps = (state) => {
     subSection: state.createStore && state.createStore.subSection,
     days: state.createStore && state.createStore.days,
     latitude: state.gps && state.gps.data && state.gps.data.latitude,
-    longitude: state.gps && state.gps.data && state.gps.data.longitude
+    longitude: state.gps && state.gps.data && state.gps.data.longitude,
+    city: state.createStore && state.createStore.payload && state.createStore.payload.city
   }
 }
 
