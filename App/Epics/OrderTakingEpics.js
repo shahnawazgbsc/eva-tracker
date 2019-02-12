@@ -3,6 +3,7 @@ import { Alert } from 'react-native'
 import { map, mergeMap } from 'rxjs/operators'
 import { of } from 'rxjs'
 import * as R from 'ramda'
+import moment from 'moment'
 import ShopActions, { ShopTypes } from '../Redux/ShopRedux'
 import 'firebase/firestore'
 
