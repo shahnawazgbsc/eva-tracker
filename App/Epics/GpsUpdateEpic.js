@@ -2,6 +2,7 @@ import { ofType } from 'redux-observable'
 import { GpsLocationTypes } from '../Redux/GpsLocationRedux'
 import { of } from 'rxjs'
 import { mergeMap } from 'rxjs/operators'
+import moment from 'moment'
 import StartupActions from '../Redux/StartupRedux'
 
 export default (action$, state$, { firebase }) => action$.pipe(
@@ -26,13 +27,13 @@ export default (action$, state$, { firebase }) => action$.pipe(
           lng: longitude,
           userId,
           lat: latitude,
-          timestamp: moment().format("MM/DD/YYYY HH:mm")
+          timestamp: moment().format('MM/DD/YYYY HH:mm')
         })
         .set(tblUsers, {
           lng: longitude,
           userId,
           lat: latitude,
-          timestamp: moment().format("MM/DD/YYYY HH:mm")
+          timestamp: moment().format('MM/DD/YYYY HH:mm')
         }).commit()
     }
 

@@ -31,12 +31,12 @@ class AddItemScreen extends React.PureComponent {
   constructor (props) {
     super(props)
     this.calculate = (obj) => {
-      const measure = obj.muInSu * obj.quantity
+      const measure = obj.packSize * obj.quantity
       const grossAmount = obj.unitPrice * obj.quantity
       const tradeOff = measure * obj.tradeOfferAmount
       const extraDiscountAmount = obj.extraDiscount * measure
       const netTotal = grossAmount - tradeOff - extraDiscountAmount
-      const totalOffer = netTotal / obj.quantity
+      const totalOffer = obj.quantity ? netTotal / obj.quantity : 0
 
       return R.merge(obj, {
         measure,
@@ -53,13 +53,13 @@ class AddItemScreen extends React.PureComponent {
       return R.clone(this.state.data)
     })
 
-    let data = R.clone(props.items)
-    data.forEach((item) => {
-      item.items.forEach((value) => {
-        value.quantity = '0'
-        value.extraDiscount = '0'
-      })
-    })
+    let data = R.map(value =>
+      R.assoc('items', R.map(value2 => this.calculate(R.merge(value2, {
+        quantity: '0',
+        extraDiscount: '0'
+      })), value.items), value)
+    )(props.items)
+
     this.state = {
       selectedValue: '',
       data
@@ -139,7 +139,7 @@ class AddItemScreen extends React.PureComponent {
             </Row>
             <Row>
               <Text
-                style={styles.item3}>{item.packSize * item.quantity}</Text>
+                style={styles.item3}>{item.measure}</Text>
               <Text style={styles.item4}>{item.unit}</Text>
             </Row>
             <Row>
