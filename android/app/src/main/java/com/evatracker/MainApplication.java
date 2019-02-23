@@ -1,9 +1,10 @@
-package com.tracking.store;
+package com.evatracker;
 
 import android.app.Application;
 
 import com.evatracker.location.LocationTrackerPackage;
 import com.facebook.react.ReactApplication;
+import io.realm.react.RealmReactPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
@@ -30,6 +31,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RealmReactPackage(),
             new VectorIconsPackage(),
             new MapsPackage(),
             new LinearGradientPackage(),
