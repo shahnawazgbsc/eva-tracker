@@ -8,7 +8,6 @@ const settings = {
 
 if (!firebase.apps.length) {
   firebase.initializeApp(AppConfig.firebaseConfig)
-  firebase.firestore().settings(settings)
 }
 
 export default firebase
