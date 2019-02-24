@@ -19,7 +19,8 @@ export default Store = {
         category: { type: 'int'},
         subsectionId:{ type: 'int' },
         classification: { type: 'int'},
-        days:{ type: 'string[]' }
+        days:{ type: 'string[]' },
+        status:{type:'int',default:0}
     },
 };
 
