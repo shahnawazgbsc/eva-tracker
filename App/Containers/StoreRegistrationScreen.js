@@ -11,7 +11,10 @@ import styles from './Styles/StoreRegistrationScreenStyle'
 import GradientWrapper from '../Components/GradientWrapper'
 import { Days } from './DaySelection'
 import Geocoder from 'react-native-geocoder';
-import moment from 'moment';
+import Moment from 'moment';
+import realm from '../Database/realm'
+import {isConnectedToInternet} from '../util/CheckInternetConnectivity'
+import {ShowAlert} from '../util/Util'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 
@@ -23,7 +26,7 @@ class StoreRegistrationScreen extends Component {
 
   constructor (props) {
     super(props)
-    var currentdatetime = moment().format("MM/DD/YYYY HH:mm");
+    var currentdatetime = Moment().format("MM/DD/YYYY HH:mm");
     this.state = {
       image: undefined,
       StartTime: currentdatetime,
@@ -48,19 +51,67 @@ class StoreRegistrationScreen extends Component {
   createStore = () => {
     const msg = this.validateFields()
     if (msg === undefined) {
-      this.props.createStore({
-        ...this.state,
-        subsectionId: this.props.subSection[this.state.subsectionId].subsectionId,
-        category: this.Categories[this.state.category],
-        classification: this.Classification[this.state.classification],
-        VisitDays: this.props.days.map(value => ({ day: value })),
-        onSuccess: () => {
-          this.setState(baseState)
-          this.setState({city:this.props.city == null?cityName:this.props.city})
-          this.props.resetDays()
-          this.props.navigation.goBack(null)
-        }
-      })
+
+      let storeId = Moment().format('x')
+      let storeObject = {
+        id:storeId,
+        imageHeight:this.state.image.height,
+        imageTimestamp:this.state.image.timestamp,
+        imageUri:this.state.image.uri,
+        imageData:this.state.image.data,
+        StartTime:this.state.StartTime,
+        shopName:this.state.shopName,
+        shopKeeper:this.state.shopKeeper,
+        contactNo:this.state.contactNo,
+        landline:this.state.landline,
+        address:this.state.landline,
+        street:this.state.street,
+        city:this.state.city,
+        landMark:this.state.landMark,
+        cnic:this.state.cnic,
+        activeStatus:this.state.activeStatus,
+        category:this.Categories[this.state.category],
+        subsectionId:this.props.subSection[this.state.subsectionId].subsectionId,
+        classification:this.Classification[this.state.classification],
+        days: this.state.days
+      }
+        isConnectedToInternet(
+          ()=>{
+            this.props.createStore({
+              // ...this.state,
+              // subsectionId: this.props.subSection[this.state.subsectionId].subsectionId,
+              // category: this.Categories[this.state.category],
+              // classification: this.Classification[this.state.classification],
+              // VisitDays: this.props.days.map(value => ({ day: value })),
+              ...storeObject,
+              image:this.state.image,
+              VisitDays: this.props.days.map(value => ({ day: value })),
+              onSuccess: () => {
+                this.setState(baseState)
+                this.setState({city:this.props.city == null?cityName:this.props.city})
+                this.props.resetDays()
+                realm.write(()=>{
+                  realm.create('Store',{
+                    ...storeObject,
+                    status:1
+                  },true)
+                })
+                this.props.navigation.goBack(null)
+              }
+            })
+          },
+          ()=>{  setTimeout(()=>
+            ShowAlert("No Internet","You are not connected to the internet, store will be saved locally"),100)
+            realm.write(() => {
+              try{
+                realm.create('Store', ...storeObject)
+              }
+              catch (error) {
+                ShowAlert("Error in saving store",error)
+              }
+            })
+          }
+      )
     } else {
       Alert.alert('Info', msg)
     }
@@ -111,6 +162,10 @@ class StoreRegistrationScreen extends Component {
   componentWillReceiveProps(newProps) {
     this.setState({
       days:newProps.days
+    },()=>{
+      console.log("DAYS "+JSON.stringify(newProps.days))
+      console.log("DAYS "+newProps.days)
+      console.log("DAYS "+JSON.parse(JSON.stringify(newProps.days)))
     })
   }
   onShopName = (txt) => {
@@ -176,7 +231,10 @@ class StoreRegistrationScreen extends Component {
 
     ImagePicker.showImagePicker(options, (response) => {
       console.log('Response = ', response)
-
+      console.log('Response = ', response.height)
+      console.log('Response = ', response.data)
+      console.log('Response = ', response.uri)
+      console.log('Response = ', response.timestamp)
       if (response.didCancel) {
         console.log('User cancelled photo picker')
       } else if (response.error) {
@@ -189,6 +247,10 @@ class StoreRegistrationScreen extends Component {
         this.setState({
           image: response
         })
+        console.log('Response = ', this.state.image.height)
+        console.log('Response = ', this.state.image.timestamp)
+        console.log('Response = ', this.state.image.uri)
+        console.log('Response = ', this.state.image.data)
       }
     })
   }
