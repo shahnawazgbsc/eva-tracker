@@ -1,5 +1,5 @@
 import Realm from 'realm';
-import { Schema,SchemaVersion } from '../../src/model';
+import { Schema,SchemaVersion } from '../models';
 
 export default realm = new Realm({
 
