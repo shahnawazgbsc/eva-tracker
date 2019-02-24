@@ -3,7 +3,7 @@ import { Schema,SchemaVersion } from '../../src/model';
 
 export default realm = new Realm({
 
-    path: 'workstreamdb.realm',
+    path: 'evatracker.realm',
     schema: Schema,
     schemaVersion: SchemaVersion
 })
