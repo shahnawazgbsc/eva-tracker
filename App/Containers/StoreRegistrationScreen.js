@@ -104,12 +104,15 @@ class StoreRegistrationScreen extends Component {
             ShowAlert("No Internet","You are not connected to the internet, store will be saved locally"),100)
             realm.write(() => {
               try{
-                realm.create('Store', ...storeObject)
+                realm.create('Store', {
+                  ...storeObject
+                })
               }
               catch (error) {
                 ShowAlert("Error in saving store",error)
               }
             })
+            this.props.navigation.goBack(null)
           }
       )
     } else {
