@@ -224,7 +224,7 @@ class AddItemScreen extends React.PureComponent {
     let cartItems = []
     this.state.data.forEach(value => {
       value.items.forEach(value => {
-        if (!isNaN(value.quantity) && value.quantity !== 0) {
+        if (!isNaN(value.quantity) && value.quantity !== "0" && value.quantity != "") {
           cartItems.push(value)
         }
       })
@@ -238,18 +238,7 @@ class AddItemScreen extends React.PureComponent {
     }
   }
 
-  renderFooter = () => {
-    return (
-
-      <Button danger rounded style={{ alignSelf: 'flex-end', marginVertical: 20 }} onPress={this.addToCart}>
-        <Icon
-          name={'add-shopping-cart'}
-          type={'MaterialIcons'}
-        />
-        <Text>Process To order</Text>
-      </Button>
-    )
-  }
+  
 
   render () {
     const data = R.path([this.state.selectedValue, 'items'], this.state.data)
@@ -269,7 +258,13 @@ class AddItemScreen extends React.PureComponent {
             <Text style={styles.titleText}>Add Items</Text>
             </Body>
             <Right
-            />
+            >
+            <Button transparent light onPress={this.addToCart}>
+                <Icon name={'add-shopping-cart'}
+                 type={'MaterialIcons'}
+                />
+              </Button>
+            </Right>
           </Header>
         </GradientWrapper>
 

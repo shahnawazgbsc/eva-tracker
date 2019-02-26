@@ -182,7 +182,7 @@ class OrderScreen extends React.Component {
           <Icon
             name={'arrow-dropleft'}
           />
-          <Text>CheckOut</Text>
+          <Text>Submit order</Text>
         </Button>
       )
     } else {

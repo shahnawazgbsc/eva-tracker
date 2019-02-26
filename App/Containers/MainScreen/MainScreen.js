@@ -1,5 +1,5 @@
 import React from 'react'
-import { Alert } from 'react-native'
+import { Alert, Linking } from 'react-native'
 import { connect } from 'react-redux'
 import { Body, Button, ActionSheet, Container, Footer, Header, Icon, Left, Right, Text } from 'native-base'
 import MapView from 'react-native-maps'
@@ -13,11 +13,45 @@ import LoginRedux from '../../Redux/LoginRedux'
 import * as R from 'ramda'
 import extractModuleFeatures from '../../Lib/extractModuleFeatures'
 import AppConfig from '../../Config/AppConfig'
+import 'firebase/firestore'
+import firebase from '../../Lib/Firebase'
+
+var package1 = require('../../../package.json');
 
 class MainScreen extends React.Component {
   constructor (props) {
     super(props)
     this.state = {}
+    
+    firebase.firestore()
+    .collection('release')
+    .doc('update-release')
+    .get()
+    .then((doc) => {
+      if(doc.exists){
+      if(doc.data().version != package1.version){
+        
+        Alert.alert(
+          'New version available',
+          'Please, update app to new version',
+          [
+            {
+              text: 'NO, THANKS',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+            {text: 'UPDATE', onPress: () =>  
+              Linking.openURL(
+                `https://play.google.com/store/apps/details?id=com.tracking.store`
+              )
+            },
+          ],
+          {cancelable: false},
+        );
+
+      }  
+      }
+    }); 
   }
 
   componentDidMount () {
