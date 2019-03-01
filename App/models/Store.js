@@ -1,14 +1,15 @@
 import Moment from 'moment';
 export default Store = { 
     name: 'Store',
-    primaryKey: 'id',
     properties: { 
-        id: {type:'string'}, 
-        imageHeight: { type: 'int'},
-        imageTimestamp:{type:'string'},
-        imageUri:{type:'string'},
-        imageData:{type:'string'},
+        storeId:{type:'int', optional: true}, 
+        companyId:{type:'int', optional: true}, 
+        imageHeight: { type: 'int', optional: true},
+        imageTimestamp:{type:'string', optional: true},
+        imageUrl:{type:'string'},
+        imageData:{type:'string', optional: true},
         StartTime: { type: 'date', optional: true, default: Moment().format("MM/DD/YYYY HH:mm") },
+        endTime:{type:'date',optional:true},
         shopName:  { type: 'string' },
         shopKeeper: { type: 'string'},
         contactNo: { type: 'string'},
@@ -23,7 +24,12 @@ export default Store = {
         subsectionId:{ type: 'int' },
         classification: { type: 'string'},
         days:{ type: 'int[]' },
-        status:{type:'int',default:0}
+        status:{type:'int',default:0},  
+        dayRegistered:{type:'int',optional:true},
+        latitude:{type:'string',optional:true},
+        longitude:{type:'string',optional:true},
+        deleted:{type:'bool',optional:true},
+        pjp:{type:'bool',optional:true,default:false}
     },
 };
 
