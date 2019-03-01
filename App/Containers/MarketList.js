@@ -24,6 +24,8 @@ import { Images } from '../Themes'
 import ParseImagePath from '../Lib/ParseImagePath'
 import Colors from '../Themes/Colors'
 import extractModuleFeatures from '../Lib/extractModuleFeatures'
+import realm from '../Database/realm'
+
 
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
 
@@ -38,7 +40,8 @@ class MarketList extends React.PureComponent {
     super(props)
     this.state = {
       segment: 0,
-      dataObjects: props.pjpShops
+      dataObjects: props.pjpShops,
+      pjpShops:[]
     }
   }
 
@@ -122,7 +125,7 @@ class MarketList extends React.PureComponent {
     this.setState({
       text: '',
       segment: 0,
-      dataObjects: this.props.pjpShops
+      dataObjects: this.state.pjpShops
     })
   }
 
@@ -141,7 +144,48 @@ class MarketList extends React.PureComponent {
       dataObjects: this.props.otherShops
     })
   }
-
+componentWillReceiveProps(newProps) {
+  
+}
+componentDidMount() {
+  if(this.props.pjpShops!=null) {
+    var shops = [];
+  realm.write(()=>{
+  for(var iter in this.props.pjpShops) {
+    shops = realm.objects('Store').filtered('storeId == $0 AND pjp == $1',this.props.pjpShops[iter].storeId,true).slice(0);
+    if(shops.length == 0) {
+    realm.create('Store',{
+      'storeId':this.props.pjpShops[iter].storeId,
+      'shopName':this.props.pjpShops[iter].shopName,
+      'shopKeeper': this.props.pjpShops[iter].shopKeeper,
+    'contactNo': this.props.pjpShops[iter].contactNo,
+    'landline': this.props.pjpShops[iter].landline,
+    'address': this.props.pjpShops[iter].address,
+    'street': this.props.pjpShops[iter].street,
+    'city': this.props.pjpShops[iter].city,
+    landMark: this.props.pjpShops[iter].landMark,
+    'cnic': this.props.pjpShops[iter].cnic,
+    'activeStatus': this.props.pjpShops[iter].activeStatus,
+    'category': this.props.pjpShops[iter].category,
+    'subsectionId':this.props.pjpShops[iter].subsectionId,
+    'classification': this.props.pjpShops[iter].classification,
+    'status':1,
+    'dayRegistered':this.props.pjpShops[iter].dayRegistered,
+    'latitude':this.props.pjpShops[iter].latitude,
+    'longitude':this.props.pjpShops[iter].longitude,
+    'imageUrl':this.props.pjpShops[iter].imageUrl,
+    'deleted':this.props.pjpShops[iter].deleted,
+    'companyId':this.props.pjpShops[iter].companyId,
+    'pjp':this.props.pjpShops[iter].pjp
+    },true)
+  }
+  }
+})
+this.setState({
+  pjpShops :realm.objects("Store").filtered("pjp == $0",true).slice(0)
+})
+}
+}
   render () {
     return (
       <Container>
@@ -167,7 +211,7 @@ class MarketList extends React.PureComponent {
             disabled={!this.props.pjpEnabled}
             style={{ flex: 1, marginLeft: 20, alignItems: 'center', justifyContent: 'center' }} first
             active={this.state.segment === 0} onPress={this.segmentPJP}><Text>PJP
-            ({this.props.pjpShops.length || 0})</Text></Button>
+            ({this.state.pjpShops.length || 0})</Text></Button>
           <Button
             disabled={!this.props.achievedEnabled}
             style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} active={this.state.segment === 1}
