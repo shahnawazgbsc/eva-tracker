@@ -31,8 +31,6 @@ var brandNames = []
 var selectedBrandNames = []
 
 class InventoryScreen extends Component {
-  SKUs = this.props.skus
-
   constructor (props) {
     super(props)
 
@@ -45,20 +43,21 @@ class InventoryScreen extends Component {
       selected,
       expanded: [],
       selectedBrandIndex: 0,
-      brands:[]
+      brands:[],
+      skus:[]
     }
   }
 componentWillMount() {
   this.setState({
-    brands:realm.objects('Brands').slice(0)
+    brands:realm.objects('Brands').slice(0),
+    skus:realm.objects('GeneralSkus').slice(0)
   })
-
 }
   componentDidMount () {
-    alert(this.state.brands.length)
     this.state.brands.map((value, index) => {
       brandNames[index] = value.brandName
     })
+    alert(JSON.stringify(this.props.sk))
   }
 
   brandSelector = ((itemValue, itemIndex) => this.setState({
@@ -69,17 +68,17 @@ componentWillMount() {
   }))
 
   getDataArray = (category) => {
-    if (this.SKUs != null && this.SKUs.length > 0) {
-      return this.SKUs
+    if (this.state.skus != null && this.state.skus.length > 0) {
+      return this.state.skus
     } else {
       return null
     }
   }
 
   componentDidMount () {
-    quantity = this.state.brands.map(value => this.props.skus.map(value => 0))
-    unit = this.state.brands.map(value => this.props.skus.map(value => 'Ltr'))
-    selected = this.state.brands.map(value => this.props.skus.map(value => true))
+    quantity = this.state.brands.map(value => this.state.skus.map(value => 0))
+    unit = this.state.brands.map(value => this.state.skus.map(value => 'Ltr'))
+    selected = this.state.brands.map(value => this.state.skus.map(value => true))
     this.setState({ selected: selected })
     this.setState({ quantity: quantity })
     this.setState({ unit: unit })
@@ -280,7 +279,7 @@ componentWillMount() {
 
 const mapStateToProps = (state) => {
   return {
-    skus: state.inventory.inventorySKUs
+    sk:state.inventory.skus
   }
 }
 
