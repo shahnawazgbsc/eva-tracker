@@ -57,7 +57,6 @@ componentWillMount() {
     this.state.brands.map((value, index) => {
       brandNames[index] = value.brandName
     })
-    alert(JSON.stringify(this.props.sk))
   }
 
   brandSelector = ((itemValue, itemIndex) => this.setState({
@@ -274,12 +273,6 @@ componentWillMount() {
         </Content>
       </Container>
     )
-  }
-}
-
-const mapStateToProps = (state) => {
-  return {
-    sk:state.inventory.skus
   }
 }
 
