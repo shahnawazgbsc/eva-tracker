@@ -24,6 +24,7 @@ import { Colors, Images } from '../Themes'
 import GradientWrapper from '../Components/GradientWrapper'
 import ShopRedux from '../Redux/ShopRedux'
 import * as R from 'ramda'
+import realm from '../Database/realm'
 
 // More info here: https://facebook.github.io/react-native/docs/flatlist.html
 
@@ -36,8 +37,8 @@ class AddItemScreen extends React.PureComponent {
       const tradeOff = measure * obj.tradeOfferAmount
       const extraDiscountAmount = obj.extraDiscount * measure
       const netTotal = grossAmount - tradeOff - extraDiscountAmount
-      const totalOffer = obj.quantity ? netTotal / obj.quantity : 0
-
+      const totalOffer = (obj.quantity && obj.quantity > 0) ? netTotal / obj.quantity : 0
+      
       return R.merge(obj, {
         measure,
         netTotal,
@@ -49,22 +50,25 @@ class AddItemScreen extends React.PureComponent {
       })
     }
     this.changeItem = R.curry((index, merge) => {
-      this.state.data[this.state.selectedValue].items[index] = merge
+      this.state.data[this.state.selectedValue] = merge
       return R.clone(this.state.data)
     })
-
     let data = R.map(value =>
-      R.assoc('items', R.map(value2 => this.calculate(R.merge(value2, {
+      this.calculate(R.merge(value,{
         quantity: '0',
-        extraDiscount: '0'
-      })), value.items), value)
-    )(props.items)
-
+        extraDiscount:'0'
+      }))
+    )(realm.objects('InventoryItems').slice(0))
     this.state = {
-      selectedValue: '',
-      data
+      selectedValue: 'first',
+      data,
+      productTypes:[]
     }
-    console.log(data)
+  }
+  componentWillMount() {
+    this.setState({
+      productTypes:realm.objects('InventoryItems').slice(0)
+    })
   }
 
   /* ***********************************************************
@@ -92,13 +96,14 @@ class AddItemScreen extends React.PureComponent {
         <Picker.Item label={'Select Category'} key={'first'} value={'first'}
         />
         {
-          this.props.items.map((value, index) => (<Picker.Item label={value.productType} value={index} key={index}/>))
+          this.state.productTypes.map((value, index) => (<Picker.Item label={value.productType} value={index} key={index}/>))
         }
       </Picker>
     </Item>
   )
 
   renderRow = ({ item, index }) => {
+    console.log("ITEM RECEIVED "+JSON.stringify(item))
     return (
       <Card style={styles.row}>
         <CardItem header style={{ paddingLeft: 0, paddingBottom: 0, paddingTop: 0, paddingRight: 0 }}>
@@ -144,7 +149,7 @@ class AddItemScreen extends React.PureComponent {
             </Row>
             <Row>
               <Text style={styles.item3}>Trade Price</Text>
-              <Text style={styles.item4}>{item.unitPrice}</Text>
+              <Text style={styles.item4}>{item.unitPrice == null? 0 : item.unitPrice}</Text>
             </Row>
             <Row>
               <Text style={styles.item3}>Gross Amount</Text>
@@ -152,7 +157,7 @@ class AddItemScreen extends React.PureComponent {
             </Row>
             <Row>
               <Text style={styles.item3}>TO / Ltr / Kg</Text>
-              <Text style={styles.item4}>{item.tradeOfferAmount}</Text>
+              <Text style={styles.item4}>{item.tradeOfferAmount != null?item.tradeOfferAmount : 0}</Text>
             </Row>
             <Row>
               <Text style={styles.item3}>Less TO</Text>
@@ -160,7 +165,7 @@ class AddItemScreen extends React.PureComponent {
             </Row>
             <Row>
               <Text style={styles.item7}>Regular Discount</Text>
-              <Text style={styles.item4}>{item.regularDiscount}</Text>
+              <Text style={styles.item4}>{item.regularDiscount == null ? 0 : item.regularDiscount}</Text>
             </Row>
             <Row>
               <Text style={styles.item3}>Less Regular Discount</Text>
@@ -223,11 +228,13 @@ class AddItemScreen extends React.PureComponent {
   addToCart = () => {
     let cartItems = []
     this.state.data.forEach(value => {
-      value.items.forEach(value => {
-        if (!isNaN(value.quantity) && value.quantity !== 0) {
+      console.log("Pushing "+JSON.stringify(value))
+      //value.items.forEach(value => {
+        if (!isNaN(value.quantity) && value.quantity !== '0') {
           cartItems.push(value)
         }
-      })
+      //})
+      console.log("Pushing Into cart "+JSON.stringify(cartItems))
     })
 
     if (cartItems.length > 0) {
@@ -252,8 +259,9 @@ class AddItemScreen extends React.PureComponent {
   }
 
   render () {
-    const data = R.path([this.state.selectedValue, 'items'], this.state.data)
-
+    var data = []
+    this.state.selectedValue == 'first'?[]:data.push(this.state.data[this.state.selectedValue])
+    console.log("values "+ this.state.selectedValue)
     return (
       <Container>
         <GradientWrapper>
@@ -290,7 +298,6 @@ class AddItemScreen extends React.PureComponent {
 
 const mapStateToProps = (state) => {
   return {
-    items: state.nonBrands.payload
   }
 }
 
