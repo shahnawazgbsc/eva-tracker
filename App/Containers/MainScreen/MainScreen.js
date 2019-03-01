@@ -35,7 +35,31 @@ class MainScreen extends React.Component {
     
       var shops = [];
       var brands = [];
+      var skus = []
       realm.write(()=>{
+        if(newProps.skus != null) {
+          for(var iter in newProps.skus) {
+            skus = realm.objects('GeneralSkus').filtered('generalSKUId == $0',
+              newProps.skus[iter].generalSKUId);
+              if(skus.length == 0) {
+                realm.create('GeneralSkus',{
+                  generalSKUId: newProps.skus[iter].generalSKUId,
+                itemName:newProps.skus[iter].itemName,
+                unit:newProps.skus[iter].unit,
+                skuCode:newProps.skus[iter].skuCode,
+                companyId:newProps.skus[iter].companyId,
+                cityId:newProps.skus[iter].cityId,
+                countryId:newProps.skus[iter].countryId,
+                branchId:newProps.skus[iter].branchId,
+                departmentId:newProps.skus[iter].departmentId,
+                createdAt:newProps.skus[iter].createdAt,
+                editedAt:newProps.skus[iter].editedAt,
+                editedBy:newProps.skus[iter].editedBy,
+                deleted:newProps.skus[iter].deleted
+            })
+              }
+          }
+        }
         if(newProps.stores!=null) {
       for(var iter in newProps.stores) {
         shops = realm.objects('Store').filtered('storeId == $0 AND pjp == $1',newProps.stores[iter].storeId,true).slice(0);
@@ -82,7 +106,6 @@ class MainScreen extends React.Component {
     }
   }
   if(newProps.brands != null) {
-    //alert(JSON.stringify(newProps.brands))
     for(var itera in newProps.brands) {
       var productTypes = [];
       brands = realm.objects('Brands').filtered('brandName == $0',newProps.brands[itera].brandName).slice(0);
@@ -122,7 +145,6 @@ class MainScreen extends React.Component {
           'brandName':newProps.brands[itera].brandName,
           'productType':productTypes
         })
-        alert("Brands: "+realm.objects('Brands').slice(0).length)
       }   
     }
   }
@@ -269,6 +291,7 @@ class MainScreen extends React.Component {
 
 const mapStateToProps = state => ({
   userid: R.path(['login', 'payload', 'user', 'userid'], state),
+  skus: state.inventory.inventorySKUs,
   isMarketAvailable: R.contains('Market', extractModuleFeatures(state)),
   dayStarted: state.store.dayStarted[state.login.payload.user.userid],
   stores: state.store && state.store.payload,
