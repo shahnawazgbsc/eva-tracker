@@ -7,10 +7,12 @@ import styles from './Styles/OrderScreenStyle'
 import { Colors, Images } from '../Themes'
 import ShopActions from '../Redux/ShopRedux'
 import * as R from 'ramda'
+import realm from '../Database/realm'
+import moment from 'moment'
 
 class OrderScreen extends React.Component {
   addOrder = () => {
-    if (this.props.itemsBrands) {
+    if (realm.objects("InventoryItems").slice(0).length > 0) {
       this.props.navigation.navigate('AddNewItem')
     } else {
       Alert.alert('Non General Brands not found', 'Please add No General Brands from portal')
@@ -193,22 +195,37 @@ class OrderScreen extends React.Component {
   }
   checkout = () => {
     if ((this.props.items && this.props.items.length > 0)) {
-      this.props.placeOrder({
-        items: this.props.items.map(value => ({ quantity: value.quantity, 
-          inventoryItemId: value.inventoryItemId ,extraDiscount: value.extraDiscount})),
-        onSuccess: () => {
-          this.props.navigation.navigate('OrderSMS', {
-            orderItem: this.props.navigation.getParam('extraItem'),
-            inventoryDetails: this.props.items
-          })
-        },
-        onFailure: (error) => {
-          this.props.navigation.navigate('OrderSMS', {
-            orderItem: this.props.navigation.getParam('extraItem'),
-            inventoryDetails: this.props.items
-          })
-        }
-      })
+      realm.write(()=>{
+        try {
+        for(var iter in this.props.items) {
+          
+        realm.create("Order",{
+          id:moment().format('x'),
+          inventoryItemId:this.props.items[iter].inventoryItemId,
+        quantity:this.props.items[iter].quantity,
+        extraDiscount:this.props.items[iter].extraDiscount,
+        measure:this.props.items[iter].measure,
+        netTotal:this.props.items[iter].netTotal,
+        grossAmount:this.props.items[iter].grossAmount,
+        tradeOff:this.props.items[iter].tradeOff,
+        regularDiscountTotal:this.props.items[iter].regularDiscountTotal,
+        totalOffer:this.props.items[iter].totalOffer,
+        extraDiscountAmount:this.props.items[iter].extraDiscountAmount,
+        status:false
+        })
+      }
+      this.props.placeOrderSuccessfully()
+      this.props.navigation.navigate('OrderSMS', {
+               orderItem: this.props.navigation.getParam('extraItem'),
+               inventoryDetails: this.props.items
+             })
+    }
+    catch(error) {
+      alert("Unable to save error:"+JSON.stringify(error))
+      this.props.navigation.goBack(null)
+    }
+    })
+    
     } else {
       Alert.alert('Error', 'Please add items to checkout')
     }
@@ -216,20 +233,15 @@ class OrderScreen extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  //const itemsBrands = state.nonBrands.payload
-  //Alert.alert('Error', 'Please add items to checkout'+itemsBrands)
- // Alert.alert('styleName', "state.nonBrands.payload"+state.nonBrands)
   return {
-    items: state.shop && state.shop.orderItems,
-    itemsBrands: state.nonBrands.payload
-    //&& state.brands.payload.find(value => value.brandName.toLowerCase() === 'EVA'.toLowerCase()) &&
-    //  state.brands.payload.find(value => value.brandName.toLowerCase() === 'EVA'.toLowerCase()).items
+    items: state.shop && state.shop.orderItems
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     placeOrder: (data) => dispatch(ShopActions.placeOrderRequest(data)),
+    placeOrderSuccessfully: () => dispatch(ShopActions.placeOrderSuccess()),
     removeItem: (item) => dispatch(ShopActions.removeItem(item))
   }
 }
