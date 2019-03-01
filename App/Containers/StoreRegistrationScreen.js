@@ -51,10 +51,7 @@ class StoreRegistrationScreen extends Component {
   createStore = () => {
     const msg = this.validateFields()
     if (msg === undefined) {
-
-      let storeId = Moment().format('x')
       let storeObject = {
-        id:storeId,
         imageHeight:this.state.image.height,
         imageTimestamp:this.state.image.timestamp,
         imageUri:this.state.image.uri,
