@@ -15,10 +15,10 @@ export default InventoryItems = {
         measurementUnt:{type:'string',optional:true},
         salesUnit:{type:'string',optional:true},
         tradeUnit:{type:'string',optional:true},
-        mulnRu:{type:'int',optional:true},
-        mulnPu:{type:'int',optional:true},
-        mulnSu:{type:'int',optional:true},
-        packageUnit:{type:'int',optional:true},
+        muInRu:{type:'int',default:0},
+        muInPu:{type:'int',default:0},
+        muInSu:{type:'int',default:0},
+        packageUnit:{type:'string',optional:true},
         regularDiscount:{type:'int',optional:true}
     },
 };
