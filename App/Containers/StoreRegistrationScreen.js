@@ -54,7 +54,7 @@ class StoreRegistrationScreen extends Component {
       let storeObject = {
         imageHeight:this.state.image.height,
         imageTimestamp:this.state.image.timestamp,
-        imageUri:this.state.image.uri,
+        imageUrl:this.state.image.uri,
         imageData:this.state.image.data,
         StartTime:this.state.StartTime,
         shopName:this.state.shopName,
