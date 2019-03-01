@@ -32,11 +32,42 @@ class MainScreen extends React.Component {
     }
   }
   componentWillReceiveProps(newProps) {
-    
       var shops = [];
       var brands = [];
       var skus = []
       realm.write(()=>{
+        if(newProps.items != null) {
+          for(var iter in newProps.items) {
+            for(var itera in newProps.items[iter].items) {
+              var items = realm.objects("InventoryItems").filtered("inventoryItemId == $0",
+              newProps.items[iter].items[itera].inventoryItemId).slice(0);
+              if(items.length == 0) {
+                realm.create('InventoryItems',{
+                  brandName: "N/A",
+                  name: newProps.items[iter].items[itera].name,
+                  productType: newProps.items[iter].productType,
+                  inventoryItemId: newProps.items[iter].items[itera].inventoryItemId,
+                  itemCode: newProps.items[iter].items[itera].itemCode,
+                  unitPrice: newProps.items[iter].items[itera].unitPrice,
+                  tradeOfferAmount: newProps.items[iter].items[itera].tradeOfferAmount,
+                  unit: newProps.items[iter].items[itera].unit,
+                  packType:newProps.items[iter].items[itera].packType,
+                  packSize:newProps.items[iter].items[itera].packSize,
+                  packageType:newProps.items[iter].items[itera].packageType,
+                  measurementUnt:newProps.items[iter].items[itera].measurementUnt,
+                  salesUnit:newProps.items[iter].items[itera].salesUnit,
+                  tradeUnit:newProps.items[iter].items[itera].tradeUnit,
+                  muInRu:newProps.items[iter].items[itera].muInRu,
+                  muInPu:newProps.items[iter].items[itera].muInPu,
+                  mulnSu:newProps.items[iter].items[itera].mulnSu,
+                  packageUnit:newProps.items[iter].items[itera].packageUnit,
+                  regularDiscount:newProps.items[iter].items[itera].regularDiscount
+                })
+              }
+  
+            }
+          }
+        }
         if(newProps.skus != null) {
           for(var iter in newProps.skus) {
             skus = realm.objects('GeneralSkus').filtered('generalSKUId == $0',
@@ -115,7 +146,7 @@ class MainScreen extends React.Component {
           for(var it in newProps.brands[itera].items[iter].items) {
             var items = realm.objects("InventoryItems").filtered("inventoryItemId == $0",
             newProps.brands[itera].items[iter].items[it].inventoryItemId).slice(0);
-            if(items.length = 0) {
+            if(items.length == 0) {
               realm.create('InventoryItems',{
                 brandName: newProps.brands[itera].brandName,
                 name: newProps.brands[itera].items[iter].items[it].name,
@@ -131,9 +162,9 @@ class MainScreen extends React.Component {
                 measurementUnt:newProps.brands[itera].items[iter].items[it].measurementUnt,
                 salesUnit:newProps.brands[itera].items[iter].items[it].salesUnit,
                 tradeUnit:newProps.brands[itera].items[iter].items[it].tradeUnit,
-                mulnRu:newProps.brands[itera].items[iter].items[it].mulnRu,
-                mulnPu:newProps.brands[itera].items[iter].items[it].mulnPu,
-                mulnSu:newProps.brands[itera].items[iter].items[it].mulnSu,
+                muInRu:newProps.brands[itera].items[iter].items[it].muInRu,
+                muInPu:newProps.brands[itera].items[iter].items[it].muInPu,
+                muInSu:newProps.brands[itera].items[iter].items[it].muInSu,
                 packageUnit:newProps.brands[itera].items[iter].items[it].packageUnit,
                 regularDiscount:newProps.brands[itera].items[iter].items[it].regularDiscount
               })
@@ -292,6 +323,7 @@ class MainScreen extends React.Component {
 const mapStateToProps = state => ({
   userid: R.path(['login', 'payload', 'user', 'userid'], state),
   skus: state.inventory.inventorySKUs,
+  items: state.nonBrands.payload,
   isMarketAvailable: R.contains('Market', extractModuleFeatures(state)),
   dayStarted: state.store.dayStarted[state.login.payload.user.userid],
   stores: state.store && state.store.payload,
