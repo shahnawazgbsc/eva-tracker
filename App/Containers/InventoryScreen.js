@@ -21,6 +21,7 @@ import InventoryActions from '../Redux/InventoryTakingRedux'
 import GradientWrapper from '../Components/GradientWrapper'
 import Colors from '../Themes/Colors'
 import realm from '../Database/realm'
+import  moment from 'moment';
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 
@@ -108,16 +109,27 @@ componentWillMount() {
       })
     })
     if (array.length > 0) {
-      this.props.sendInventory({
-        items: array,
-        onSuccess: () => {
+        try {
+          var quantity = [];
+          var ids = []
+         realm.write(()=>{
+            for(var iter in array) {
+              quantity.push(array[iter].quantity)
+              ids.push(array[iter].generalSKUId)
+            }
+            realm.create("Inventory",{
+              id:moment().format('x'),
+              quantity:quantity,
+              generalSKUId:ids
+            })
+          })
           Alert.alert(null, 'Inventory updated')
           this.props.navigation.goBack(null)
-        },
-        onFailure: () => {
-          this.props.navigation.goBack(null)
         }
-      })
+        catch(error) {
+          alert("Unable to save inventory, error: "+JSON.stringify(error))
+          this.props.navigation.goBack(null)
+         }
     } else {
       Alert.alert(null, 'Please select items to submit')
     }
@@ -275,11 +287,10 @@ componentWillMount() {
     )
   }
 }
-
 const mapDispatchToProps = (dispatch) => {
   return {
     sendInventory: (data) => dispatch(InventoryActions.inventoryRequest(data))
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(InventoryScreen)
+export default connect(mapDispatchToProps)(InventoryScreen)
