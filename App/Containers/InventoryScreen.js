@@ -20,6 +20,7 @@ import styles from './Styles/InventoryScreenStyle'
 import InventoryActions from '../Redux/InventoryTakingRedux'
 import GradientWrapper from '../Components/GradientWrapper'
 import Colors from '../Themes/Colors'
+import realm from '../Database/realm'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 
@@ -43,19 +44,26 @@ class InventoryScreen extends Component {
       unit,
       selected,
       expanded: [],
-      selectedBrandIndex: 0
+      selectedBrandIndex: 0,
+      brands:[]
     }
-    this.props.brands.map((value, index) => {
+  }
+componentWillMount() {
+  this.setState({
+    brands:realm.objects('Brands').slice(0)
+  })
+
+}
+  componentDidMount () {
+    alert(this.state.brands.length)
+    this.state.brands.map((value, index) => {
       brandNames[index] = value.brandName
     })
   }
 
-  componentWillMount () {
-  }
-
   brandSelector = ((itemValue, itemIndex) => this.setState({
     selectedBrand: itemValue,
-    selectedBrandName: itemValue === '' ? null : this.props.brands[itemValue].brandName,
+    selectedBrandName: itemValue === '' ? null : this.state.brands[itemValue].brandName,
     inventorySKU: itemValue === '' ? null : this.getDataArray(itemValue),
     selectedBrandIndex: itemIndex - 1
   }))
@@ -69,9 +77,9 @@ class InventoryScreen extends Component {
   }
 
   componentDidMount () {
-    quantity = this.props.brands.map(value => this.props.skus.map(value => 0))
-    unit = this.props.brands.map(value => this.props.skus.map(value => 'Ltr'))
-    selected = this.props.brands.map(value => this.props.skus.map(value => true))
+    quantity = this.state.brands.map(value => this.props.skus.map(value => 0))
+    unit = this.state.brands.map(value => this.props.skus.map(value => 'Ltr'))
+    selected = this.state.brands.map(value => this.props.skus.map(value => true))
     this.setState({ selected: selected })
     this.setState({ quantity: quantity })
     this.setState({ unit: unit })
@@ -210,7 +218,7 @@ class InventoryScreen extends Component {
                 </Button>
 
                 {
-                  this.props.brands && this.props.brands.length > 0 &&
+                  this.state.brands && this.state.brands.length > 0 &&
                   <Item picker bordered={false} fixedLabel style={{ borderBottomWidth: 0 }}>
                     <Label>Select Brand: </Label>
                     <Card style={{ flex: 1 }}>
@@ -227,7 +235,7 @@ class InventoryScreen extends Component {
                           key='0'
                         />
                         {
-                          this.props.brands.map((value, index) => (
+                          this.state.brands.map((value, index) => (
                             <Picker.Item
                               label={value.brandName}
                               value={index}
@@ -272,7 +280,6 @@ class InventoryScreen extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    brands: state.brands.payload,
     skus: state.inventory.inventorySKUs
   }
 }
