@@ -22,12 +22,15 @@ import { Colors } from '../Themes'
 import styles from './Styles/ReasonScreenStyle'
 import GradientWrapper from '../Components/GradientWrapper'
 import ShopRedux from '../Redux/ShopRedux'
+import realm from '../Database/realm'
+import moment from 'moment'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
+  
+var nonProductiveReasons = []
 
 class ReasonScreen extends Component {
 
-  reasons = []
   constructor (props) {
     super(props)
     this.state = {
@@ -36,18 +39,18 @@ class ReasonScreen extends Component {
     }
   }
 componentWillMount() {
-  this.props.nonProductiveReasons()
+}
+componentDidMount() {
+  nonProductiveReasons = realm.objects("NonProductiveReasons").slice(0);
+  var reasons = [];
+  for(var iter in nonProductiveReasons) {
+    reasons.push(nonProductiveReasons[iter].reason)
+  }
+  this.setState({
+    nonProductiveReasons:reasons
+  })
 }
 componentWillReceiveProps(newProps) {
-  if(newProps.reasons!= null) {
-  this.reasons = newProps.reasons.map((value)=>(
-    value.reason
-))
-  
-this.setState({
-  nonProductiveReasons:this.reasons
-})
-  }
 }
   close = () => {
     this.props.navigation.goBack(null)
@@ -60,12 +63,32 @@ this.setState({
     if (reason === 'Other') {
       reason = this.state.otherText ? this.state.otherText : reason
     }
-    this.props.placeOrder({ items: [{ noorderreason: reason }] })
-    this.props.checkOutRequest({
-      onSuccess: () => this.props.navigation.dispatch(StackActions.popToTop()),
-      productive: false,
-      pjp: this.props.pjp
+    realm.write(()=>{
+      realm.create("CheckIn",{
+          id:moment().format('x'),
+          StoreId: this.props.checkedIn[0].StoreId,
+          pjp: !!this.props.checkedIn[0].pjp,
+          companyId:this.props.checkedIn[0].companyId,
+          latitude:this.props.checkedIn[0].latitude,
+          longitude:this.props.checkedIn[0].longitude,
+          ContactPersonName: '',
+          ContactNo: '',
+          NextScheduledVisit: '',
+          Location: '',
+          Notes: '',
+          StartTime:this.props.checkedIn[0].StartTime,
+          EndTime: moment().format("MM/DD/YYYY HH:mm"),
+          checkedIn:false,
+          productive:false,
+          stat:false
+      },true)
+      realm.create("NoOrderReason",{
+        StoreId:this.props.checkedIn[0].StoreId,
+        reason:reason,
+        status:false
+      },true)
     })
+    this.props.navigation.dispatch(StackActions.popToTop())    
   }
 
   otherText = (text) => {
@@ -136,15 +159,12 @@ this.setState({
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    pjp: ownProps.navigation.getParam('item').pjp,
-    reasons:state.shop.reasons
+    checkedIn: ownProps.navigation.getParam('checkedIn')
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    nonProductiveReasons:()=>dispatch(ShopRedux.nonProductiveReasons()),
-    checkOutRequest: (data) => dispatch(ShopRedux.checkOutRequest(data)),
     placeOrder: (data) => dispatch(ShopRedux.placeOrderRequest(data))
   }
 }
