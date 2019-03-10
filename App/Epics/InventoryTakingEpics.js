@@ -7,15 +7,15 @@ export const selectProductsListEpics = (action$, state$, { api }) => action$.pip
   mergeMap(action => {
     const checkInParam = state$.value.shop.checkInParam
     var requestData = []
-    action.data.items.forEach(element => {
+    JSON.parse(action.data.items).forEach(element => {
       if(Number.parseInt(element.quantity) > 0) {
         requestData.push({
           brandName : element.brandName,
           generalSKUId : element.generalSKUId,
           quantity: element.quantity,
-          storeVisitId: checkInParam.storeVisitId,
-          companyId: checkInParam.companyId,
-          StoreId: checkInParam.StoreId
+          storeVisitId: action.data.checkIn.storeVisitId,
+          companyId: action.data.checkIn.companyId,
+          StoreId: action.data.checkIn.StoreId
         })
       }
     });
