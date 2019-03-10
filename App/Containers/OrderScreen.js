@@ -211,7 +211,8 @@ class OrderScreen extends React.Component {
         regularDiscountTotal:this.props.items[iter].regularDiscountTotal,
         totalOffer:this.props.items[iter].totalOffer,
         extraDiscountAmount:this.props.items[iter].extraDiscountAmount,
-        status:false
+        status:false,
+        StoreId:this.props.navigation.getParam('extraItem').storeId.toString()
         })
       }
       this.props.placeOrderSuccessfully()
