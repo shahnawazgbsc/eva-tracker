@@ -1,5 +1,5 @@
 import React from 'react'
-import { Alert } from 'react-native'
+import { Alert, AsyncStorage } from 'react-native'
 import * as R from 'ramda'
 import { connect } from 'react-redux'
 import { Body, Button, ActionSheet, Container, Footer, Header, Icon, Left, Right, Text } from 'native-base'
@@ -7,6 +7,7 @@ import MapView from 'react-native-maps'
 import { Colors, Images } from '../../Themes'
 import StoresRedux from '../../Redux/StoresRedux'
 import InventoryRedux from '../../Redux/InventoryTakingRedux'
+import ShopRedux from '../../Redux/ShopRedux'
 import GpsLocationRedux from '../../Redux/GpsLocationRedux'
 import GradientWrapper from '../../Components/GradientWrapper'
 import styles from './MainScreenStyle'
@@ -24,6 +25,7 @@ class MainScreen extends React.Component {
   componentDidMount () {
     this.props.request()
     this.props.inventorySKUs()
+    this.props.nonProductiveReasons()
   }
 
   menu = () => {
@@ -35,7 +37,28 @@ class MainScreen extends React.Component {
       var shops = [];
       var brands = [];
       var skus = []
+       if(newProps.userDetails!=null) {
+         AsyncStorage.multiSet([
+           ["companyId",newProps.userDetails.payload.user.companyid.toString()],
+           ["userId",newProps.userDetails.payload.user.userid.toString()]
+         ])
+      }
+      if(newProps.latitude != null) {
+        AsyncStorage.multiSet([
+          ["latitude",newProps.latitude.toString()],
+          ["longitude",newProps.longitude.toString()]
+        ])
+      }
       realm.write(()=>{
+        if(newProps.Reasons!=null) {
+          for(var iter in newProps.Reasons) {
+          realm.create('NonProductiveReasons',{
+            id:newProps.Reasons[iter].nonproductiveVisitReasonId.toString(),
+            reason:newProps.Reasons[iter].reason,
+            companyId:newProps.Reasons[iter].companyId.toString()
+          },true)
+        }
+        }
         if(newProps.items != null) {
           for(var iter in newProps.items) {
             for(var itera in newProps.items[iter].items) {
@@ -320,20 +343,24 @@ class MainScreen extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  userid: R.path(['login', 'payload', 'user', 'userid'], state),
-  skus: state.inventory.inventorySKUs,
-  items: state.nonBrands.payload,
-  isMarketAvailable: R.contains('Market', extractModuleFeatures(state)),
-  dayStarted: state.store.dayStarted[state.login.payload.user.userid],
-  stores: state.store && state.store.payload,
-  brands: state.brands.payload,
-  subSection: state.createStore && state.createStore.subSection,
-  waypoint: state.gps && state.gps.waypoint,
-  latitude: state.gps && state.gps.data && state.gps.data.latitude,
-  longitude: state.gps && state.gps.data && state.gps.data.longitude
+const mapStateToProps = state =>{
+  return({
+      userid: R.path(['login', 'payload', 'user', 'userid'], state),
+      userDetails: state.login,
+      gpsUpdate: state.gps,
+      skus: state.inventory.inventorySKUs,
+      items: state.nonBrands.payload,
+      Reasons: state.shop.reasons,
+      isMarketAvailable: R.contains('Market', extractModuleFeatures(state)),
+      dayStarted: state.store.dayStarted[state.login.payload.user.userid],
+      stores: state.store && state.store.payload,
+      brands: state.brands.payload,
+      subSection: state.createStore && state.createStore.subSection,
+      waypoint: state.gps && state.gps.waypoint,
+      latitude: state.gps && state.gps.data && state.gps.data.latitude,
+      longitude: state.gps && state.gps.data && state.gps.data.longitude
 })
-
+}
 
 const mapDispatchToProps = dispatch => ({
   directions: (location) => dispatch(GpsLocationRedux.gpsDirection(location)),
@@ -342,7 +369,8 @@ const mapDispatchToProps = dispatch => ({
   request: () => dispatch(StoresRedux.storesRequest()),
   logout: () => dispatch(LoginRedux.logout()),
   reset: () => dispatch(StoresRedux.reset()),
-  inventorySKUs: () => dispatch(InventoryRedux.inventory_sku_request())
+  inventorySKUs: () => dispatch(InventoryRedux.inventory_sku_request()),
+  nonProductiveReasons:()=>dispatch(ShopRedux.nonProductiveReasons())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainScreen)
