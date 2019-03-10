@@ -73,5 +73,33 @@ export default StyleSheet.create({
     width: 80,
     borderRadius: 40,
     overflow: 'hidden'
+  },
+  dialogHeader:{
+    justifyContent: 'center',
+    backgroundColor: 'rgb(0,164,81)',
+},
+cardSectionStyle    :{
+    justifyContent: 'center',
+    backgroundColor: '#ffffff',
+    padding:50,
+},
+textStyle:{
+    flex:1,
+    fontSize:18,
+    textAlign: 'center',
+    color:"#ffffff"
+},
+containerStyle:{
+    flex:1,
+    justifyContent:'center',
+    backgroundColor:'rgba(0,0,0,0.75)'
+},
+dialogContainer:{
+    margin:10
+},
+spinnerStyle: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center'
   }
 })
