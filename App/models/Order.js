@@ -1,8 +1,10 @@
 export default Order = {
     name : 'Order',
     primaryKey: 'id',
-    properties: {
-        id: {type:'string'}, 
+    properties: { 
+        id:{type:'string'},
+        StoreId: {type:'string'},
+        StoreVisitId: {type:'string',default:''},
         inventoryItemId:{type:'int'},
         quantity:{type:'string'},
         extraDiscount:{type:'string'},
