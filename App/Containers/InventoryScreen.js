@@ -109,7 +109,7 @@ componentWillMount() {
       })
     })
     if (array.length > 0) {
-        try {
+        //try {
           var quantity = [];
           var ids = []
          realm.write(()=>{
@@ -118,18 +118,18 @@ componentWillMount() {
               ids.push(array[iter].generalSKUId)
             }
             realm.create("Inventory",{
-              id:moment().format('x'),
-              quantity:quantity,
-              generalSKUId:ids
-            })
+              inventories:JSON.stringify(array),
+              StoreId:this.props.navigation.getParam('item').storeId.toString(),
+              status:false
+            },true)
           })
           Alert.alert(null, 'Inventory updated')
           this.props.navigation.goBack(null)
-        }
-        catch(error) {
-          alert("Unable to save inventory, error: "+JSON.stringify(error))
-          this.props.navigation.goBack(null)
-         }
+        // }
+        // catch(error) {
+        //   alert("Unable to save inventory, error: "+JSON.stringify(error))
+        //   this.props.navigation.goBack(null)
+        //  }
     } else {
       Alert.alert(null, 'Please select items to submit')
     }
