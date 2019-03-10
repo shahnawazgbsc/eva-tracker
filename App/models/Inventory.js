@@ -1,10 +1,10 @@
 export default Inventory = {
     name : 'Inventory',
-    primaryKey: 'id',
+    primaryKey: 'StoreId',
     properties: {
-        id:{type:'string'},
-        status:{type:'int',default:0},
-        quantity:{type:'string[]'},
-        generalSKUId:{type:'int[]'},
+        StoreId: {type:'string'},
+        inventories:{type: 'string'},
+        StoreVisitId: {type:'string',default:''},
+        status:{type:'bool'}
     }
 }
