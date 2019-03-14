@@ -7,6 +7,7 @@ import FixtureApi from '../Services/FixtureApi'
 /* ------------- Assemble The Reducers ------------- */
 export const reducers = combineReducers({
   nav: require('./NavigationRedux').reducer,
+  offline: require('./OfflineRedux').reducer,
   login: require('./LoginRedux').reducer,
   store: require('./StoresRedux').reducer,
   shop: require('./ShopRedux').reducer,

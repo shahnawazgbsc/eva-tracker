@@ -1,6 +1,5 @@
-import { createReducer, createActions } from 'reduxsauce'
+import { createActions, createReducer } from 'reduxsauce'
 import Immutable from 'seamless-immutable'
-import { LoginTypes } from './LoginRedux'
 
 /* ------------- Types and Action Creators ------------- */
 

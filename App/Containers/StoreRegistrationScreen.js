@@ -10,20 +10,20 @@ import CreateStoreActions from '../Redux/CreateStoreRedux'
 import styles from './Styles/StoreRegistrationScreenStyle'
 import GradientWrapper from '../Components/GradientWrapper'
 import { Days } from './DaySelection'
-import Geocoder from 'react-native-geocoder';
-import moment from 'moment';
+import Geocoder from 'react-native-geocoder'
+import moment from 'moment'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 
 var baseState = {}
-var cityName="";
+var cityName = ''
 class StoreRegistrationScreen extends Component {
   Categories = ['LMT', 'V/S', 'Retail']
   Classification = ['500 & Above', '250 to 499', '100 to 249', 'Less then 100']
 
   constructor (props) {
     super(props)
-    var currentdatetime = moment().format("MM/DD/YYYY HH:mm");
+    var currentdatetime = moment().format('MM/DD/YYYY HH:mm')
     this.state = {
       image: undefined,
       StartTime: currentdatetime,
@@ -40,7 +40,7 @@ class StoreRegistrationScreen extends Component {
       category: undefined,
       subsectionId: undefined,
       classification: undefined,
-      days:[]
+      days: []
     }
     baseState = this.state
   }
@@ -56,7 +56,7 @@ class StoreRegistrationScreen extends Component {
         VisitDays: this.props.days.map(value => ({ day: value })),
         onSuccess: () => {
           this.setState(baseState)
-          this.setState({city:this.props.city == null?cityName:this.props.city})
+          this.setState({city: this.props.city == null ? cityName : this.props.city})
           this.props.resetDays()
           this.props.navigation.goBack(null)
         }
@@ -98,19 +98,18 @@ class StoreRegistrationScreen extends Component {
 
   componentDidMount (): void {
     this.props.resetDays()
-    if(this.props.city == null) {
-    Geocoder.fallbackToGoogle("AIzaSyAkzbji8MfNjpWXG42WS5L0dItXEkKjSRE")
-    Geocoder.geocodePosition({lat:this.props.latitude,lng:this.props.longitude}).then(res => {
-      cityName = res[0].locality;
-      this.setState({city:res[0].locality})
-  })
+    if (this.props.city == null) {
+      Geocoder.fallbackToGoogle('AIzaSyAkzbji8MfNjpWXG42WS5L0dItXEkKjSRE')
+      Geocoder.geocodePosition({lat: this.props.latitude, lng: this.props.longitude}).then(res => {
+        cityName = res[0].locality
+        this.setState({city: res[0].locality})
+      })
   .catch(err => alert(err))
-    }
-    else this.setState({city:this.props.city})
+    } else this.setState({city: this.props.city})
   }
-  componentWillReceiveProps(newProps) {
+  componentWillReceiveProps (newProps) {
     this.setState({
-      days:newProps.days
+      days: newProps.days
     })
   }
   onShopName = (txt) => {
@@ -138,7 +137,7 @@ class StoreRegistrationScreen extends Component {
   }
 
   onCity = (txt) => {
-    this.setState({ city: this.props.city == null? txt:this.props.city })
+    this.setState({ city: this.props.city == null ? txt : this.props.city })
   }
 
   onLandmark = (txt) => {
@@ -206,9 +205,9 @@ class StoreRegistrationScreen extends Component {
               </Button>
             </Left>
             <Body>
-            <Text style={styles.titleText}>Store Registration</Text>
+              <Text style={styles.titleText}>Store Registration</Text>
             </Body>
-            <Right/>
+            <Right />
           </Header>
         </GradientWrapper>
         <KeyboardAwareScrollView>
@@ -259,11 +258,11 @@ class StoreRegistrationScreen extends Component {
                   selectedValue={this.state.subsectionId}
                   onValueChange={this.onSubSectionSelected}
                 >
-                  <Picker.Item label={'Select Subsection'} key={'first'} value={''}/>
+                  <Picker.Item label={'Select Subsection'} key={'first'} value={''} />
                   {
                     this.props.subSection &&
                     this.props.subSection.map((value, index) => (
-                      <Picker.Item label={value.name} value={index} key={index}/>))
+                      <Picker.Item label={value.name} value={index} key={index} />))
                   }
                 </Picker>
               </Item>
@@ -287,7 +286,7 @@ class StoreRegistrationScreen extends Component {
                 <Label>City</Label>
                 <Input
                   onChangeText={this.onCity}
-                  value={this.props.city == null? this.state.city:this.props.city}
+                  value={this.props.city == null ? this.state.city : this.props.city}
                 />
               </Item>
 
@@ -323,9 +322,9 @@ class StoreRegistrationScreen extends Component {
                   selectedValue={this.state.category}
                   onValueChange={this.onCategorySelected}
                 >
-                  <Picker.Item label={'Select Category'} key={'first'} value={''}/>
+                  <Picker.Item label={'Select Category'} key={'first'} value={''} />
                   {
-                    this.Categories.map((value, index) => (<Picker.Item label={value} value={index} key={index}/>))
+                    this.Categories.map((value, index) => (<Picker.Item label={value} value={index} key={index} />))
                   }
                 </Picker>
               </Item>
@@ -340,9 +339,9 @@ class StoreRegistrationScreen extends Component {
                   selectedValue={this.state.classification}
                   onValueChange={this.onClassificationSelected}
                 >
-                  <Picker.Item label={'Select Classification'} key={'first'} value={''}/>
+                  <Picker.Item label={'Select Classification'} key={'first'} value={''} />
                   {
-                    this.Classification.map((value, index) => <Picker.Item label={value} value={index} key={index}/>)
+                    this.Classification.map((value, index) => <Picker.Item label={value} value={index} key={index} />)
                   }
                 </Picker>
               </Item>

@@ -3,7 +3,7 @@ import Immutable from 'seamless-immutable'
 import { ShopTypes } from './ShopRedux'
 import * as R from 'ramda'
 import moment from 'moment'
-import GetVisitDay from '../Lib/GetVisitDay'
+import GetVisitDay, { getOtherShops, getPjpShops } from '../Lib/GetVisitDay'
 import AppConfig from '../Config/AppConfig'
 
 /* ------------- Types and Action Creators ------------- */
@@ -50,7 +50,7 @@ const dayStartSuccess = (state, { id, userid }) => Immutable(state).merge({
   fetching: false,
   pjpId: R.assoc(userid, id, state.pjpId),
   dayStarted: R.assoc(userid, true, state.dayStarted),
-  dayStartDate: R.assoc(userid, moment().format("MM/DD/YYYY HH:mm"), state.dayStartDate)
+  dayStartDate: R.assoc(userid, moment().format('MM/DD/YYYY HH:mm'), state.dayStartDate)
 })
 
 const dayEndRequest = (state) => Immutable(state).merge({ fetching: true })
@@ -64,23 +64,8 @@ const dayEndSuccess = (state, { userid }) => Immutable(state).merge({
 })
 
 export const success = (state, { payload }) => {
-  let pjpShops =
-    R.map(R.assoc('pjp', true))(
-      R.filter(
-        R.compose(
-          R.contains(GetVisitDay()),
-          R.map(R.prop('day')),
-          R.prop('visitDays')
-        ))(payload))
-
-  let others = R.filter(
-    R.compose(
-      R.not,
-      R.contains(GetVisitDay()),
-      R.map(R.prop('day')),
-      R.prop('visitDays')
-    )
-  )(payload)
+  let pjpShops = getPjpShops(payload)
+  let others = getOtherShops(payload)
   return Immutable(state).merge({ payload, fetching: false, pjpShops, others })
 }
 

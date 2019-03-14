@@ -3,9 +3,13 @@ import { from, of, zip } from 'rxjs'
 import { Alert } from 'react-native'
 import { ofType } from 'redux-observable'
 import StoresRedux, { StoresTypes } from '../Redux/StoresRedux'
+import OfflineActions from '../Redux/OfflineRedux'
 import CreateStoreActions, { CreateStoreTypes } from '../Redux/CreateStoreRedux'
 import GetBrandsActions from '../Redux/GetBrandsRedux'
 import GetNonBrandsActions from '../Redux/GetNonBrandsRedux'
+import { NETWORK_ERROR } from 'apisauce'
+import { getOtherShops, getPjpShops } from '../Lib/GetVisitDay'
+import * as R from 'ramda'
 
 export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
   ofType(CreateStoreTypes.CREATE_STORE_REQUEST),
@@ -24,7 +28,7 @@ export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
                 image: null,
                 latitude: location.latitude,
                 longitude: location.longitude,
-                EndTime: moment().format("MM/DD/YYYY HH:mm"),
+                EndTime: moment().format('MM/DD/YYYY HH:mm'),
                 userId: userId,
                 companyId: companyId,
                 imageUrl: response.data.filepath
@@ -38,14 +42,35 @@ export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
             if (response.ok) {
               Alert.alert('Success', 'Store created successfully')
               if (action.data.onSuccess) action.data.onSuccess()
-              return of(CreateStoreActions.createStoreSuccess({...response.data,city:action.data.city}), StoresRedux.storesRequest())
+              return of(CreateStoreActions.createStoreSuccess({
+                ...response.data,
+                city: action.data.city
+              }), StoresRedux.storesRequest())
             } else {
-              return of(CreateStoreActions.createStoreFailure(response))
+              if (response.problem === NETWORK_ERROR) {
+                let data = R.concat(getPjpShops([action.data]), getOtherShops([action.data]))
+
+                Alert.alert('Success', 'Store created in offline mode')
+                if (action.data.onSuccess) action.data.onSuccess()
+
+                if (data[0].pjp) {
+                  return of(OfflineActions.addPjpStore({
+                    action,
+                    data: R.assoc('storeId', new Date().getMilliseconds(), data)
+                  }))
+                } else {
+                  return of(OfflineActions.addOtherStore({
+                    action,
+                    data: R.assoc('storeId', new Date().getMilliseconds(), data)
+                  }))
+                }
+              } else {
+                return of(CreateStoreActions.createStoreFailure(response))
+              }
             }
           })
         )
-    } 
-    else {
+    } else {
       Alert.alert('Failed to grab your location, Please try again')
       return of(CreateStoreActions.createStoreFailure(null))
     }
@@ -80,7 +105,7 @@ export const storeById = (action$, state$, { api }) => action$.pipe(
                 actions.push(StoresRedux.storesFailure(value))
                 break
               case 1:
-                actions.push(GetBrandsActions.getBrandsFailure(value))  
+                actions.push(GetBrandsActions.getBrandsFailure(value))
                 break
               case 2:
                 actions.push(GetNonBrandsActions.getNonBrandsFailure(value))

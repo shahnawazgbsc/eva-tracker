@@ -1,5 +1,4 @@
-import * as R from 'ramda'
-import { mergeMap, filter } from 'rxjs/operators'
+import { filter, mergeMap } from 'rxjs/operators'
 import { of } from 'rxjs'
 import StartupActions from '../Redux/StartupRedux'
 import { Alert } from 'react-native'
