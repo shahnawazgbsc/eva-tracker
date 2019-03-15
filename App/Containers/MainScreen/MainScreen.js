@@ -188,7 +188,7 @@ const mapDispatchToProps = dispatch => ({
   request: () => dispatch(StoresRedux.storesRequest()),
   logout: () => dispatch(LoginRedux.logout()),
   reset: () => dispatch(StoresRedux.reset()),
-  inventorySKUs: () => dispatch(InventoryRedux.inventory_sku_request())
+  inventorySKUs: () => dispatch(InventoryRedux.inventory_sku_request()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainScreen)

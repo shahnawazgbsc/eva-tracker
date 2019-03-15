@@ -7,7 +7,7 @@ import moment from 'moment'
 import ShopActions, { ShopTypes } from '../Redux/ShopRedux'
 import OfflineActions from '../Redux/OfflineRedux'
 import 'firebase/firestore'
-import { NETWORK_ERROR } from 'apisauce'
+import { NETWORK_ERROR, TIMEOUT_ERROR } from 'apisauce'
 
 export const checkInEpic = (action$, state$, { api }) => action$.pipe(
   ofType(ShopTypes.CHECK_IN_REQUEST),
@@ -34,10 +34,10 @@ export const checkInEpic = (action$, state$, { api }) => action$.pipe(
           if (response.ok) {
             return of(ShopActions.checkInSuccess({ ...data, storeVisitId: response.data.storeVisitId }))
           } else {
-            if (response.problem === NETWORK_ERROR) {
+            if (R.any(value => R.equals(R.prop('problem', response), value), [NETWORK_ERROR, TIMEOUT_ERROR])) {
               const param = {
                 ...data,
-                storeVisitId: new Date().getMilliseconds(),
+                storeVisitId: new Date().getTime(),
                 offline: true
               }
               return of(OfflineActions.addCheckIns(param), ShopActions.checkInSuccess(param), ShopActions.shopFailure(response))
@@ -80,7 +80,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
         StoreVisitId: checkInParam.storeVisitId,
         Status: 'Achieved'
       }
-      const dateNow = String(new Date().getMilliseconds())
+      const dateNow = String(new Date().getTime())
 
       if (checkInParam.offline) {
         if (action.data.onSuccess) action.data.onSuccess()

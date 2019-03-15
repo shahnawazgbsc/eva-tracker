@@ -28,27 +28,31 @@ export const INITIAL_STATE = Immutable({
 /* ------------- Reducers ------------- */
 
 // request the data from an api
-export const addPjpStore = (state, { data }) => Immutable(state).merge({ pjpShops: Immutable(state).pjpShops.concat(data) })
+export const addPjpStore = (state, { data }) => Immutable(state).merge({ pjpShops: R.append(data, state.pjpShops) })
 
-export const addOtherStore = (state, { data }) => Immutable(state).merge({ otherShops: Immutable(state).otherShops.concat(data) })
+export const addOtherStore = (state, { data }) => Immutable(state).merge({ otherShops: R.append(data, state.otherShops) })
 
-export const addCheckIns = (state, { data }) => Immutable(state).merge({ checkIns: Immutable(state).checkIns.concat(data) })
+export const addCheckIns = (state, { data }) => Immutable(state).merge({ checkIns: R.append(data, state.checkIns) })
 
 export const addInventory = (state, { data }) => Immutable(state).merge({
-  checkIns: R.set(R.lensProp(`${state.checkIns.length - 1}`), R.assoc('inventory', data, state.checkIns[state.checkIns.length - 1]), state.checkIns)
+  checkIns: R.update(state.checkIns.length - 1, R.assoc('inventory', data, state.checkIns[state.checkIns.length - 1]), state.checkIns)
+})
+
+export const addOrder = (state, { data }) => Immutable(state).merge({
+  checkIns: R.update(state.checkIns.length - 1, R.assoc('order', data, state.checkIns[state.checkIns.length - 1]), state.checkIns)
 })
 
 export const fixStore = (state, { prevId, newId }) => {
   const index = R.findIndex(R.propEq('StoreId', prevId), state.checkIns)
+  const pjpIndex = R.findIndex(R.pathEq(['data', 'storeId'], prevId))(state.pjpShops)
+  const otherIndex = R.findIndex(R.pathEq(['data', 'storeId'], prevId))(state.otherShops)
+
   return Immutable(state).merge({
-    checkIns: index !== -1 ? R.over(R.lensIndex(index), R.assoc('StoreId', newId), state.checkIns)
-      : state.checkIns
+    checkIns: index !== -1 ? R.update(index, R.assoc('StoreId', newId, state.checkIns[index]), state.checkIns) : state.checkIns,
+    pjpShops: pjpIndex !== -1 ? R.remove(pjpIndex, 1, state.pjpShops) : state.pjpShops,
+    otherShops: otherIndex !== -1 ? R.remove(otherIndex, 1, state.otherShops) : state.otherShops
   })
 }
-
-export const addOrder = (state, { data }) => Immutable(state).merge({
-  checkIns: R.set(R.lensProp(`${state.checkIns.length - 1}`), R.assoc('order', data, state.checkIns[state.checkIns.length - 1]), state.checkIns)
-})
 
 /* ------------- Hookup Reducers To Types ------------- */
 
