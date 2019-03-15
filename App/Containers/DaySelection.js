@@ -106,11 +106,11 @@ class DaySelection extends React.PureComponent {
       props.days.forEach(value => map.set(value, true))
     }
 
-    this.state = {
-      dataObjects: Days,
-      selected: map
+    if (!this.state) {
+      this.state = { dataObjects: Days, selected: map }
+    } else {
+      this.setState({ dataObjects: Days, selected: map })
     }
-    this.setState(this.state)
   }
 
   componentWillReceiveProps (nextProps): void {

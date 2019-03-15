@@ -1,4 +1,4 @@
-import { createReducer, createActions } from 'reduxsauce'
+import { createActions, createReducer } from 'reduxsauce'
 import Immutable from 'seamless-immutable'
 
 /* ------------- Types and Action Creators ------------- */
@@ -41,7 +41,7 @@ export const success = (state, action) => {
 
 // Something went wrong somewhere.
 export const failure = state =>
-  Immutable(state).merge({ fetching: false, error: true, payload: null })
+  Immutable(state).merge({ fetching: false, error: true })
 
 export const startUp = (state) => Immutable(state).merge({ fetching: false })
 

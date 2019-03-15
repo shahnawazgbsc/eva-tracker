@@ -3,7 +3,7 @@ import Immutable from 'seamless-immutable'
 import { ShopTypes } from './ShopRedux'
 import * as R from 'ramda'
 import moment from 'moment'
-import GetVisitDay, { getOtherShops, getPjpShops } from '../Lib/GetVisitDay'
+import { getOtherShops, getPjpShops } from '../Lib/GetVisitDay'
 import AppConfig from '../Config/AppConfig'
 
 /* ------------- Types and Action Creators ------------- */

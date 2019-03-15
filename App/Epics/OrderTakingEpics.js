@@ -5,7 +5,9 @@ import { of } from 'rxjs'
 import * as R from 'ramda'
 import moment from 'moment'
 import ShopActions, { ShopTypes } from '../Redux/ShopRedux'
+import OfflineActions from '../Redux/OfflineRedux'
 import 'firebase/firestore'
+import { NETWORK_ERROR } from 'apisauce'
 
 export const checkInEpic = (action$, state$, { api }) => action$.pipe(
   ofType(ShopTypes.CHECK_IN_REQUEST),
@@ -23,16 +25,25 @@ export const checkInEpic = (action$, state$, { api }) => action$.pipe(
         longitude,
         ContactPersonName: '',
         ContactNo: '',
-        StartTime: moment().format("MM/DD/YYYY HH:mm"),
+        StartTime: moment().format('MM/DD/YYYY HH:mm'),
         Status: 'Pending',
         NextScheduledVisit: ''
       }
       return api.checkIn(data).pipe(
-        map(response => {
+        mergeMap(response => {
           if (response.ok) {
-            return ShopActions.checkInSuccess({ ...data, storeVisitId: response.data.storeVisitId })
+            return of(ShopActions.checkInSuccess({ ...data, storeVisitId: response.data.storeVisitId }))
           } else {
-            return ShopActions.shopFailure(response)
+            if (response.problem === NETWORK_ERROR) {
+              const param = {
+                ...data,
+                storeVisitId: new Date().getMilliseconds(),
+                offline: true
+              }
+              return of(OfflineActions.addCheckIns(param), ShopActions.checkInSuccess(param), ShopActions.shopFailure(response))
+            } else {
+              return of(ShopActions.shopFailure(response))
+            }
           }
         })
       )
@@ -65,11 +76,22 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
         NextScheduledVisit: '',
         Location: '',
         Notes: '',
-        EndTime: moment().format("MM/DD/YYYY HH:mm"),
+        EndTime: moment().format('MM/DD/YYYY HH:mm'),
         StoreVisitId: checkInParam.storeVisitId,
         Status: 'Achieved'
       }
       const dateNow = String(new Date().getMilliseconds())
+
+      if (checkInParam.offline) {
+        if (action.data.onSuccess) action.data.onSuccess()
+        return of(ShopActions.checkOutSuccess(
+          {
+            id: checkInParam.StoreId,
+            pjp: !!action.data.pjp,
+            productive: action.data.productive
+          }, userId
+        ))
+      }
 
       return api.checkOut(data).pipe(
         map(response => {
@@ -87,7 +109,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
                 shopId: String(checkInParam.StoreId),
                 eventId: dateNow,
                 userId: String(userId),
-                timestamp: moment().format("MM/DD/YYYY HH:mm")
+                timestamp: moment().format('MM/DD/YYYY HH:mm')
               }).set(firebase.firestore().collection('tbl_shops')
                 .doc(String(checkInParam.StoreId))
                 .collection('visit_summary')
@@ -100,19 +122,18 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
                 shopId: checkInParam.StoreId,
                 userId: userId,
                 visitId: Number.parseInt(dateNow),
-                timestamp: moment().format("MM/DD/YYYY HH:mm")
+                timestamp: moment().format('MM/DD/YYYY HH:mm')
               }).commit()
 
             firebase.firestore().collection('tbl_shops')
               .doc(String(checkInParam.StoreId))
-              .set(
-                {
-                  userId: userId,
-                  lng: longitude,
-                  lat: latitude,
-                  shopId: checkInParam.StoreId,
-                  timestamp: moment().format("MM/DD/YYYY HH:mm")
-                })
+              .set({
+                userId: userId,
+                lng: longitude,
+                lat: latitude,
+                shopId: checkInParam.StoreId,
+                timestamp: moment().format('MM/DD/YYYY HH:mm')
+              })
 
             if (action.data.onSuccess) action.data.onSuccess()
             return ShopActions.checkOutSuccess(
@@ -164,33 +185,38 @@ export const placeOrderEpics = (action$, state$, { api }) => action$.pipe(
 
     var extra = action.data.items[0].extraDiscount
 
-    return api.addItems({ Order }).pipe(
-      mergeMap(response => {
-        if (!response.ok || hasReason) {
-          return of(response)
-        } else {
-          const array = response.data.response[0].orderTakings.map(value => ({
-            orderTakingId: value.orderTakingId,
-            inventoryItemId: value.inventoryItemId,
-            quantity: value.quantity,
-            storeVisitId: value.storeVisitId,
-            companyId: value.companyId,
-            storeId: value.storeId,
-            extraDiscount: extra,
-            userId: userId
-          }))
-          return api.salesIndents(array)
-        }
-      }),
-      mergeMap(response => {
-        if (response.ok) {
-          if (action.data.onSuccess) action.data.onSuccess()
-          return of(ShopActions.placeOrderSuccess())
-        } else {
-          if (action.data.onFailure) action.data.onFailure()
-          return of(ShopActions.placeOrderFailure(response))
-        }
-      })
-    )
+    if (checkInParams.offline) {
+      if (action.data.onSuccess) action.data.onSuccess()
+      return of(OfflineActions.addOrder(action), ShopActions.placeOrderSuccess())
+    } else {
+      return api.addItems({ Order }).pipe(
+        mergeMap(response => {
+          if (!response.ok || hasReason) {
+            return of(response)
+          } else {
+            const array = response.data.response[0].orderTakings.map(value => ({
+              orderTakingId: value.orderTakingId,
+              inventoryItemId: value.inventoryItemId,
+              quantity: value.quantity,
+              storeVisitId: value.storeVisitId,
+              companyId: value.companyId,
+              storeId: value.storeId,
+              extraDiscount: extra,
+              userId: userId
+            }))
+            return api.salesIndents(array)
+          }
+        }),
+        mergeMap(response => {
+          if (response.ok) {
+            if (action.data.onSuccess) action.data.onSuccess()
+            return of(ShopActions.placeOrderSuccess())
+          } else {
+            if (action.data.onFailure) action.data.onFailure()
+            return of(ShopActions.placeOrderFailure(response))
+          }
+        })
+      )
+    }
   })
 )

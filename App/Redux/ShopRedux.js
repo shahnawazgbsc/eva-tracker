@@ -12,7 +12,7 @@ const { Types, Creators } = createActions({
   removeItem: ['item'],
   placeOrderRequest: ['data'],
   placeOrderSuccess: null,
-  placeOrderFailure:['error'],
+  placeOrderFailure: ['error'],
   shopFailure: ['error'],
   nonProductiveReasons: null,
   nonProductiveReasonsSuccess: ['data'],

@@ -1,7 +1,4 @@
-import {
-  createActions,
-  createReducer
-} from 'reduxsauce'
+import { createActions, createReducer } from 'reduxsauce'
 import Immutable from 'seamless-immutable'
 
 /* ------------- Types and Action Creators ------------- */
@@ -26,7 +23,7 @@ export default Creators
 export const INITIAL_STATE = Immutable({
   fetching: false,
   error: null,
-  inventorySKUs:[]
+  inventorySKUs: []
 })
 
 /* ------------- Reducers ------------- */
@@ -54,23 +51,17 @@ export const failure = (state, {
   error
 })
 
-export const inventory_sku_request = (state) => Immutable(state).merge({
-  fetching: true,
-  inventorySKUs:[]
-})
-export const inventory_sku_success = (state,{
-  data
-}) => Immutable(state).merge({
+export const inventory_sku_request = (state) => Immutable(state).merge({ fetching: true })
+export const inventory_sku_success = (state, { data }) => Immutable(state).merge({
   fetching: false,
-  error:null,
-  inventorySKUs:data
+  error: null,
+  inventorySKUs: data
 })
-export const inventory_sku_failure = (state,{
+export const inventory_sku_failure = (state, {
   error
 }) => Immutable(state).merge({
   fetching: false,
   error,
-  inventorySKUs:[]
 })
 /* ------------- Hookup Reducers To Types ------------- */
 export const reducer = createReducer(INITIAL_STATE, {

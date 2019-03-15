@@ -17,6 +17,7 @@ import moment from 'moment'
 
 var baseState = {}
 var cityName = ''
+
 class StoreRegistrationScreen extends Component {
   Categories = ['LMT', 'V/S', 'Retail']
   Classification = ['500 & Above', '250 to 499', '100 to 249', 'Less then 100']
@@ -27,15 +28,15 @@ class StoreRegistrationScreen extends Component {
     this.state = {
       image: undefined,
       StartTime: currentdatetime,
-      shopName: '',
-      shopKeeper: '',
-      contactNo: '',
-      landline: '',
-      address: '',
-      street: '',
-      city: '',
-      landMark: '',
-      cnic: '',
+      shopName: __DEV__ ? 'Test Shop' : '',
+      shopKeeper: __DEV__ ? 'Test Shopkeeper' : '',
+      contactNo: __DEV__ ? '12345678910' : '',
+      landline: __DEV__ ? '12345678910' : '',
+      address: __DEV__ ? 'Abc Address' : '',
+      street: __DEV__ ? 'Abc street' : '',
+      city: __DEV__ ? 'Karachi' : '',
+      landMark: __DEV__ ? 'LandMark' : '',
+      cnic: __DEV__ ? '4210122222222' : '',
       activeStatus: true,
       category: undefined,
       subsectionId: undefined,
@@ -53,10 +54,10 @@ class StoreRegistrationScreen extends Component {
         subsectionId: this.props.subSection[this.state.subsectionId].subsectionId,
         category: this.Categories[this.state.category],
         classification: this.Classification[this.state.classification],
-        VisitDays: this.props.days.map(value => ({ day: value })),
+        visitDays: this.props.days.map(value => ({ day: value })),
         onSuccess: () => {
           this.setState(baseState)
-          this.setState({city: this.props.city == null ? cityName : this.props.city})
+          this.setState({ city: this.props.city == null ? cityName : this.props.city })
           this.props.resetDays()
           this.props.navigation.goBack(null)
         }
@@ -100,18 +101,20 @@ class StoreRegistrationScreen extends Component {
     this.props.resetDays()
     if (this.props.city == null) {
       Geocoder.fallbackToGoogle('AIzaSyAkzbji8MfNjpWXG42WS5L0dItXEkKjSRE')
-      Geocoder.geocodePosition({lat: this.props.latitude, lng: this.props.longitude}).then(res => {
+      Geocoder.geocodePosition({ lat: this.props.latitude, lng: this.props.longitude }).then(res => {
         cityName = res[0].locality
-        this.setState({city: res[0].locality})
+        this.setState({ city: res[0].locality })
       })
-  .catch(err => alert(err))
-    } else this.setState({city: this.props.city})
+        .catch(err => alert(err))
+    } else this.setState({ city: this.props.city })
   }
+
   componentWillReceiveProps (newProps) {
     this.setState({
       days: newProps.days
     })
   }
+
   onShopName = (txt) => {
     this.setState({ shopName: txt })
   }
@@ -205,9 +208,9 @@ class StoreRegistrationScreen extends Component {
               </Button>
             </Left>
             <Body>
-              <Text style={styles.titleText}>Store Registration</Text>
+            <Text style={styles.titleText}>Store Registration</Text>
             </Body>
-            <Right />
+            <Right/>
           </Header>
         </GradientWrapper>
         <KeyboardAwareScrollView>
@@ -258,11 +261,11 @@ class StoreRegistrationScreen extends Component {
                   selectedValue={this.state.subsectionId}
                   onValueChange={this.onSubSectionSelected}
                 >
-                  <Picker.Item label={'Select Subsection'} key={'first'} value={''} />
+                  <Picker.Item label={'Select Subsection'} key={'first'} value={''}/>
                   {
                     this.props.subSection &&
                     this.props.subSection.map((value, index) => (
-                      <Picker.Item label={value.name} value={index} key={index} />))
+                      <Picker.Item label={value.name} value={index} key={index}/>))
                   }
                 </Picker>
               </Item>
@@ -322,9 +325,9 @@ class StoreRegistrationScreen extends Component {
                   selectedValue={this.state.category}
                   onValueChange={this.onCategorySelected}
                 >
-                  <Picker.Item label={'Select Category'} key={'first'} value={''} />
+                  <Picker.Item label={'Select Category'} key={'first'} value={''}/>
                   {
-                    this.Categories.map((value, index) => (<Picker.Item label={value} value={index} key={index} />))
+                    this.Categories.map((value, index) => (<Picker.Item label={value} value={index} key={index}/>))
                   }
                 </Picker>
               </Item>
@@ -339,9 +342,9 @@ class StoreRegistrationScreen extends Component {
                   selectedValue={this.state.classification}
                   onValueChange={this.onClassificationSelected}
                 >
-                  <Picker.Item label={'Select Classification'} key={'first'} value={''} />
+                  <Picker.Item label={'Select Classification'} key={'first'} value={''}/>
                   {
-                    this.Classification.map((value, index) => <Picker.Item label={value} value={index} key={index} />)
+                    this.Classification.map((value, index) => <Picker.Item label={value} value={index} key={index}/>)
                   }
                 </Picker>
               </Item>

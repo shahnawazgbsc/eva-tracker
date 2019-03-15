@@ -7,6 +7,7 @@ import { createReactNavigationReduxMiddleware } from 'react-navigation-redux-hel
 import { createEpicMiddleware } from 'redux-observable'
 import rootEpics from '../Epics'
 import firebase from '../Lib/Firebase'
+import { createLogger } from 'redux-logger'
 
 // creates the store
 export default (rootReducer, api) => {
@@ -23,6 +24,7 @@ export default (rootReducer, api) => {
   middleware.push(navigationMiddleware)
 
   /* ------------- Analytics Middleware ------------- */
+  const reduxLogger = applyMiddleware(createLogger())
 
   /* ------------- Saga Middleware ------------- */
 
@@ -44,12 +46,18 @@ export default (rootReducer, api) => {
   const persistConfig = {
     key: 'root',
     storage: storage,
-    stateReconciler: autoMergeLevel2, // see "Merge Process" section for details.
+    stateReconciler: autoMergeLevel2 // see "Merge Process" section for details.
   }
 
   const pReducer = persistReducer(persistConfig, rootReducer)
 
-  const store = createAppropriateStore(pReducer, compose(...enhancers))
+  let store
+  if (Config.useReactotron) {
+    store = createAppropriateStore(pReducer, compose(...enhancers))
+  } else {
+    store = createAppropriateStore(pReducer, compose(...enhancers, reduxLogger))
+  }
+
   const persistor = persistStore(store)
 
   // kick off root saga

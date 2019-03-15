@@ -15,4 +15,6 @@ require('core-js/fn/array/find')
 require('intl')
 require('intl/locale-data/jsonp/en')
 
+console.disableYellowBox = true
+
 AppRegistry.registerComponent('EvaTracker', () => App)

@@ -8,8 +8,9 @@ import CreateStoreActions, { CreateStoreTypes } from '../Redux/CreateStoreRedux'
 import GetBrandsActions from '../Redux/GetBrandsRedux'
 import GetNonBrandsActions from '../Redux/GetNonBrandsRedux'
 import { NETWORK_ERROR } from 'apisauce'
-import { getOtherShops, getPjpShops } from '../Lib/GetVisitDay'
+import GetVisitDay, { hasPJPDay } from '../Lib/GetVisitDay'
 import * as R from 'ramda'
+import moment from 'moment'
 
 export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
   ofType(CreateStoreTypes.CREATE_STORE_REQUEST),
@@ -42,27 +43,36 @@ export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
             if (response.ok) {
               Alert.alert('Success', 'Store created successfully')
               if (action.data.onSuccess) action.data.onSuccess()
-              return of(CreateStoreActions.createStoreSuccess({
-                ...response.data,
-                city: action.data.city
-              }), StoresRedux.storesRequest())
+              if (action.data.offline) {
+                return of(CreateStoreActions.createStoreSuccess({
+                  ...response.data,
+                  city: action.data.city
+                }), OfflineActions.fixStore(action.id, response.data.id))
+              } else {
+                return of(CreateStoreActions.createStoreSuccess({
+                  ...response.data, city: action.data.city
+                }), StoresRedux.storesRequest())
+              }
             } else {
               if (response.problem === NETWORK_ERROR) {
-                let data = R.concat(getPjpShops([action.data]), getOtherShops([action.data]))
+                const hasPJP = hasPJPDay(action.data)
+
+                console.log(GetVisitDay())
+                console.log(hasPJP)
 
                 Alert.alert('Success', 'Store created in offline mode')
                 if (action.data.onSuccess) action.data.onSuccess()
 
-                if (data[0].pjp) {
+                if (hasPJP) {
                   return of(OfflineActions.addPjpStore({
                     action,
-                    data: R.assoc('storeId', new Date().getMilliseconds(), data)
-                  }))
+                    data: R.merge(action.data, { storeId: new Date().getMilliseconds(), pjp: true })
+                  }), CreateStoreActions.createStoreFailure(response))
                 } else {
                   return of(OfflineActions.addOtherStore({
                     action,
-                    data: R.assoc('storeId', new Date().getMilliseconds(), data)
-                  }))
+                    data: R.assoc('storeId', new Date().getMilliseconds(), action.data)
+                  }), CreateStoreActions.createStoreFailure(response))
                 }
               } else {
                 return of(CreateStoreActions.createStoreFailure(response))

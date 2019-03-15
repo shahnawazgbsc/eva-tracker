@@ -19,7 +19,6 @@ import { connect } from 'react-redux'
 import styles from './Styles/InventoryScreenStyle'
 import InventoryActions from '../Redux/InventoryTakingRedux'
 import GradientWrapper from '../Components/GradientWrapper'
-import Colors from '../Themes/Colors'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 
@@ -91,12 +90,11 @@ class InventoryScreen extends Component {
     this.state.selected.forEach((brands, index) => {
       inventoryMap.brandName = brandNames[index]
       brands.forEach((sku, brandIndex) => {
-
-        if(this.state.quantity[index][brandIndex] != "" && this.state.quantity[index][brandIndex] != 0){
+        if (this.state.quantity[index][brandIndex] !== '' && this.state.quantity[index][brandIndex] !== 0) {
           array.push({
             ...inventoryMap,
             quantity: this.state.quantity[index][brandIndex],
-            generalSKUId: this.state.inventorySKU[brandIndex].generalSKUId,
+            generalSKUId: this.state.inventorySKU[brandIndex].generalSKUId
           })
         }
       })
@@ -128,7 +126,7 @@ class InventoryScreen extends Component {
             this.setState({ selected: clone })
           }
           }>
-            
+
             <Text style={styles.itemProduct}>{content.itemName}</Text>
             <Item rounded style={styles.input}>
               <Input
@@ -185,7 +183,7 @@ class InventoryScreen extends Component {
               light
               onPress={this.back}
             >
-              <Icon name={'arrow-back'}/>
+              <Icon name={'arrow-back'} />
             </Button>
             <View style={{ marginVertical: 10, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
               <Icon

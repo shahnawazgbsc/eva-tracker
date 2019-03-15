@@ -1,20 +1,6 @@
 import React, { Component } from 'react'
 import { Text, TextInput } from 'react-native'
-import * as R from 'ramda'
-import {
-  Body,
-  Button,
-  CheckBox,
-  Container,
-  Content,
-  Form,
-  H3,
-  Header,
-  Icon,
-  Left,
-  ListItem,
-  Right
-} from 'native-base'
+import { Body, Button, CheckBox, Container, Content, Form, H3, Header, Icon, Left, ListItem, Right } from 'native-base'
 import { connect } from 'react-redux'
 import { StackActions } from 'react-navigation'
 import { Colors } from '../Themes'
@@ -26,29 +12,32 @@ import ShopRedux from '../Redux/ShopRedux'
 // import YourActions from '../Redux/YourRedux'
 
 class ReasonScreen extends Component {
-
   reasons = []
+
   constructor (props) {
     super(props)
     this.state = {
       selected: null,
-      nonProductiveReasons:[]
+      nonProductiveReasons: []
     }
   }
-componentWillMount() {
-  this.props.nonProductiveReasons()
-}
-componentWillReceiveProps(newProps) {
-  if(newProps.reasons!= null) {
-  this.reasons = newProps.reasons.map((value)=>(
-    value.reason
-))
-  
-this.setState({
-  nonProductiveReasons:this.reasons
-})
+
+  componentWillMount () {
+    this.props.nonProductiveReasons()
   }
-}
+
+  componentWillReceiveProps (newProps) {
+    if (newProps.reasons != null) {
+      this.reasons = newProps.reasons.map((value) => (
+        value.reason
+      ))
+
+      this.setState({
+        nonProductiveReasons: this.reasons
+      })
+    }
+  }
+
   close = () => {
     this.props.navigation.goBack(null)
   }
@@ -79,15 +68,15 @@ this.setState({
           <Header style={styles.header}>
             <Left>
               <Button transparent light onPress={this.close}>
-                <Icon name={'close'}/>
+                <Icon name={'close'} />
               </Button>
             </Left>
             <Body>
-            <Text style={styles.titleText}>Select Reason</Text>
+              <Text style={styles.titleText}>Select Reason</Text>
             </Body>
             <Right>
               <Button transparent light onPress={this.accept}>
-                <Icon name={'checkmark'}/>
+                <Icon name={'checkmark'} />
               </Button>
             </Right>
           </Header>
@@ -101,10 +90,10 @@ this.setState({
                   this.setState({ selected: value })
                 }}>
                   <Body>
-                  <Text>{value}</Text>
+                    <Text>{value}</Text>
                   </Body>
                   <Right>
-                    <CheckBox checked={this.state.selected === value}/>
+                    <CheckBox checked={this.state.selected === value} />
                   </Right>
                 </ListItem>
               ))
@@ -137,13 +126,13 @@ this.setState({
 const mapStateToProps = (state, ownProps) => {
   return {
     pjp: ownProps.navigation.getParam('item').pjp,
-    reasons:state.shop.reasons
+    reasons: state.shop.reasons
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    nonProductiveReasons:()=>dispatch(ShopRedux.nonProductiveReasons()),
+    nonProductiveReasons: () => dispatch(ShopRedux.nonProductiveReasons()),
     checkOutRequest: (data) => dispatch(ShopRedux.checkOutRequest(data)),
     placeOrder: (data) => dispatch(ShopRedux.placeOrderRequest(data))
   }
