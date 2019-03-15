@@ -5,6 +5,7 @@ import { Image, Text, View } from 'react-native'
 import styles from './Styles/CustomDrawerStyle'
 import GradientWrapper from './GradientWrapper'
 import { Body, Container, Content, Header, ListItem } from 'native-base'
+import OfflineActions from '../Redux/OfflineRedux'
 
 class CustomDrawer extends PureComponent {
   // // Prop type warnings
@@ -47,6 +48,9 @@ class CustomDrawer extends PureComponent {
             <Text>Store Registration</Text>
           </ListItem>
           }
+          <ListItem button onPress={this.props.syncStores}>
+            <Text>Sync Stores</Text>
+          </ListItem>
         </Content>
       </Container>
     )
@@ -59,6 +63,8 @@ const mapStateToProps = (state) => ({
   email: state.login.payload && state.login.payload.user.email
 })
 
-const mapDispatchToProps = (dispatch) => ({})
+const mapDispatchToProps = (dispatch) => ({
+  syncStores: () => dispatch(OfflineActions.syncWithServer())
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(CustomDrawer)
