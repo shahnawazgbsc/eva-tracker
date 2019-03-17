@@ -47,7 +47,7 @@ export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
                 return of(CreateStoreActions.createStoreSuccess({
                   ...response.data,
                   city: action.data.city
-                }), OfflineActions.fixStore(action.id, response.data.id))
+                }), OfflineActions.fixStore(action.id, response.data.id, userId))
               } else {
                 return of(CreateStoreActions.createStoreSuccess({
                   ...response.data, city: action.data.city

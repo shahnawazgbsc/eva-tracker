@@ -14,8 +14,22 @@ export const appEpic = (action$) => action$.pipe(
   })
 )
 
+export const processCheckIns = (action$, state$) => action$.pipe(
+  ofType(OfflineTypes.SYNC_CHECK_INS),
+  mergeMap((action) => {
+    let offline = state$.value.offline
+
+    return from(R.map(value => ({
+      offline: true,
+      data: { storeId: value.StoreId, pjp: value.pjp, time: value.StartTime },
+      value,
+      type: value.action.type
+    }), offline.checkIns))
+  })
+)
+
 export const processStores = (action$, state$) => action$.pipe(
-  ofType(OfflineTypes.SYNC_WITH_SERVER),
+  ofType(OfflineTypes.SYNC_STORES),
   mergeMap((action) => {
     let offline = state$.value.offline
 

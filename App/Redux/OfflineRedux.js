@@ -10,8 +10,11 @@ const { Types, Creators } = createActions({
   addCheckIns: ['data'],
   addInventory: ['data'],
   addOrder: ['data'],
-  fixStore: ['prevId', 'newId'],
-  syncWithServer: null
+  addCheckOut: ['time'],
+  removeCheckIn: ['id'],
+  fixStore: ['prevId', 'newId', 'userId'],
+  syncStores: null,
+  syncCheckIns: null
 })
 
 export const OfflineTypes = Types
@@ -34,6 +37,10 @@ export const addOtherStore = (state, { data }) => Immutable(state).merge({ other
 
 export const addCheckIns = (state, { data }) => Immutable(state).merge({ checkIns: R.append(data, state.checkIns) })
 
+export const addCheckOut = (state, { time }) => Immutable(state).merge({
+  checkIns: R.update(state.checkIns.length - 1, R.assoc('EndTime', time, state.checkIns[state.checkIns.length - 1]), state.checkIns)
+})
+
 export const addInventory = (state, { data }) => Immutable(state).merge({
   checkIns: R.update(state.checkIns.length - 1, R.assoc('inventory', data, state.checkIns[state.checkIns.length - 1]), state.checkIns)
 })
@@ -41,6 +48,14 @@ export const addInventory = (state, { data }) => Immutable(state).merge({
 export const addOrder = (state, { data }) => Immutable(state).merge({
   checkIns: R.update(state.checkIns.length - 1, R.assoc('order', data, state.checkIns[state.checkIns.length - 1]), state.checkIns)
 })
+
+export const removeCheckIn = (state, { id }) => {
+  const index = R.findIndex(R.propEq('storeVisitId', id), state.checkIns)
+
+  return Immutable(state).merge({
+    checkIns: index !== -1 ? R.remove(index, 1, state.checkIns) : state.checkIns
+  })
+}
 
 export const fixStore = (state, { prevId, newId }) => {
   const index = R.findIndex(R.propEq('StoreId', prevId), state.checkIns)
@@ -60,7 +75,9 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.ADD_PJP_STORE]: addPjpStore,
   [Types.ADD_OTHER_STORE]: addOtherStore,
   [Types.ADD_CHECK_INS]: addCheckIns,
+  [Types.ADD_CHECK_OUT]: addCheckOut,
   [Types.ADD_ORDER]: addOrder,
   [Types.ADD_INVENTORY]: addInventory,
-  [Types.FIX_STORE]: fixStore
+  [Types.FIX_STORE]: fixStore,
+  [Types.REMOVE_CHECK_IN]: removeCheckIn
 })

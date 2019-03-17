@@ -1,7 +1,7 @@
 import { ofType } from 'redux-observable'
 import { Alert } from 'react-native'
 import { map, mergeMap } from 'rxjs/operators'
-import { of } from 'rxjs'
+import { from, of } from 'rxjs'
 import * as R from 'ramda'
 import moment from 'moment'
 import ShopActions, { ShopTypes } from '../Redux/ShopRedux'
@@ -25,26 +25,60 @@ export const checkInEpic = (action$, state$, { api }) => action$.pipe(
         longitude,
         ContactPersonName: '',
         ContactNo: '',
-        StartTime: moment().format('MM/DD/YYYY HH:mm'),
+        StartTime: action.data.time ? action.data.time : moment().format('MM/DD/YYYY HH:mm'),
         Status: 'Pending',
         NextScheduledVisit: ''
       }
       return api.checkIn(data).pipe(
         mergeMap(response => {
+          let actions = []
           if (response.ok) {
-            return of(ShopActions.checkInSuccess({ ...data, storeVisitId: response.data.storeVisitId }))
+            if (action.offline) {
+              actions.push(OfflineActions.removeCheckIn(action.value.storeVisitId))
+              actions.push(R.merge({
+                checkInParam: R.merge(action.value, {
+                  offline: false,
+                  storeVisitId: response.data.storeVisitId
+                })
+              }, ShopActions.checkOutRequest({
+                productive: !!action.value.order,
+                pjp: action.pjp
+              })))
+
+              if (action.value.order) {
+                actions.push(R.merge({
+                  checkInParam: R.merge(action.value, {
+                    offline: false,
+                    storeVisitId: response.data.storeVisitId
+                  })
+                }, action.value.order))
+              }
+              if (action.value.inventory) {
+                actions.push(R.merge({
+                  checkInParam: R.merge(action.value, {
+                    offline: false,
+                    storeVisitId: response.data.storeVisitId
+                  })
+                }, action.value.inventory))
+              }
+            } else {
+              actions.push(ShopActions.checkInSuccess({ ...data, storeVisitId: response.data.storeVisitId }))
+            }
           } else {
-            if (R.any(value => R.equals(R.prop('problem', response), value), [NETWORK_ERROR, TIMEOUT_ERROR])) {
+            if (R.any(value => R.equals(R.prop('problem', response), value), [NETWORK_ERROR, TIMEOUT_ERROR]) && R.not(R.path(['value', 'offline'], action))) {
               const param = {
                 ...data,
                 storeVisitId: new Date().getTime(),
-                offline: true
+                offline: true,
+                action
               }
-              return of(OfflineActions.addCheckIns(param), ShopActions.checkInSuccess(param), ShopActions.shopFailure(response))
+              actions.push(OfflineActions.addCheckIns(param), ShopActions.checkInSuccess(param), ShopActions.shopFailure(response))
             } else {
-              return of(ShopActions.shopFailure(response))
+              actions.push(ShopActions.shopFailure(response))
             }
           }
+
+          return from(actions)
         })
       )
     } else {
@@ -60,7 +94,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
     const latitude = state$.value.gps.data && state$.value.gps.data.latitude
     const longitude = state$.value.gps.data && state$.value.gps.data.longitude
 
-    const checkInParam = state$.value.shop.checkInParam
+    const checkInParam = action.checkInParam ? action.checkInParam : state$.value.shop.checkInParam
     const userId = state$.value.login.payload.user.userid
 
     if (latitude && longitude) {
@@ -76,7 +110,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
         NextScheduledVisit: '',
         Location: '',
         Notes: '',
-        EndTime: moment().format('MM/DD/YYYY HH:mm'),
+        EndTime: checkInParam.EndTime || moment().format('MM/DD/YYYY HH:mm'),
         StoreVisitId: checkInParam.storeVisitId,
         Status: 'Achieved'
       }
@@ -90,7 +124,7 @@ export const checkOutEpic = (action$, state$, { api, firebase }) => action$.pipe
             pjp: !!action.data.pjp,
             productive: action.data.productive
           }, userId
-        ))
+        ), OfflineActions.addCheckOut(data.EndTime))
       }
 
       return api.checkOut(data).pipe(
@@ -171,7 +205,7 @@ export const nonProductiveReasonsEpics = (action$, state$, { api }) => action$.p
 export const placeOrderEpics = (action$, state$, { api }) => action$.pipe(
   ofType(ShopTypes.PLACE_ORDER_REQUEST),
   mergeMap(action => {
-    const checkInParams = state$.value.shop.checkInParam
+    const checkInParams = action.checkInParam ? action.checkInParam : state$.value.shop.checkInParam
     const userId = state$.value.login.payload.user.userid
     const Order = action.data.items.map(value => ({
       ...value,

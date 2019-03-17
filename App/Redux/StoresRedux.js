@@ -5,6 +5,7 @@ import * as R from 'ramda'
 import moment from 'moment'
 import { getOtherShops, getPjpShops } from '../Lib/GetVisitDay'
 import AppConfig from '../Config/AppConfig'
+import { OfflineTypes } from './OfflineRedux'
 
 /* ------------- Types and Action Creators ------------- */
 
@@ -79,10 +80,18 @@ export const startUp = (state) => {
 }
 
 export const checkOutCheck = (state, { data, userid }) =>
-  R.contains(
-    data.id,
-    R.map(R.prop('id'))(state.achieved[userid] || [])
-  ) ? state : Immutable(state).merge({ achieved: R.assoc(userid, R.concat(state.achieved[userid] || [], [data]), state.achieved) })
+  R.contains(data.id, R.map(R.prop('id'))(state.achieved[userid] || []))
+    ? state : Immutable(state).merge({ achieved: R.assoc(userid, R.concat(state.achieved[userid] || [], [data]), state.achieved) })
+
+export const fixAchieved = (state, { prevId, newId, userId }) => {
+  const achieved = state.achieved[userId]
+  if (achieved) {
+    const index = R.findIndex(R.propEq('StoreId', prevId), state.achieved[userId])
+    return index !== -1 ? Immutable(state).merge({ achieved: R.update(index, newId, achieved) }) : state
+  } else {
+    return state
+  }
+}
 
 export const reset = state => Immutable(state).merge({
   shops: null,
@@ -104,5 +113,6 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.DAY_END_SUCCESS]: dayEndSuccess,
   [Types.RESET]: reset,
   [ShopTypes.CHECK_OUT_SUCCESS]: checkOutCheck,
+  [OfflineTypes.FIX_STORE]: fixAchieved,
   'STARTUP': startUp
 })

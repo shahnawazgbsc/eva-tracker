@@ -7,7 +7,7 @@ import OfflineActions from '../Redux/OfflineRedux'
 export const selectProductsListEpics = (action$, state$, { api }) => action$.pipe(
   ofType(InventoryTakingType.INVENTORY_REQUEST),
   mergeMap(action => {
-    const checkInParam = state$.value.shop.checkInParam
+    const checkInParam = action.checkInParam ? action.checkInParam : state$.value.shop.checkInParam
     var requestData = []
     action.data.items.forEach(element => {
       if (Number.parseInt(element.quantity) > 0) {

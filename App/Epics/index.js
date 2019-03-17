@@ -7,7 +7,7 @@ import GpsUpdateEpic from './GpsUpdateEpic'
 import { selectInventorySKUs, selectProductsListEpics } from './InventoryTakingEpics'
 import { dayEndEpic, dayStartEpic } from './DayEpics'
 import ShopHistoryEpics from './ShopHistoryEpics'
-import { appEpic, processStores } from './AppEpics'
+import { appEpic, processCheckIns, processStores } from './AppEpics'
 
 export default combineEpics(
   LoginEpics,
@@ -26,4 +26,5 @@ export default combineEpics(
   nonProductiveReasonsEpics,
   ShopHistoryEpics,
   processStores,
+  processCheckIns
 )

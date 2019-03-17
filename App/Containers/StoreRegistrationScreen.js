@@ -12,6 +12,7 @@ import GradientWrapper from '../Components/GradientWrapper'
 import { Days } from './DaySelection'
 import Geocoder from 'react-native-geocoder'
 import moment from 'moment'
+import * as R from 'ramda'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 
@@ -187,9 +188,8 @@ class StoreRegistrationScreen extends Component {
       } else {
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-        console.log(response)
         this.setState({
-          image: response
+          image: R.pick(['uri', 'fileName'], response)
         })
       }
     })
