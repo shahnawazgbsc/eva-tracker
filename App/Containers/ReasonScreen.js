@@ -12,13 +12,11 @@ import ShopRedux from '../Redux/ShopRedux'
 // import YourActions from '../Redux/YourRedux'
 
 class ReasonScreen extends Component {
-  reasons = []
 
   constructor (props) {
     super(props)
     this.state = {
-      selected: null,
-      nonProductiveReasons: []
+      selected: null
     }
   }
 
@@ -31,10 +29,6 @@ class ReasonScreen extends Component {
       this.reasons = newProps.reasons.map((value) => (
         value.reason
       ))
-
-      this.setState({
-        nonProductiveReasons: this.reasons
-      })
     }
   }
 
@@ -85,12 +79,12 @@ class ReasonScreen extends Component {
           <H3>Please provide reason for not placing an order</H3>
           <Form>
             {
-              this.state.nonProductiveReasons.map((value) => (
+              this.props.reasons.map((value) => (
                 <ListItem onPress={() => {
                   this.setState({ selected: value })
                 }}>
                   <Body>
-                    <Text>{value}</Text>
+                    <Text>{value.reason}</Text>
                   </Body>
                   <Right>
                     <CheckBox checked={this.state.selected === value} />
@@ -126,7 +120,7 @@ class ReasonScreen extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     pjp: ownProps.navigation.getParam('item').pjp,
-    reasons: state.shop.reasons
+    reasons: state.shop.reasons || []
   }
 }
 

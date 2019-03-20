@@ -1,5 +1,5 @@
 import React from 'react'
-import { Alert } from 'react-native'
+import { Alert,Linking } from 'react-native'
 import { connect } from 'react-redux'
 import { Body, Button, ActionSheet, Container, Footer, Header, Icon, Left, Right, Text } from 'native-base'
 import MapView from 'react-native-maps'
@@ -13,18 +13,147 @@ import LoginRedux from '../../Redux/LoginRedux'
 import * as R from 'ramda'
 import extractModuleFeatures from '../../Lib/extractModuleFeatures'
 import AppConfig from '../../Config/AppConfig'
+import 'firebase/firestore'
+import firebase from '../../Lib/Firebase'
+
+var package1 = require('../../../package.json');
+
 
 class MainScreen extends React.Component {
   constructor (props) {
     super(props)
     this.state = {}
+
+    firebase.firestore()
+    .collection('release')
+    .doc('update-release')
+    .get()
+    .then((doc) => {
+      if(doc.exists){
+      if(doc.data().version != package1.version){
+        
+        Alert.alert(
+          'New version available',
+          'Please, update app to new version',
+          [
+            {
+              text: 'NO, THANKS',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+            {text: 'UPDATE', onPress: () =>  
+              Linking.openURL(
+                `https://play.google.com/store/apps/details?id=com.tracking.store`
+              )
+            },
+          ],
+          {cancelable: false},
+        );
+
+      }  
+      }
+    }); 
+
+
   }
+
+
+  async checkPermission() {
+    const enabled = await firebase.messaging().hasPermission();
+    if (enabled) {
+        this.getToken();
+       // console.log(this.getToken());
+    } else {
+        this.requestPermission();
+    }
+  }
+
+  async getToken() {
+    let fcmToken = await AsyncStorage.getItem('fcmToken');
+    if (!fcmToken) {
+        fcmToken = await firebase.messaging().getToken();
+        if (fcmToken) {
+            // user has a device token
+           // console.log(fcmToken);
+
+           this.showAlert(fcmToken, fcmToken);
+          //  await AsyncStorage.setItem('fcmToken', fcmToken);
+        }
+    }
+  }
+
+
+  async createNotificationListeners() {
+    /*
+    * Triggered when a particular notification has been received in foreground
+    * */
+    this.notificationListener = firebase.notifications().onNotification((notification) => {
+        const { title, body } = notification;
+        this.showAlert(title, body);
+    });
+  
+    /*
+    * If your app is in background, you can listen for when a notification is clicked / tapped / opened as follows:
+    * */
+    this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen) => {
+        const { title, body } = notificationOpen.notification;
+        this.showAlert(title, body);
+    });
+  
+    /*
+    * If your app is closed, you can check if it was opened by a notification being clicked / tapped / opened as follows:
+    * */
+    const notificationOpen = await firebase.notifications().getInitialNotification();
+    if (notificationOpen) {
+        const { title, body } = notificationOpen.notification;
+        this.showAlert(title, body);
+    }
+    /*
+    * Triggered for data only payload in foreground
+    * */
+    this.messageListener = firebase.messaging().onMessage((message) => {
+      //process data message
+      console.log(JSON.stringify(message));
+    });
+  }
+
+  showAlert(title, body) {
+    Alert.alert(
+      title, body,
+      [
+          { text: 'OK', onPress: () => console.log('OK Pressed') },
+      ],
+      { cancelable: false },
+    );
+  }
+
+
+  async requestPermission() {
+    try {
+        await firebase.messaging().requestPermission();
+        // User has authorised
+        this.getToken();
+    } catch (error) {
+        // User has rejected permissions
+        console.log('permission rejected');
+    }
+  }
+
 
   componentDidMount () {
     this.props.request()
     this.props.inventorySKUs()
+    this.checkPermission();
+    this.createNotificationListeners();
+
   }
 
+  componentWillUnmount() {
+    this.notificationListener();
+    this.notificationOpenedListener();
+  }
+
+  
   menu = () => {
     if (this.props.dayStarted) {
       this.props.navigation.openDrawer()

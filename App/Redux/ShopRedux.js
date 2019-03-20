@@ -63,8 +63,7 @@ export const placeOrderRequest = (state) => Immutable(state).merge({ fetching: t
 export const placeOrderSuccess = (state) => Immutable(state).merge({
   fetching: false,
   orderPlaced: true,
-  orderItems: [],
-  reasons: []
+  orderItems: []
 })
 export const placeOrderFailure = (state, { error }) =>
   Immutable(state).merge({ fetching: false, error })

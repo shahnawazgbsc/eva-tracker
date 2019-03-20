@@ -76,8 +76,8 @@ class ShopHistory extends Component {
           </View>
           <View style={{ flexDirection: 'row', alignContent: 'space-between', flex: 2 }}>
             <View style={{ flexDirection: 'row', flex: 1 }}>
-              <Text style={{ fontSize: 13, fontWeight: 'bold', color: '#676767' }}>Visit Date : </Text>
-              <Text style={{ fontSize: 13, color: '#616161' }}>{((moment(new Date(data.visitDateTime)).format("MM/DD/YYYY HH:mm")))}</Text>
+              <Text style={{ fontSize: 13, flex: 1, fontWeight: 'bold', color: '#676767' }}>Visit Date : </Text>
+              <Text style={{ fontSize: 13, flex: 3, color: '#616161' }}>{((moment(new Date(data.visitDateTime)).format("MM/DD/YYYY HH:mm")))}</Text>
             </View>
             <View style={{ flexDirection: 'row', flex: 1 }}>
               <Text style={{ fontSize: 13, fontWeight: 'bold', color: '#676767' }}>Visit Time : </Text>
@@ -85,6 +85,7 @@ class ShopHistory extends Component {
             </View>
           </View>
         </View>
+        {data.noOrderReason == null &&
         <View style={{ marginTop: 10 }}>
           <View style={{ flexDirection: 'row' }}>
             <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#676767' }}>Bill To </Text>
@@ -95,6 +96,9 @@ class ShopHistory extends Component {
             <Text style={{ fontSize: 13, color: '#616161' }}>{(data.billDate == null ?  "" : (new Date(data.billDate).getDate() + '-' + (new Date(data.billDate).getMonth() + 1) + '-' + new Date(data.billDate).getFullYear()))}</Text>
           </View> */}
         </View>
+      }
+        {data.noOrderReason == null &&
+
         <View style={{ borderColor: 'black', borderBottomWidth: 1, marginTop: 10, flex: 1 }}>
           <View style={{
             flexDirection: 'row',
@@ -124,7 +128,7 @@ class ShopHistory extends Component {
                   <Text style={{ fontSize: 12, color: '#616161' }}>{item.itemName}</Text>
                 </View>
                 <View style={{ flex: 2.5 }}>
-                  <Text style={{ fontSize: 13, color: '#616161' }}>{item.quantity + " " + item.packType}</Text>
+                <Text style={{ fontSize: 13, color: '#616161' }}>{(item.quantity) + " " + item.packType}</Text>
                 </View>
                 <View style={{ flex: 1, justifyContent: 'flex-end', flexDirection: 'row' }}>
                   <Text style={{ fontSize: 13, color: '#616161', alignSelf: 'flex-end' }}>{item.netAmount}</Text>
@@ -134,6 +138,9 @@ class ShopHistory extends Component {
             )
           })}
         </View>
+      }
+        {data.noOrderReason == null &&
+
         <View style={{
           flexDirection: 'row',
           justifyContent: 'flex-end',
@@ -145,6 +152,23 @@ class ShopHistory extends Component {
           <Text style={{ fontSize: 13, color: '#616161' }}>{totalAmount}</Text>
           <Text style={{ fontSize: 10, fontWeight: 'bold', color: '#616161', marginTop: 3 }}>.00</Text>
         </View>
+
+      }
+
+{data.noOrderReason != null &&
+<View style={{
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  flex: 5,
+  marginVertical: 5,
+  alignContent: 'center'
+}}>
+  <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#676767',marginTop: 10  }}> Reason : {data.noOrderReason}</Text>
+</View>
+}
+
+
+
       </View>
     )
 
