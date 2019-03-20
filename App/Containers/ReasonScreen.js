@@ -24,14 +24,6 @@ class ReasonScreen extends Component {
     this.props.nonProductiveReasons()
   }
 
-  componentWillReceiveProps (newProps) {
-    if (newProps.reasons != null) {
-      this.reasons = newProps.reasons.map((value) => (
-        value.reason
-      ))
-    }
-  }
-
   close = () => {
     this.props.navigation.goBack(null)
   }
@@ -81,13 +73,13 @@ class ReasonScreen extends Component {
             {
               this.props.reasons.map((value) => (
                 <ListItem onPress={() => {
-                  this.setState({ selected: value })
+                  this.setState({ selected: value.reason })
                 }}>
                   <Body>
                     <Text>{value.reason}</Text>
                   </Body>
                   <Right>
-                    <CheckBox checked={this.state.selected === value} />
+                    <CheckBox checked={this.state.selected === value.reason} />
                   </Right>
                 </ListItem>
               ))

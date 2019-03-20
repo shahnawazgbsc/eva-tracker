@@ -68,7 +68,15 @@ export const placeOrderSuccess = (state) => Immutable(state).merge({
 export const placeOrderFailure = (state, { error }) =>
   Immutable(state).merge({ fetching: false, error })
 
-export const checkOutSuccess = (state) => INITIAL_STATE
+export const checkOutSuccess = (state) => Immutable(state).merge({
+  checkedIn: false,
+  shop: null,
+  checkInParam: null,
+  fetching: null,
+  orderItems: [],
+  orderPlaced: false,
+  error: null
+})
 
 // Something went wrong somewhere.
 export const failure = (state, { error }) =>
