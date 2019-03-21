@@ -126,10 +126,11 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file(keystore)
-            storePassword passStore
-            keyAlias alias
-            keyPassword passKey
+             storeFile file('/Common/keystore/eva keystore/app_sign.jks')
+            storePassword '123456'
+            keyAlias 'key0'
+            keyPassword '123456'
+
         }
     }
     buildTypes {
