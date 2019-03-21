@@ -41,7 +41,7 @@ export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
           }),
           mergeMap(response => {
             if (response.ok) {
-              Alert.alert('Success', 'Store created successfully')
+
               if (action.data.onSuccess) action.data.onSuccess()
               if (action.offline) {
                 return of(CreateStoreActions.createStoreSuccess({
@@ -49,6 +49,7 @@ export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
                   city: action.data.city
                 }), OfflineActions.fixStore(action.id, response.data.id, userId))
               } else {
+                Alert.alert('Success', 'Store created successfully')
                 return of(CreateStoreActions.createStoreSuccess({
                   ...response.data, city: action.data.city
                 }), StoresRedux.storesRequest())
