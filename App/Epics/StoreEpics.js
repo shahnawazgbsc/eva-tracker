@@ -41,14 +41,13 @@ export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
           }),
           mergeMap(response => {
             if (response.ok) {
-
-              if (action.data.onSuccess) action.data.onSuccess()
               if (action.offline) {
                 return of(CreateStoreActions.createStoreSuccess({
                   ...response.data,
                   city: action.data.city
                 }), OfflineActions.fixStore(action.id, response.data.id, userId))
               } else {
+                if (action.data.onSuccess) action.data.onSuccess()
                 Alert.alert('Success', 'Store created successfully')
                 return of(CreateStoreActions.createStoreSuccess({
                   ...response.data, city: action.data.city
@@ -64,7 +63,11 @@ export const createStoreEpic = (action$, state$, { api }) => action$.pipe(
                 if (hasPJP) {
                   return of(OfflineActions.addPjpStore({
                     action,
-                    data: R.merge(action.data, { storeId: new Date().getTime(), pjp: true })
+                    data: R.merge(action.data, {
+                      storeId: new Date().getTime(),
+                      pjp: true,
+                      imageUrl: action.data.image.uri
+                    })
                   }), CreateStoreActions.createStoreFailure(response))
                 } else {
                   return of(OfflineActions.addOtherStore({

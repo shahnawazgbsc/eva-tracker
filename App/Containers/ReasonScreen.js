@@ -35,7 +35,7 @@ class ReasonScreen extends Component {
     if (reason === 'Other') {
       reason = this.state.otherText ? this.state.otherText : reason
     }
-    this.props.placeOrder({ items: [{ noorderreason: reason }] })
+    this.props.placeOrder({ items: [{ noorderreason: reason }], checkInParam: this.props.checkIn })
     this.props.checkOutRequest({
       onSuccess: () => this.props.navigation.dispatch(StackActions.popToTop()),
       productive: false,
@@ -112,7 +112,8 @@ class ReasonScreen extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     pjp: ownProps.navigation.getParam('item').pjp,
-    reasons: state.shop.reasons || []
+    reasons: state.shop.reasons || [],
+    checkIn: state.shop.checkInParam
   }
 }
 

@@ -1,10 +1,12 @@
 import { ofType } from 'redux-observable'
 import { Alert } from 'react-native'
-import { map, mergeMap } from 'rxjs/operators'
+import { filter, debounceTime, map, mergeMap, switchMap } from 'rxjs/operators'
 import { from, of } from 'rxjs'
 import * as R from 'ramda'
 import moment from 'moment'
 import ShopActions, { ShopTypes } from '../Redux/ShopRedux'
+import StoreActions from '../Redux/StoresRedux'
+import { CreateStoreTypes } from '../Redux/CreateStoreRedux'
 import OfflineActions from '../Redux/OfflineRedux'
 import 'firebase/firestore'
 import { NETWORK_ERROR, TIMEOUT_ERROR } from 'apisauce'
@@ -202,6 +204,13 @@ export const nonProductiveReasonsEpics = (action$, state$, { api }) => action$.p
       }))
   })
 )
+
+export const placeOrderSuccessEpic = (action$, state$, { api }) => action$.pipe(
+  ofType(CreateStoreTypes.CREATE_STORE_SUCCESS),
+  debounceTime(2000),
+  switchMap(action => of(StoreActions.storesRequest()))
+)
+
 export const placeOrderEpics = (action$, state$, { api }) => action$.pipe(
   ofType(ShopTypes.PLACE_ORDER_REQUEST),
   mergeMap(action => {
@@ -221,6 +230,7 @@ export const placeOrderEpics = (action$, state$, { api }) => action$.pipe(
 
     if (checkInParams.offline) {
       if (action.data.onSuccess) action.data.onSuccess()
+      action.data.onSuccess = undefined
       return of(OfflineActions.addOrder(action), ShopActions.placeOrderSuccess())
     } else {
       return api.addItems({ Order }).pipe(

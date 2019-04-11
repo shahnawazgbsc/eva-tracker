@@ -14,6 +14,10 @@ import extractModuleFeatures from '../../Lib/extractModuleFeatures'
 class ShopProfile extends React.Component {
   constructor (props) {
     super(props)
+
+    const item = this.props.navigation.getParam('item')
+    if (!item) this.props.navigation.goBack()
+
     this.state = {
       enabledOptions: [
         { title: 'Check In', icon: 'log-in', type: '' },
@@ -64,6 +68,8 @@ class ShopProfile extends React.Component {
 
   header = () => {
     const item = this.props.navigation.getParam('item')
+
+    if (!item) return null
     return (
       <Card style={styles.cardHeaderContainer}>
         <CardItem cardBody style={styles.cardItem}>

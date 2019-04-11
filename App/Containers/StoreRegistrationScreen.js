@@ -309,7 +309,7 @@ class StoreRegistrationScreen extends Component {
                   value={this.state.cnic}
                 />
               </Item>
-              <Item fixedLabel onPress={() => this.props.navigation.navigate('DaySelection')}>
+              <Item fixedLabel onPress={() => this.props.navigation.push('DaySelection')}>
                 <Label>Days</Label>
                 <Label style={{ textAlign: 'right', marginRight: 15, marginVertical: 15 }}>
                   {this.props.days ? this.props.days.map(value => Days.find(value1 => value1.key === value).title.substring(0, 3)).join(', ') : 'Select Days'}</Label>

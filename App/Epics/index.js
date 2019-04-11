@@ -1,7 +1,13 @@
 import { combineEpics } from 'redux-observable'
 import LoginEpics from './LoginEpics'
 import { createStoreEpic, storeById } from './StoreEpics'
-import { checkInEpic, checkOutEpic, nonProductiveReasonsEpics, placeOrderEpics } from './OrderTakingEpics'
+import {
+  checkInEpic,
+  checkOutEpic,
+  nonProductiveReasonsEpics,
+  placeOrderEpics,
+  placeOrderSuccessEpic
+} from './OrderTakingEpics'
 import { directionsEpic } from './MapsEpics'
 import GpsUpdateEpic from './GpsUpdateEpic'
 import { selectInventorySKUs, selectProductsListEpics } from './InventoryTakingEpics'
@@ -26,5 +32,6 @@ export default combineEpics(
   nonProductiveReasonsEpics,
   ShopHistoryEpics,
   processStores,
-  processCheckIns
+  processCheckIns,
+  placeOrderSuccessEpic
 )

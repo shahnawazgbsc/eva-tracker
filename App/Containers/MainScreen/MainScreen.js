@@ -30,7 +30,7 @@ class MainScreen extends React.Component {
       .get()
       .then((doc) => {
         if (doc.exists) {
-          if (doc.data().version != package1.version) {
+          if (doc.data().version !== package1.version) {
 
             Alert.alert(
               'New version available',
@@ -50,11 +50,9 @@ class MainScreen extends React.Component {
               ],
               { cancelable: false },
             )
-
           }
         }
       })
-
   }
 
   async checkPermission () {
