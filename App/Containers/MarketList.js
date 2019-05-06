@@ -22,6 +22,7 @@ import styles from './Styles/MarketListStyle'
 import GradientWrapper from '../Components/GradientWrapper'
 import { Images } from '../Themes'
 import ParseImagePath from '../Lib/ParseImagePath'
+import FastImage from 'react-native-fast-image'
 import Colors from '../Themes/Colors'
 import extractModuleFeatures from '../Lib/extractModuleFeatures'
 
@@ -63,12 +64,10 @@ class MarketList extends React.PureComponent {
           button
           onPress={() => this.gotoDetail(item)}>
           <View style={styles.profileImgContainer}>
-            <Image
+            <FastImage
               style={styles.profileImg}
-              source={
-                item.imageUrl ? { uri: ParseImagePath(item.imageUrl) } : Images.logo
-              }
-              resizeMode={'cover'}
+              source={item.imageUrl ? { uri: ParseImagePath(item.imageUrl) } : Images.logo}
+              resizeMode={FastImage.resizeMode.contain}
             />
           </View>
 
@@ -198,10 +197,17 @@ class MarketList extends React.PureComponent {
         {this.checkDataAvailable()
           ? <FlatList
             renderItem={this.renderRow}
+            windowSize={10}
+            maxToRenderPerBatch={5}
+            removeClippedSubviews={true}
+            disableVirtualization={true}
+            getItemLayout={(data, index) => (
+              { length: 50, offset: 50 * index, index }
+            )}
             style={styles.listContent}
             data={this.state.dataObjects}
             extraData={this.state.dataObjects && this.state.dataObjects.length}
-            initialNumToRender={20}
+            initialNumToRender={10}
             keyExtractor={this.keyExtractor}
           /> : <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{

@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import GradientWrapper from '../../Components/GradientWrapper'
 import styles from './ShopProfileStyle'
 import { Images } from '../../Themes'
+import FastImage from 'react-native-fast-image'
 import ParseImagePath from '../../Lib/ParseImagePath'
 import ShopRedux from '../../Redux/ShopRedux'
 import * as R from 'ramda'
@@ -74,12 +75,12 @@ class ShopProfile extends React.Component {
       <Card style={styles.cardHeaderContainer}>
         <CardItem cardBody style={styles.cardItem}>
           <View style={styles.imageContainer}>
-            <Image
+            <FastImage
               style={styles.image}
               source={
                 item.imageUrl ? { uri: ParseImagePath(item.imageUrl) } : Images.logo
               }
-              resizeMode={'cover'}
+              resizeMode={FastImage.resizeMode.contain}
             />
           </View>
           <View style={{ display: 'flex', flex: 1 }}>

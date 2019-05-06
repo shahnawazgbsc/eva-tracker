@@ -1,7 +1,7 @@
 // Simple React Native specific changes
 
 const ENV = 'DEV' | 'STAGE'
-const env: ENV = 'DEV'
+const env: ENV = 'STAGE'
 
 const configDev = {
   apiKey: 'AIzaSyD6eADZofvvncbTswItjCrD6rDSQJkJALI',

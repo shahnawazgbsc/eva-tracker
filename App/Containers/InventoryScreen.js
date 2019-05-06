@@ -19,6 +19,7 @@ import { connect } from 'react-redux'
 import styles from './Styles/InventoryScreenStyle'
 import InventoryActions from '../Redux/InventoryTakingRedux'
 import GradientWrapper from '../Components/GradientWrapper'
+import * as R from 'ramda'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 
@@ -134,9 +135,9 @@ class InventoryScreen extends Component {
                 value={this.state.quantity[this.state.selectedBrand][index]}
                 onChangeText={text => {
                   if (!isNaN(text)) {
-                    let clone = JSON.parse(JSON.stringify(this.state.quantity))
-                    clone[this.state.selectedBrandIndex][index] = text
-                    this.setState({ quantity: clone })
+                    const first = R.lensIndex(this.state.selectedBrand)
+                    const second = R.lensIndex(index)
+                    this.setState({ quantity: R.set(R.compose(first, second), text, this.state.quantity) })
                   }
                 }}
                 keyboardType={'numeric'}
@@ -183,7 +184,7 @@ class InventoryScreen extends Component {
               light
               onPress={this.back}
             >
-              <Icon name={'arrow-back'} />
+              <Icon name={'arrow-back'}/>
             </Button>
             <View style={{ marginVertical: 10, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
               <Icon

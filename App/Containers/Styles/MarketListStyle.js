@@ -20,13 +20,12 @@ export default StyleSheet.create({
   profileImgContainer: {
     height: 50,
     width: 50,
-    borderRadius: 25
+    borderRadius: 25,
+    overflow: 'hidden'
   },
   profileImg: {
     height: 50,
-    width: 50,
-    borderRadius: 25,
-    overflow: 'hidden'
+    width: 50
   },
   boldLabel: {
     alignSelf: 'flex-start',

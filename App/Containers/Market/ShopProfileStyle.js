@@ -56,6 +56,7 @@ export default StyleSheet.create({
     height: 80,
     width: 80,
     margin: 15,
+    overflow: 'hidden',
     borderRadius: 40
   },
   childIcon: {
@@ -70,8 +71,6 @@ export default StyleSheet.create({
   },
   image: {
     height: 80,
-    width: 80,
-    borderRadius: 40,
-    overflow: 'hidden'
+    width: 80
   }
 })

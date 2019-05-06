@@ -1,8 +1,8 @@
 import { applyMiddleware, compose, createStore } from 'redux'
 import Config from '../Config/DebugConfig'
 import { persistReducer, persistStore } from 'redux-persist'
-import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2'
-import storage from 'redux-persist/lib/storage'
+import hardSet from 'redux-persist/lib/stateReconciler/hardSet'
+import { AsyncStorage } from 'react-native'
 import { createReactNavigationReduxMiddleware } from 'react-navigation-redux-helpers'
 import { createEpicMiddleware } from 'redux-observable'
 import rootEpics from '../Epics'
@@ -45,8 +45,8 @@ export default (rootReducer, api) => {
 
   const persistConfig = {
     key: 'root',
-    storage: storage,
-    stateReconciler: autoMergeLevel2 // see "Merge Process" section for details.
+    storage: AsyncStorage,
+    stateReconciler: hardSet // see "Merge Process" section for details.
   }
 
   const pReducer = persistReducer(persistConfig, rootReducer)
